@@ -2,4 +2,89 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="red">#FFFF0000</color>
+    <color name="green">#FF00FF00</color>
+    <color name="blue">#FF0000FF</color>
+    <color name="yellow">#FFFFFF00</color>
+    <color name="cyan">#FF00FFFF</color>
+    <color name="magenta">#FFFF00FF</color>
+    <color name="gray">#FF808080</color>
+    <color name="dark_gray">#FF404040</color>
+    <color name="light_gray">#FFBFBFBF</color>
+    <color name="orange">#FFFFA500</color>
+    <color name="pink">#FFFFC0CB</color>
+    <color name="purple">#FF800080</color>
+    <color name="lime">#FF00FF00</color>
+    <color name="indigo">#FF4B0082</color>
+    <color name="violet">#FFEE82EE</color>
+    <color name="brown">#FFA52A2A</color>
+    <color name="maroon">#FF800000</color>
+    <color name="navy">#FF000080</color>
+    <color name="olive">#FF808000</color>
+    <color name="teal">#FF008080</color>
+    <color name="turquoise">#FF40E0D0</color>
+    <color name="gold">#FFFFD700</color>
+    <color name="silver">#FFC0C0C0</color>
+    <color name="beige">#FFF5F5DC</color>
+    <color name="ivory">#FFFFFFF0</color>
+    <color name="lavender">#FFE6E6FA</color>
+    <color name="coral">#FFFF7F50</color>
+    <color name="salmon">#FFFA8072</color>
+    <color name="crimson">#FFDC143C</color>
+    <color name="khaki">#FFF0E68C</color>
+    <color name="plum">#FFDDA0DD</color>
+    <color name="orchid">#FFDA70D6</color>
+    <color name="sky_blue">#FF87CEEB</color>
+    <color name="deep_sky_blue">#FF00BFFF</color>
+    <color name="steel_blue">#FF4682B4</color>
+    <color name="dodger_blue">#FF1E90FF</color>
+    <color name="slate_gray">#FF708090</color>
+    <color name="forest_green">#FF228B22</color>
+    <color name="dark_green">#FF006400</color>
+    <color name="sea_green">#FF2E8B57</color>
+    <color name="light_sea_green">#FF20B2AA</color>
+    <color name="medium_aquamarine">#FF66CDAA</color>
+    <color name="aquamarine">#FF7FFFD4</color>
+    <color name="medium_spring_green">#FF00FA9A</color>
+    <color name="spring_green">#FF00FF7F</color>
+    <color name="mint_cream">#FFF5FFFA</color>
+    <color name="misty_rose">#FFFFE4E1</color>
+    <color name="peach_puff">#FFFFDAB9</color>
+    <color name="sandy_brown">#FFF4A460</color>
+    <color name="sienna">#FFA0522D</color>
+
+
+    <!-- Primary Colors -->
+    <color name="primary">#6200EE</color> <!-- Deep Purple -->
+    <color name="primary_dark">#3700B3</color> <!-- Darker Purple -->
+    <color name="primary_light">#BB86FC</color> <!-- Lighter Purple -->
+
+    <!-- Secondary Colors -->
+    <color name="secondary">#03DAC6</color> <!-- Teal -->
+    <color name="secondary_dark">#018786</color> <!-- Darker Teal -->
+    <color name="secondary_light">#67E8E3</color> <!-- Lighter Teal -->
+
+    <!-- Background Colors -->
+    <color name="background">#FFFFFF</color> <!-- White -->
+    <color name="surface">#F1F3F4</color> <!-- Light Gray for surfaces -->
+
+    <!-- Text Colors -->
+    <color name="text_primary">#FF000000</color> <!-- Black -->
+    <color name="text_secondary">#80000000</color> <!-- Semi-transparent Black -->
+    <color name="text_on_primary">#FFFFFFFF</color> <!-- White on primary background -->
+
+    <!-- Error Color -->
+    <color name="error">#B00020</color> <!-- Red -->
+
+    <!-- Success Color -->
+    <color name="success">#4CAF50</color> <!-- Green -->
+
+    <!-- Warning Color -->
+    <color name="warning">#FFC107</color> <!-- Amber -->
+
+    <!-- Neutral Grays -->
+    <color name="gray_light">#E0E0E0</color> <!-- Light Gray -->
+    <color name="gray_medium">#9E9E9E</color> <!-- Medium Gray -->
+    <color name="gray_dark">#616161</color> <!-- Dark Gray -->
+
 </resources>
