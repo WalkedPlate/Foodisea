@@ -1,6 +1,5 @@
-package com.example.foodisea;
+package com.example.foodisea.activity.cliente;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -9,23 +8,19 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.foodisea.activity.cliente.ClienteMainActivity;
+import com.example.foodisea.R;
 
-public class MainActivity extends AppCompatActivity {
+public class ClienteRestauranteActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_cliente_restaurante);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        // Para ver una activity cualquiera
-        startActivity(new Intent(MainActivity.this, ClienteMainActivity.class));
-        finish();
     }
 }

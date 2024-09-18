@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.cliente.ClienteMainActivity">
+
+    <!-- Header con logo y opciones -->
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <!-- Icono de perfil -->
+        <Button
+            android:id="@+id/btnProfile"
+            style="?attr/materialIconButtonFilledTonalStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Profile"
+            app:icon="@drawable/rounded_person_24" />
+
+        <!-- Logo Foodisea -->
+        <ImageView
+            android:id="@+id/ivLogoFoodisea"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/foodisea" />
+
+        <!-- Icono de historial de pedidos -->
+        <Button
+            android:id="@+id/btnOrders"
+            style="?attr/materialIconButtonFilledTonalStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Historial"
+            app:icon="@drawable/rounded_orders_24" />
+    </LinearLayout>
+
+    <!-- Texto de bienvenida -->
+    <TextView
+        android:id="@+id/tvWelcome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/headerLayout"
+        android:padding="10dp"
+        android:text="¡Hola John! ¿Qué te gustaría pedir hoy?"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <!-- Barra de búsqueda -->
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/svRestaurants"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvWelcome"
+        android:layout_margin="8dp"
+        app:queryHint="Buscar restaurantes, platos..."
+        app:iconifiedByDefault="false"
+        android:background="@drawable/search_view_bg" />
+
+    <!-- Todas las categorías -->
+    <TextView
+        android:id="@+id/tvCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/svRestaurants"
+        android:padding="10dp"
+        android:text="Categorías"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <!-- Lista de categorías horizontal -->
+    <HorizontalScrollView
+        android:id="@+id/hsvCategories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvCategory"
+        android:scrollbars="none"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp">
+
+            <!-- Botones con las categorías -->
+            <Button
+                style="?attr/materialIconButtonFilledStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="18dp"
+                android:text="Todas" />
+
+            <Button
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="18dp"
+                android:text="Rápida" />
+
+            <Button
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="18dp"
+                android:text="Postres" />
+
+            <Button
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="18dp"
+                android:text="Desayunos" />
+
+            <Button
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="18dp"
+                android:text="Parrilladas" />
+
+            <Button
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="18dp"
+                android:text="Tortas" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Restaurantes -->
+    <TextView
+        android:id="@+id/tvRestaurants"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/hsvCategories"
+        android:padding="10dp"
+        android:text="Restaurantes"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <!-- Lista de restaurantes -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRestaurants"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvRestaurants"
+        android:nestedScrollingEnabled="false" />
+
+
+</RelativeLayout>
