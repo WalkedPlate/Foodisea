@@ -1,5 +1,6 @@
 package com.example.foodisea.activity.cliente;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -13,6 +14,9 @@ import com.example.foodisea.adapter.CarritoAdapter;
 import com.example.foodisea.entity.ProductoCarrito;
 
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,5 +55,20 @@ public class ClienteCarritoActivity extends AppCompatActivity {
         // Inicializar el adaptador y asignarlo al RecyclerView
         adapter = new CarritoAdapter(productoCarritos);
         recyclerView.setAdapter(adapter);
+
+        // funcion de los botones
+        Button btnBack = findViewById(R.id.btnBack);
+        Button btnCheckout = findViewById(R.id.btnCheckout);
+
+        btnBack.setOnClickListener(v -> {
+            // Acción para regresar
+            finish(); // Cierra la actividad actual y regresa
+        });
+
+        btnCheckout.setOnClickListener(v -> {
+            // Acción para ir al carrito de compras
+            Intent checkout = new Intent(this, ClienteCheckoutActivity.class);
+            startActivity(checkout);
+        });
     }
 }
