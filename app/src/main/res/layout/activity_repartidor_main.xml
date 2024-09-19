@@ -34,14 +34,15 @@
                     android:src="@drawable/baseline_account_circle_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
 
                 <ImageView
                     android:id="@+id/ivLogo"
                     android:layout_width="180dp"
                     android:layout_height="40dp"
                     android:background="@color/gray_light"
-                    android:src="@drawable/baseline_account_circle_24"
+                    android:src="@drawable/foodisea"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -132,8 +133,8 @@
 
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="90dp"
-                        android:src="@drawable/baseline_delivery_dining_24"
+                        android:layout_height="190dp"
+                        android:src="@drawable/restaurant_image"
                         android:background="@color/black"
                         />
                     <TextView
@@ -176,8 +177,8 @@
 
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="90dp"
-                        android:src="@drawable/baseline_delivery_dining_24"
+                        android:layout_height="190dp"
+                        android:src="@drawable/restaurant_image"
                         android:background="@color/black"
                         />
                     <TextView
