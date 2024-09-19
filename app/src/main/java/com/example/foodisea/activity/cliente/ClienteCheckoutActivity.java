@@ -44,7 +44,7 @@ public class ClienteCheckoutActivity extends AppCompatActivity {
 
         btnAccept.setOnClickListener(v -> {
             // Acción para ver el mensaje de confirmación
-            Intent confirmacion = new Intent(this, ClienteCarritoActivity.class);
+            Intent confirmacion = new Intent(this, ConfirmacionPedido.class);
             startActivity(confirmacion);
         });
     }

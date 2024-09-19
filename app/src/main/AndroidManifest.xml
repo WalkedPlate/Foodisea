@@ -13,6 +13,12 @@
         android:theme="@style/Theme.Foodisea"
         tools:targetApi="31">
         <activity
+            android:name=".activity.cliente.ClienteTrackingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.cliente.ConfirmacionPedido"
+            android:exported="false" />
+        <activity
             android:name=".activity.cliente.ClienteCheckoutActivity"
             android:exported="false" />
         <activity
