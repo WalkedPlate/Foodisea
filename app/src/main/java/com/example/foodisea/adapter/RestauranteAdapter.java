@@ -1,6 +1,8 @@
 package com.example.foodisea.adapter;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
+import com.example.foodisea.activity.cliente.ClienteRestauranteActivity;
 import com.example.foodisea.entity.Restaurante;
 
 import java.util.List;
@@ -18,8 +21,10 @@ import java.util.List;
 public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.RestaurantViewHolder> {
 
     private List<Restaurante> restaurantes;
+    private Context context;
 
-    public RestauranteAdapter(List<Restaurante> restaurantes) {
+    public RestauranteAdapter(Context context, List<Restaurante> restaurantes) {
+        this.context = context;
         this.restaurantes = restaurantes;
     }
 
@@ -38,6 +43,16 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
         holder.restaurantPlates.setText(restaurant.getPlates());
         holder.restaurantRating.setText(String.valueOf(restaurant.getRating()));
         holder.restaurantImage.setImageResource(restaurant.getImageResource());
+
+
+        // Añadir el onClickListener para abrir la actividad de detalles
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ClienteRestauranteActivity.class);
+            intent.putExtra("name", restaurant.getName());
+            intent.putExtra("rating", restaurant.getRating());
+            intent.putExtra("image", restaurant.getImageResource());
+            context.startActivity(intent);
+        });
     }
 
     @Override
@@ -59,4 +74,6 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
             restaurantRating = itemView.findViewById(R.id.restaurantRating);
         }
     }
+
+
 }

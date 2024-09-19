@@ -45,7 +45,7 @@ public class ClienteMainActivity extends AppCompatActivity {
         restaurantList.add(new Restaurante("Burger Place", "Burgers - Fries - Shakes", 4.5f, R.drawable.burger_image));
 
         // Configurar el adaptador
-        RestauranteAdapter adapter = new RestauranteAdapter(restaurantList);
+        RestauranteAdapter adapter = new RestauranteAdapter(this, restaurantList);
         rvRestautants.setAdapter(adapter);
         rvRestautants.setLayoutManager(new LinearLayoutManager(this));
     }

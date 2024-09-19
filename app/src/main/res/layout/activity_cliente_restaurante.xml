@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,4 +7,158 @@
     android:layout_height="match_parent"
     tools:context=".activity.cliente.ClienteRestauranteActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+
+        <!-- Imagen del restaurante -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Imagen del restaurante -->
+            <ImageView
+                android:id="@+id/ivRestaurantImage"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:scaleType="centerCrop"/>
+
+            <!-- Botón de regresar (flecha) -->
+            <Button
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_margin="16dp"
+                app:icon="@drawable/baseline_arrow_back_ios_new_24"
+                android:contentDescription="regresar"/>
+
+            <!-- Botón de carrito de compras -->
+            <Button
+                style="?attr/materialIconButtonFilledStyle"
+                android:id="@+id/btnCart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="16dp"
+                app:icon="@drawable/outline_shopping"
+                android:contentDescription="carrito"/>
+
+            <!-- Indicador de cantidad en el carrito -->
+            <TextView
+                android:id="@+id/tvCartItemCount"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignTop="@id/btnCart"
+                android:layout_alignEnd="@id/btnCart"
+                android:background="@drawable/circle_bg"
+                android:text="0"
+                android:textColor="@android:color/white"
+                android:textSize="6sp"
+                android:padding="4dp" />
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <!-- Nombre del restaurante (extremo izquierdo) -->
+            <TextView
+                android:id="@+id/tvRestaurantName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <!-- Calificación del restaurante (extremo derecho) -->
+            <TextView
+                android:id="@+id/tvRestaurantRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_star"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+
+        <!-- Descipción del restaurante -->
+        <TextView
+            android:id="@+id/tvDescipcionRest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Restaurante especializado en hamburguesas artesanales, donde la calidad de los ingredientes y el sabor único se combinan para ofrecer una experiencia culinaria inigualable. Desde las clásicas hasta creaciones gourmet, cada hamburguesa es preparada al momento, acompañada de papas crujientes y una selección de salsas caseras."
+            android:textAlignment="viewStart"
+            android:textAllCaps="false"
+            android:layout_marginBottom="6dp"/>
+
+        <!-- Categorías de productos -->
+        <HorizontalScrollView
+            android:id="@+id/hsvCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp">
+
+                <!-- Botones con las categorías -->
+                <Button
+                    style="?attr/materialIconButtonFilledStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="18dp"
+                    android:text="Todas" />
+
+                <Button
+                    style="?attr/materialIconButtonFilledTonalStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="18dp"
+                    android:text="Hamburguesa" />
+
+                <Button
+                    style="?attr/materialIconButtonFilledTonalStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="18dp"
+                    android:text="Pizza" />
+
+                <Button
+                    style="?attr/materialIconButtonFilledTonalStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="18dp"
+                    android:text="Sandwich" />
+
+                <Button
+                    style="?attr/materialIconButtonFilledTonalStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="18dp"
+                    android:text="Salchipapa" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+
+
+        <!-- Lista de productos (RecyclerView) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvProducts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"/>
+
+    </LinearLayout>
+</ScrollView>
