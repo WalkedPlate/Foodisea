@@ -2,6 +2,7 @@ package com.example.foodisea.activity.cliente;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,7 +40,24 @@ public class ClienteProductoActivity extends AppCompatActivity {
 
         // Configurar la vista con los datos recibidos
         productName.setText(name);
-        productPrice.setText("$" + price);
+        productPrice.setText("S/." + price);
         productImage.setImageResource(imageResource);
+
+
+        // funcion de los botones
+        Button btnBack = findViewById(R.id.btnBack);
+        Button btnCart = findViewById(R.id.btnCart);
+        TextView tvCartItemCount = findViewById(R.id.tvCartItemCount);
+
+        btnBack.setOnClickListener(v -> {
+            // Acción para regresar
+            finish(); // Cierra la actividad actual y regresa
+        });
+
+        btnCart.setOnClickListener(v -> {
+            // Acción para ir al carrito de compras
+            Intent carrito = new Intent(this, ClienteCarritoActivity.class);
+            startActivity(carrito);
+        });
     }
 }

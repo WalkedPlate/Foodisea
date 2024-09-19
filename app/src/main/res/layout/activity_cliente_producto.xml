@@ -1,32 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".activity.cliente.ClienteProductoActivity">
 
-    <ImageView
-        android:id="@+id/productDetailImage"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop" />
 
-    <TextView
-        android:id="@+id/productDetailName"
+    <!-- Contenido desplazable -->
+    <ScrollView
+        android:id="@+id/scrollViewContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/containerBottom">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Imagen del producto -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Imagen -->
+                <ImageView
+                    android:id="@+id/productDetailImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:scaleType="centerCrop" />
+
+                <!-- Botón de regresar (flecha) -->
+                <Button
+                    style="?attr/materialIconButtonFilledTonalStyle"
+                    android:id="@+id/btnBack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_margin="16dp"
+                    app:icon="@drawable/baseline_arrow_back_ios_new_24"
+                    android:contentDescription="regresar"/>
+
+                <!-- Botón de carrito de compras -->
+                <Button
+                    style="?attr/materialIconButtonFilledStyle"
+                    android:id="@+id/btnCart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_margin="16dp"
+                    app:icon="@drawable/outline_shopping"
+                    android:contentDescription="carrito"/>
+
+                <!-- Indicador de cantidad en el carrito -->
+                <TextView
+                    android:id="@+id/tvCartItemCount"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignTop="@id/btnCart"
+                    android:layout_alignEnd="@id/btnCart"
+                    android:background="@drawable/circle_bg"
+                    android:text="0"
+                    android:textColor="@android:color/white"
+                    android:textSize="6sp"
+                    android:padding="4dp" />
+            </RelativeLayout>
+
+            <!-- Nombre del producto   -->
+            <TextView
+                android:id="@+id/productDetailName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:paddingTop="16dp"
+                android:paddingLeft="12dp"/>
+
+            <!-- Descripción del producto   -->
+            <TextView
+                android:id="@+id/tvDescripcionProduct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="La Classic Burger es una jugosa hamburguesa de res a la parrilla, servida en un pan brioche suave, con queso cheddar derretido, lechuga fresca, tomate, cebolla caramelizada y una salsa especial de la casa."
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:layout_marginBottom="6dp"/>
+        </LinearLayout>
+
+
+    </ScrollView>
+
+    <!-- Contenedor del precio, botones de cantidad y "Añadir al carrito", ubicado en la parte inferior -->
+    <LinearLayout
+        android:id="@+id/containerBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:paddingTop="16dp" />
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@android:color/white"
+        android:elevation="8dp">
 
-    <TextView
-        android:id="@+id/productDetailPrice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textColor="@android:color/holo_red_dark"
-        android:paddingTop="8dp" />
-</LinearLayout>
+        <!-- Contenedor del precio y botones de cantidad -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:elevation="4dp"
+            android:gravity="center_vertical">
+
+            <!-- Precio -->
+            <TextView
+                android:id="@+id/productDetailPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="S/. 32"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_weight="1"/>
+
+            <!-- Botones de menos, cantidad y más -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/search_view_bg"
+                android:padding="4dp"
+                android:elevation="2dp">
+
+                <!-- Botón de menos -->
+                <Button
+                    style="?attr/materialIconButtonFilledTonalStyle"
+                    android:id="@+id/btnMinus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/baseline_remove_24"
+                    android:contentDescription="Decrementar cantidad" />
+
+                <!-- Texto para mostrar la cantidad -->
+                <TextView
+                    android:id="@+id/tvQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2"
+                    android:paddingHorizontal="16dp"
+                    android:textSize="18sp"
+                    android:gravity="center_vertical"
+                    android:textColor="@android:color/black" />
+
+                <!-- Botón de más -->
+                <Button
+                    style="?attr/materialIconButtonFilledTonalStyle"
+                    android:id="@+id/btnPlus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/baseline_add_24"
+                    android:contentDescription="Incrementar cantidad" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Botón de "Añadir al carrito" dentro del mismo contenedor -->
+        <Button
+            android:id="@+id/btnAddToCart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="AÑADIR AL CARRITO"
+            android:textSize="18sp"
+            android:backgroundTint="@android:color/holo_red_light"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:padding="16dp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+
+</RelativeLayout>
