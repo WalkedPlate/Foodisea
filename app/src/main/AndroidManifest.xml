@@ -16,6 +16,12 @@
             android:name=".activity.repartidor.RepartidorVerOrdenActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.adminRes.CartaAdminResActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.adminRes.HomeAdminResActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.cliente.ClienteTrackingActivity"
             android:exported="false" />
         <activity
@@ -29,9 +35,6 @@
             android:exported="false" />
         <activity
             android:name=".activity.cliente.ClienteCarritoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ClienteCarrritoActivity"
             android:exported="false" />
         <activity
             android:name=".activity.cliente.ClienteRestauranteActivity"
