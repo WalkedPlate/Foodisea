@@ -16,10 +16,10 @@
             android:name=".activity.repartidor.RepartidorVerOrdenActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.adminRes.CartaAdminResActivity"
+            android:name=".activity.adminRes.AdminResCartaActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.adminRes.HomeAdminResActivity"
+            android:name=".activity.adminRes.AdminResHomeActivity"
             android:exported="false" />
         <activity
             android:name=".activity.cliente.ClienteTrackingActivity"
