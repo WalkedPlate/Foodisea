@@ -8,8 +8,16 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
+import com.example.foodisea.adapter.RestauranteAdapter;
+import com.example.foodisea.adapter.repartidor.RestaurantRepartidorAdapter;
+import com.example.foodisea.entity.Restaurante;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RepartidorMainActivity extends AppCompatActivity {
 
@@ -24,12 +32,24 @@ public class RepartidorMainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
+        RecyclerView rvRestautants = findViewById(R.id.recyclerViewRestaurantes);
+
+        // Crear una lista de restaurantes
+        List<Restaurante> restaurantList = new ArrayList<>();
+        restaurantList.add(new Restaurante("Rose Garden Restaurant", "Burger - Chicken - Ribs - Wings", 4.7f, R.drawable.restaurant_image, "2118 Thornridge Cir. Syracuse"));
+        restaurantList.add(new Restaurante("Burger Place", "Burgers - Fries - Shakes", 4.5f, R.drawable.burger_image, "2118 Thornridge Cir. Syracuse"));
+        // Añade más restaurantes según necesites
+        restaurantList.add(new Restaurante("Rose Garden Restaurant", "Burger - Chicken - Ribs - Wings", 4.7f, R.drawable.restaurant_image, "2118 Thornridge Cir. Syracuse"));
+        restaurantList.add(new Restaurante("Burger Place", "Burgers - Fries - Shakes", 4.5f, R.drawable.burger_image, "2118 Thornridge Cir. Syracuse"));
+        restaurantList.add(new Restaurante("Rose Garden Restaurant", "Burger - Chicken - Ribs - Wings", 4.7f, R.drawable.restaurant_image, "2118 Thornridge Cir. Syracuse"));
+        restaurantList.add(new Restaurante("Burger Place", "Burgers - Fries - Shakes", 4.5f, R.drawable.burger_image, "2118 Thornridge Cir. Syracuse"));
+        restaurantList.add(new Restaurante("Rose Garden Restaurant", "Burger - Chicken - Ribs - Wings", 4.7f, R.drawable.restaurant_image, "2118 Thornridge Cir. Syracuse"));
+        restaurantList.add(new Restaurante("Burger Place", "Burgers - Fries - Shakes", 4.5f, R.drawable.burger_image, "2118 Thornridge Cir. Syracuse"));
+
+        // Configurar el adaptador
+        RestaurantRepartidorAdapter adapter = new RestaurantRepartidorAdapter(this, restaurantList);
+        rvRestautants.setAdapter(adapter);
+        rvRestautants.setLayoutManager(new LinearLayoutManager(this));
 
 
 

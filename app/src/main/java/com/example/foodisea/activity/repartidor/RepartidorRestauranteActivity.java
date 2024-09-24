@@ -1,5 +1,6 @@
 package com.example.foodisea.activity.repartidor;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -21,6 +22,9 @@ import java.util.List;
 
 public class RepartidorRestauranteActivity extends AppCompatActivity {
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +41,7 @@ public class RepartidorRestauranteActivity extends AppCompatActivity {
         rvPedidos.setLayoutManager(new GridLayoutManager(this, 2)); // 2 columns
 
         List<Pedido> pedidosList = getPedidosList(); // Method to get your order data
-        PedidosAdapter adapter = new PedidosAdapter(pedidosList);
+        PedidosAdapter adapter = new PedidosAdapter(this,pedidosList);
         rvPedidos.setAdapter(adapter);
 
         // Set the title with the order count
@@ -45,6 +49,18 @@ public class RepartidorRestauranteActivity extends AppCompatActivity {
         tvPedidosTitle.setText(String.format("Pedidos (%d)", pedidosList.size()));
 
 
+        // Obtén los datos pasados desde el intent
+        Intent intent = getIntent();
+        String restaurantName = intent.getStringExtra("name");
+        float restaurantRating = intent.getFloatExtra("rating", 0);
+        int restaurantImage = intent.getIntExtra("image", R.drawable.restaurant_image);
+        String restaurantLocation = intent.getStringExtra("location");
+
+        //Setear los datos del restaurante elegido
+        TextView tvRestaurantName = findViewById(R.id.tvRestaurantName);
+        tvRestaurantName.setText(restaurantName);
+        TextView tvRestaurantLocation = findViewById(R.id.tvRestaurantAddress);
+        tvRestaurantLocation.setText(restaurantLocation);
 
 
     }

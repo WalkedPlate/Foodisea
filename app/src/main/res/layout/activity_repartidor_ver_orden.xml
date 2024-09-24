@@ -89,7 +89,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="El pedido estará listo a las 4:30 pm"
-                    android:drawableStart="@drawable/baseline_access_time_24"
+                    android:drawableStart="@drawable/ic_clock"
                     android:drawablePadding="4dp"
                     android:layout_marginTop="4dp" />
             </LinearLayout>
@@ -106,7 +106,7 @@
                 android:id="@+id/locationIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/baseline_location_on_24" />
+                android:src="@drawable/ic_location" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -195,7 +195,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/btnCheckout"
+            android:id="@+id/startDeliveryBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="HACER DELIVERY"

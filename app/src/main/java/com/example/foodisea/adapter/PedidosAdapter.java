@@ -1,5 +1,7 @@
 package com.example.foodisea.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
+import com.example.foodisea.activity.repartidor.RepartidorRestauranteActivity;
+import com.example.foodisea.activity.repartidor.RepartidorVerOrdenActivity;
 import com.example.foodisea.entity.Pedido;
 
 import java.util.List;
@@ -17,9 +21,11 @@ import java.util.List;
 public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoViewHolder> {
 
     private List<Pedido> pedidos;
+    private Context context;
 
-    public PedidosAdapter(List<Pedido> pedidos) {
+    public PedidosAdapter(Context context, List<Pedido> pedidos) {
         this.pedidos = pedidos;
+        this.context = context;
     }
 
     @NonNull
@@ -33,6 +39,18 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoVi
     public void onBindViewHolder(@NonNull PedidoViewHolder holder, int position) {
         Pedido pedido = pedidos.get(position);
         holder.bind(pedido);
+
+        // Añadir el onClickListener para abrir la actividad de detalles
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, RepartidorVerOrdenActivity.class);
+            intent.putExtra("orderNumber", pedido.getOrderNumber());
+            intent.putExtra("customerName", pedido.getCustomerName());
+            intent.putExtra("address", pedido.getAddress());
+            intent.putExtra("price", pedido.getPrice());
+            context.startActivity(intent);
+        });
+
+
     }
 
     @Override

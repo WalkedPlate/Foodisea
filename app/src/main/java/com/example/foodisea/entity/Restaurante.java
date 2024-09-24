@@ -5,12 +5,14 @@ public class Restaurante {
     private String plates;
     private float rating;
     private int imageResource;
+    private String location;
 
-    public Restaurante(String name, String plates, float rating, int imageResource) {
+    public Restaurante(String name, String plates, float rating, int imageResource, String location) {
         this.name = name;
         this.plates = plates;
         this.rating = rating;
         this.imageResource = imageResource;
+        this.location = location;
     }
 
     public String getName() {
@@ -27,5 +29,13 @@ public class Restaurante {
 
     public int getImageResource() {
         return imageResource;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

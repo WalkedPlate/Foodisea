@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E0E0E0"
-    android:id="@+id/main">
+    android:id="@+id/main"
+    tools:context=".activity.repartidor.RepartidorRestauranteActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -73,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2118 Thornridge Cir. Syracuse"
-                android:drawableStart="@drawable/baseline_location_on_24"
+                android:drawableStart="@drawable/ic_location"
                 android:drawablePadding="4dp"
                 app:layout_constraintStart_toStartOf="@id/tvRestaurantName"
                 app:layout_constraintTop_toBottomOf="@id/tvRestaurantName"/>
