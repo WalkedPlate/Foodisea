@@ -74,6 +74,7 @@ public class RepartidorVerOrdenActivity extends AppCompatActivity {
         Button startDelivery = findViewById(R.id.startDeliveryBtn);
         startDelivery.setOnClickListener(v -> {
             Intent intentStartDelivery = new Intent(RepartidorVerOrdenActivity.this, RepartidorDeliveryMapActivity.class);
+            intentStartDelivery.putExtra("customerName",customerName);
             startActivity(intentStartDelivery);
 
         });

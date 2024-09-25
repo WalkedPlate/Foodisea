@@ -13,6 +13,15 @@
         android:theme="@style/Theme.Foodisea"
         tools:targetApi="31">
         <activity
+            android:name=".activity.repartidor.RepartidorChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.repartidor.RepartidorLlamadaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.repartidor.RepartidorConfirmacionEntregaActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.superadmin.SuperadminMainActivity"
             android:exported="false" />
         <activity
@@ -63,6 +72,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
     </application>
 
 </manifest>

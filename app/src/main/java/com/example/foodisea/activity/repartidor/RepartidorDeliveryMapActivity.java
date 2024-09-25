@@ -1,7 +1,9 @@
 package com.example.foodisea.activity.repartidor;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -52,5 +54,39 @@ public class RepartidorDeliveryMapActivity extends AppCompatActivity {
             }
         });
 
+        //Botones:
+
+        setupButtonListeners();
+
+
     }
+
+
+    private void setupButtonListeners() {
+        Intent intent = getIntent();
+        String customerName = intent.getStringExtra("customerName");
+
+
+        ImageButton chatButton = findViewById(R.id.chatButton);
+        ImageButton phoneButton = findViewById(R.id.phoneButton);
+
+
+        chatButton.setOnClickListener(v -> {
+            Intent intentToCallView = new Intent(RepartidorDeliveryMapActivity.this, RepartidorChatActivity.class);
+            intentToCallView.putExtra("customerName",customerName);
+            startActivity(intentToCallView);
+
+        });
+
+        phoneButton.setOnClickListener(v -> {
+            Intent intentToChatView = new Intent(RepartidorDeliveryMapActivity.this, RepartidorLlamadaActivity.class);
+            intentToChatView.putExtra("customerName",customerName);
+            startActivity(intentToChatView);
+        });
+
+
+    }
+
+
+
 }
