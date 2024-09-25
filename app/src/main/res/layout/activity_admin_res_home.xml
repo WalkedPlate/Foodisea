@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".activity.adminRes.AdminResHomeActivity">
 
     <!-- Header con logo y opciones -->
@@ -28,7 +29,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="Profile"
-            app:icon="@drawable/rounded_person_24" />
+            app:icon="@drawable/rounded_person_24"
+            app:iconTint="#FB6F3D"
+            android:backgroundTint="#F6F8FA"
+            />
 
         <!-- Logo Foodisea -->
         <ImageView
@@ -58,8 +62,9 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="409dp"
+        android:layout_width="match_parent"
         android:layout_height="171dp"
+        android:background="@color/gray_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -99,7 +104,7 @@
         android:layout_below="@id/headerLayout"
         android:padding="10dp"
         android:text="Maecenas sed diam eget risus varius blandit sit amet non magna. Integer posuere erat a ante venenatis dapibus posuere velit aliquet."
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/darker_gray"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -109,35 +114,61 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.637" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Platos y/o bebidas"
-        app:icon="@drawable/menu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descripcionRestaurant" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Lista de pedidos"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reportes de ventas"
+    <LinearLayout
+        android:layout_width="342dp"
+        android:layout_height="205dp"
+        android:orientation="vertical"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/descripcionRestaurant">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="#F6F8FA"
+            android:gravity="center"
+            android:text="Platos y/o bebidas"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            app:icon="@drawable/menu"
+            app:iconTint="#000000"
+            app:iconSize="35dp"
+            tools:layout_editor_absoluteX="219dp"
+            tools:layout_editor_absoluteY="508dp" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="#F6F8FA"
+            android:gravity="center"
+            android:text="Lista de pedidos"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            app:icon="@drawable/list"
+            app:iconTint="#000000"
+            app:iconSize="35dp"
+            tools:layout_editor_absoluteY="588dp" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:backgroundTint="#F6F8FA"
+            android:gravity="center"
+            android:text="Reportes de ventas"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            app:icon="@drawable/report"
+            app:iconSize="35dp"
+            app:iconTint="#000000"
+            tools:layout_editor_absoluteY="683dp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
