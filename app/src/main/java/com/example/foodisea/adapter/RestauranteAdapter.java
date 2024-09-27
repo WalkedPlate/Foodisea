@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
 import com.example.foodisea.activity.cliente.ClienteRestauranteActivity;
+import com.example.foodisea.databinding.ItemRestaurantBinding;
 import com.example.foodisea.entity.Restaurante;
 
 import java.util.List;
@@ -31,18 +32,19 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
     @NonNull
     @Override
     public RestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_restaurant, parent, false);
-        return new RestaurantViewHolder(view);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        ItemRestaurantBinding binding = ItemRestaurantBinding.inflate(inflater, parent, false);
+        return new RestaurantViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position) {
         Restaurante restaurant = restaurantes.get(position);
 
-        holder.restaurantName.setText(restaurant.getName());
-        holder.restaurantPlates.setText(restaurant.getPlates());
-        holder.restaurantRating.setText(String.valueOf(restaurant.getRating()));
-        holder.restaurantImage.setImageResource(restaurant.getImageResource());
+        holder.binding.restaurantName.setText(restaurant.getName());
+        holder.binding.restCategories.setText(restaurant.getCategories());
+        holder.binding.restaurantRating.setText(String.valueOf(restaurant.getRating()));
+        holder.binding.restaurantImage.setImageResource(restaurant.getImageResource());
 
 
         // Añadir el onClickListener para abrir la actividad de detalles
@@ -61,17 +63,11 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
     }
 
     public static class RestaurantViewHolder extends RecyclerView.ViewHolder {
-        public ImageView restaurantImage;
-        public TextView restaurantName;
-        public TextView restaurantPlates;
-        public TextView restaurantRating;
+        ItemRestaurantBinding binding;
 
-        public RestaurantViewHolder(@NonNull View itemView) {
-            super(itemView);
-            restaurantImage = itemView.findViewById(R.id.restaurantImage);
-            restaurantName = itemView.findViewById(R.id.restaurantName);
-            restaurantPlates = itemView.findViewById(R.id.restaurantPlates);
-            restaurantRating = itemView.findViewById(R.id.restaurantRating);
+        public RestaurantViewHolder(ItemRestaurantBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 

@@ -2,14 +2,14 @@ package com.example.foodisea.entity;
 
 public class Restaurante {
     private String name;
-    private String plates;
+    private String categories;
     private float rating;
     private int imageResource;
     private String location;
 
-    public Restaurante(String name, String plates, float rating, int imageResource, String location) {
+    public Restaurante(String name, String categories, float rating, int imageResource, String location) {
         this.name = name;
-        this.plates = plates;
+        this.categories = categories;
         this.rating = rating;
         this.imageResource = imageResource;
         this.location = location;
@@ -19,8 +19,8 @@ public class Restaurante {
         return name;
     }
 
-    public String getPlates() {
-        return plates;
+    public String getCategories() {
+        return categories;
     }
 
     public float getRating() {
