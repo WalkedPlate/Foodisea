@@ -5,7 +5,7 @@
     <string name="btnProfile">boton perfil</string>
     <string name="btnOrders">boton historial pedidos</string>
     <!-- Colocar el nombre del usuario -->
-    <string name="welcome">¡Hola, %1$s! ¿Qué te gustaría pedir hoy?</string>
+    <string name="welcome">¡Hola, John! ¿Qué te gustaría pedir hoy?</string>
     <string name="categorias">Categorías</string>
     <string name="todas">Todas</string>
     <!-- Colocar las distintas categorías -->

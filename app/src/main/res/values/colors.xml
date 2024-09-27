@@ -87,4 +87,21 @@
     <color name="gray_medium">#9E9E9E</color> <!-- Medium Gray -->
     <color name="gray_dark">#616161</color> <!-- Dark Gray -->
 
+
+
+
+    <!-- Agregando colores naranjas para la app -->
+    <color name="bg_color">#FFFFFF</color>
+    <color name="bg_gray_light">#ECF0F4</color>
+<!--    <color name="btn_category_primary">#F58D1D</color>-->
+<!--    <color name="btn_category_secondary">#26FDAE47</color>-->
+<!--    <color name="btn_icon_medium">#FB6F3D</color>-->
+
+    <!-- Colores rojos -->
+    <color name="btn_dark">#E70F0F</color>
+    <color name="btn_medium">#FFFF4444</color>
+    <color name="btn_light">#26F6A695</color>
+<!--    <color name="btn_category_equis">#DE1717</color>-->
+<!--    <color name="btn_icon_medium">#FA4834</color>-->
+
 </resources>

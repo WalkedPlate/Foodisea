@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_color"
     tools:context=".activity.cliente.ClienteMainActivity">
 
     <LinearLayout
@@ -18,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="14dp">
+            android:padding="12dp">
 
             <!-- Icono de perfil -->
             <Button
@@ -27,7 +28,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/btnProfile"
-                app:icon="@drawable/rounded_person_24" />
+                app:icon="@drawable/rounded_person_24"
+                app:iconTint="@color/btn_medium"
+                android:backgroundTint="@color/bg_gray_light"/>
 
             <!-- Logo Foodisea -->
             <ImageView
@@ -41,11 +44,12 @@
             <!-- Icono de historial de pedidos -->
             <Button
                 android:id="@+id/btnOrders"
-                style="?attr/materialIconButtonFilledTonalStyle"
+                style="?attr/materialIconButtonFilledStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/btnOrders"
-                app:icon="@drawable/rounded_orders_24" />
+                app:icon="@drawable/rounded_orders_24"
+                android:backgroundTint="@color/btn_medium"/>
         </LinearLayout>
 
         <!-- Parte scrolleable -->
@@ -67,7 +71,9 @@
                     android:padding="16dp"
                     android:text="@string/welcome"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/sen_font"/>
 
                 <!-- Barra de búsqueda -->
                 <androidx.appcompat.widget.SearchView
@@ -75,10 +81,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="8dp"
-                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginHorizontal="16dp"
                     app:queryHint="Buscar restaurantes, platos..."
                     app:iconifiedByDefault="false"
-                    android:background="@drawable/search_view_bg" />
+                    android:background="@drawable/search_view_bg"/>
 
                 <!-- Todas las categorías -->
                 <TextView
@@ -88,7 +94,9 @@
                     android:padding="16dp"
                     android:text="@string/categorias"
                     android:textSize="18sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/sen_font"/>
 
                 <!-- Lista de categorías horizontal -->
                 <HorizontalScrollView
@@ -110,35 +118,46 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingHorizontal="18dp"
-                            android:text="@string/todas" />
+                            android:text="@string/todas"
+                            android:fontFamily="@font/sen_font"
+                            android:textStyle="bold"
+                            android:backgroundTint="@color/btn_dark"/>
 
                         <Button
                             style="?attr/materialIconButtonFilledTonalStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingHorizontal="18dp"
-                            android:text="@string/nombreCategoria" />
+                            android:fontFamily="@font/sen_font"
+                            android:text="@string/nombreCategoria"
+                            android:backgroundTint="@color/btn_light"/>
 
                         <Button
                             style="?attr/materialIconButtonFilledTonalStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingHorizontal="18dp"
-                            android:text="@string/nombreCategoria"/>
+                            android:text="@string/nombreCategoria"
+                            android:fontFamily="@font/sen_font"
+                            android:backgroundTint="@color/btn_light"/>
 
                         <Button
                             style="?attr/materialIconButtonFilledTonalStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingHorizontal="18dp"
-                            android:text="@string/nombreCategoria" />
+                            android:text="@string/nombreCategoria"
+                            android:fontFamily="@font/sen_font"
+                            android:backgroundTint="@color/btn_light"/>
 
                         <Button
                             style="?attr/materialIconButtonFilledTonalStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingHorizontal="18dp"
-                            android:text="@string/nombreCategoria" />
+                            android:text="@string/nombreCategoria"
+                            android:fontFamily="@font/sen_font"
+                            android:backgroundTint="@color/btn_light"/>
                     </LinearLayout>
 
                 </HorizontalScrollView>
@@ -152,7 +171,9 @@
                     android:text="@string/restaurantes"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:layout_marginTop="16dp"/>
+                    android:layout_marginTop="16dp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/sen_font"/>
 
                 <!-- Lista de restaurantes -->
                 <androidx.recyclerview.widget.RecyclerView
@@ -162,13 +183,8 @@
                     android:nestedScrollingEnabled="false" />
 
             </LinearLayout>
-
-
-
         </androidx.core.widget.NestedScrollView>
 
     </LinearLayout>
-
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
