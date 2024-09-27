@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Imagen del restaurante con bordes curvados -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/platoImage"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/imgRest"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.RoundedCorners16dp"
+        android:layout_marginBottom="8dp" />
+    <TextView
+        android:id="@+id/nameProducto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Burger Ferguson"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:fontFamily="@font/sen_font"/>
+    <TextView
+        android:id="@+id/precioProducto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="$40"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:fontFamily="@font/sen_font"/>
+
+    <!-- Indicador de "Agotado" (opcional) -->
+    <TextView
+        android:id="@+id/productStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="gone" />
+</LinearLayout>
