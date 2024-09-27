@@ -9,4 +9,9 @@
         <item name="android:dropDownVerticalOffset">8dp</item> <!-- Ajusta la posición del dropdown -->
         <item name="android:background">@drawable/custom_spinner_background</item>
     </style>
+
+    <style name="ShapeAppearanceOverlay.RoundedCorners16dp" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
 </resources>

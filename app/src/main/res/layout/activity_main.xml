@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/bg_color">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -22,17 +23,21 @@
             android:text="Superadmin"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:fontFamily="@font/sen_font"
+            android:textColor="@color/btn_dark"
             android:paddingVertical="16dp"/>
 
         <Button
             style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-            android:id="@+id/btnRole2"
+            android:id="@+id/btnRole4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cliente"
+            android:text="Administrador"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:fontFamily="@font/sen_font"
             android:paddingVertical="16dp"
+            android:textColor="@color/btn_dark"
             android:layout_marginTop="16dp" />
 
         <Button
@@ -44,18 +49,24 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:paddingVertical="16dp"
+            android:fontFamily="@font/sen_font"
+            android:textColor="@color/btn_dark"
             android:layout_marginTop="16dp" />
 
         <Button
             style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-            android:id="@+id/btnRole4"
+            android:id="@+id/btnRole2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Admin Restaurante"
+            android:text="Cliente"
             android:textSize="18sp"
             android:textStyle="bold"
             android:paddingVertical="16dp"
+            android:fontFamily="@font/sen_font"
+            android:textColor="@color/btn_dark"
             android:layout_marginTop="16dp" />
+
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
