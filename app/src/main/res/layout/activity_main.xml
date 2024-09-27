@@ -12,33 +12,49 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="16dp">
+        android:padding="70dp">
 
         <Button
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
             android:id="@+id/btnRole1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Superadmin" />
+            android:text="Superadmin"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingVertical="16dp"/>
 
         <Button
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
             android:id="@+id/btnRole2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cliente"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingVertical="16dp"
             android:layout_marginTop="16dp" />
 
         <Button
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
             android:id="@+id/btnRole3"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Repartidor"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingVertical="16dp"
             android:layout_marginTop="16dp" />
 
         <Button
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
             android:id="@+id/btnRole4"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Administrador"
+            android:text="Admin Restaurante"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingVertical="16dp"
             android:layout_marginTop="16dp" />
     </LinearLayout>
 
