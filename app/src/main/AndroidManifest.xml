@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Foodisea"
         tools:targetApi="31">
         <activity
+            android:name=".activity.adminRes.AdminResNuevoProductoActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.repartidor.RepartidorChatActivity"
             android:exported="false" />
         <activity
@@ -31,7 +34,7 @@
             android:name=".activity.repartidor.RepartidorVerOrdenActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.adminRes.AdminResCartaActivity"
             android:exported="false" />
         <activity
             android:name=".activity.adminRes.AdminResHomeActivity"
@@ -64,7 +67,7 @@
             android:name=".activity.repartidor.RepartidorMainActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.adminRes.AdminResCartaActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -72,8 +75,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
     </application>
 
 </manifest>
