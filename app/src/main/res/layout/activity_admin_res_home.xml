@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:orientation="vertical"
+    android:background="@color/bg_color"
     tools:context=".activity.adminRes.AdminResHomeActivity">
 
     <!-- Header con logo y opciones -->
@@ -14,13 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        android:padding="12dp">
 
         <!-- Icono de perfil -->
         <Button
@@ -28,18 +23,20 @@
             style="?attr/materialIconButtonFilledTonalStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="Profile"
+            android:contentDescription="@string/btnProfile"
             app:icon="@drawable/rounded_person_24"
-            app:iconTint="#FB6F3D"
-            android:backgroundTint="#F6F8FA"
+            app:iconTint="@color/btn_medium"
+            android:backgroundTint="@color/bg_gray_light"
             />
 
         <!-- Logo Foodisea -->
         <ImageView
             android:id="@+id/ivLogoFoodisea"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
+            android:layout_marginEnd="36dp"
+            android:contentDescription="@string/app_name"
             app:srcCompat="@drawable/foodisea" />
     </LinearLayout>
 
@@ -47,29 +44,19 @@
         android:id="@+id/tvWelcome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/headerLayout"
-        android:padding="10dp"
-        android:text="Hola John ¡Buen dia!"
+        android:padding="16dp"
+        android:text="@string/welcome"
         android:textColor="@android:color/black"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.121" />
+        android:fontFamily="@font/sen_font"/>
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
-        android:layout_height="171dp"
-        android:background="@color/gray_dark"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.265"
+        android:layout_height="180dp"
+        android:contentDescription="@string/imgRest"
+        android:scaleType="centerCrop"
         app:srcCompat="@drawable/restaurant_image" />
 
     <LinearLayout
@@ -77,98 +64,97 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.517">
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/nombreRestaurant"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/headerLayout"
-            android:padding="10dp"
-            android:text="Spicy Restaurant"
+            android:layout_weight="1"
+            android:text="@string/nameRest"
+            android:fontFamily="@font/sen_font"
             android:textColor="@android:color/black"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
+
+        <!-- Calificación del restaurante -->
+        <TextView
+            android:id="@+id/tvRestaurantRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rateRest"
+            android:gravity="center"
+            android:fontFamily="@font/sen_font"
+            android:drawablePadding="4dp"
+            android:textSize="16sp"
+            app:drawableStartCompat="@drawable/ic_star"
+            android:textColor="@color/gray" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/descripcionRestaurant"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/headerLayout"
-        android:padding="10dp"
-        android:text="Maecenas sed diam eget risus varius blandit sit amet non magna. Integer posuere erat a ante venenatis dapibus posuere velit aliquet."
-        android:textColor="@android:color/darker_gray"
+        android:paddingHorizontal="16dp"
+        android:text="@string/descripcionRest"
         android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.637" />
+        android:textAlignment="viewStart"
+        android:layout_marginBottom="8dp"/>
 
 
     <LinearLayout
-        android:layout_width="342dp"
-        android:layout_height="205dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descripcionRestaurant">
+        android:paddingVertical="16dp"
+        android:paddingHorizontal="24dp">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btnCarta"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginBottom="10dp"
-            android:backgroundTint="#F6F8FA"
-            android:gravity="center"
-            android:text="Platos y/o bebidas"
+            android:layout_height="80dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/search_view_bg"
+            android:paddingHorizontal="40dp"
+            app:backgroundTint="@color/bg_gray_light"
+            android:text="@string/btnCarta"
             android:textColor="@color/black"
-            android:textSize="20dp"
+            android:textSize="18sp"
+            android:fontFamily="@font/sen_font"
             app:icon="@drawable/menu"
             app:iconTint="#000000"
-            app:iconSize="35dp"
-            tools:layout_editor_absoluteX="219dp"
-            tools:layout_editor_absoluteY="508dp" />
+            app:iconSize="35dp"/>
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btnPedidos"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginBottom="10dp"
-            android:backgroundTint="#F6F8FA"
-            android:gravity="center"
-            android:text="Lista de pedidos"
+            android:layout_height="80dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/search_view_bg"
+            android:paddingHorizontal="40dp"
+            app:backgroundTint="@color/bg_gray_light"
+            android:text="@string/btnPedidos"
             android:textColor="@color/black"
-            android:textSize="20dp"
+            android:textSize="18sp"
+            android:fontFamily="@font/sen_font"
             app:icon="@drawable/list"
             app:iconTint="#000000"
-            app:iconSize="35dp"
-            tools:layout_editor_absoluteY="588dp" />
+            app:iconSize="35dp" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/btnReporte"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:backgroundTint="#F6F8FA"
-            android:gravity="center"
-            android:text="Reportes de ventas"
+            android:layout_height="80dp"
+            android:background="@drawable/search_view_bg"
+            android:paddingHorizontal="40dp"
+            app:backgroundTint="@color/bg_gray_light"
+            android:text="@string/btnReporte"
             android:textColor="@color/black"
-            android:textSize="20dp"
+            android:textSize="18sp"
+            android:fontFamily="@font/sen_font"
             app:icon="@drawable/report"
             app:iconSize="35dp"
-            app:iconTint="#000000"
-            tools:layout_editor_absoluteY="683dp" />
+            app:iconTint="#000000"/>
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -24,7 +24,8 @@
     <string name="cantProducts">5</string>
     <string name="btnFavorite">Boton de favorito</string>
     <string name="descripcionRest">
-        Restaurante especializado en hamburguesas artesanales, donde la calidad de los ingredientes y el sabor único se combinan para ofrecer una experiencia culinaria inigualable.
+        Restaurante especializado en hamburguesas artesanales, donde la calidad de los ingredientes
+        y el sabor único se combinan para ofrecer una experiencia culinariainigualable.
     </string>
 
     <!-- Item Producto -->
@@ -33,4 +34,8 @@
     <string name="priceProduct">S/. %1$.2f</string>
 
 
+    <!-- Admin main -->
+    <string name="btnCarta">Platos y/o bebidas</string>
+    <string name="btnPedidos">Lista de pedidos</string>
+    <string name="btnReporte">Reportes de ventas</string>
 </resources>

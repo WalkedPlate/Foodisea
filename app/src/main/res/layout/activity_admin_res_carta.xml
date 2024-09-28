@@ -23,7 +23,7 @@
 
             <!-- Icono de perfil -->
             <Button
-                android:id="@+id/btnProfile"
+                android:id="@+id/btnBack"
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

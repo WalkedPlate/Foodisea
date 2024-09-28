@@ -1,5 +1,6 @@
 package com.example.foodisea.activity.adminRes;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
+import com.example.foodisea.activity.cliente.ClienteCarritoActivity;
 import com.example.foodisea.adapter.adminRes.CartaAdapter;
 import com.example.foodisea.databinding.ActivityAdminResCartaBinding;
 import com.example.foodisea.entity.Producto;
@@ -20,13 +22,13 @@ import java.util.List;
 
 public class AdminResCartaActivity extends AppCompatActivity {
 
-    ActivityAdminResCartaBinding biding;
+    ActivityAdminResCartaBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        biding = ActivityAdminResCartaBinding.inflate(getLayoutInflater());
-        setContentView(biding.getRoot());
+        binding = ActivityAdminResCartaBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         /*EdgeToEdge.enable(this);
         setContentView(R.layout.activity_admin_res_carta);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -52,7 +54,13 @@ public class AdminResCartaActivity extends AppCompatActivity {
         // Configura el GridLayoutManager con 2 columnas
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2); // 2 columnas
 
-        biding.rvProductos.setAdapter(adapter);
-        biding.rvProductos.setLayoutManager(gridLayoutManager);
+        binding.rvProductos.setAdapter(adapter);
+        binding.rvProductos.setLayoutManager(gridLayoutManager);
+
+        // funcion de los botones
+        binding.btnBack.setOnClickListener(v -> {
+            finish(); // Cierra la actividad actual y regresa
+        });
+
     }
 }
