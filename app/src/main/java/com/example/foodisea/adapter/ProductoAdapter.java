@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
 import com.example.foodisea.activity.cliente.ClienteProductoActivity;
+import com.example.foodisea.databinding.ItemProductoBinding;
 import com.example.foodisea.entity.Producto;
 
 import java.util.List;
@@ -31,24 +32,25 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_producto, parent, false);
-        return new ProductViewHolder(view);
+        LayoutInflater inflater =  LayoutInflater.from(parent.getContext());
+        ItemProductoBinding binding = ItemProductoBinding.inflate(inflater, parent, false);
+        return new ProductViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Producto producto = productList.get(position);
 
-        holder.productName.setText(producto.getName());
-        holder.productPrice.setText("$" + producto.getPrice());
-        holder.productImage.setImageResource(producto.getImageResource());
+        holder.binding.productName.setText(producto.getName());
+        holder.binding.productPrice.setText(context.getString(R.string.priceProduct, producto.getPrice()));
+        holder.binding.productImage.setImageResource(producto.getImageResource());
 
         // Mostrar "Agotado" si el producto no está disponible
-        if (producto.isOutOfStock()) {
-            holder.productStatus.setVisibility(View.VISIBLE);
-        } else {
-            holder.productStatus.setVisibility(View.GONE);
-        }
+//        if (producto.isOutOfStock()) {
+//            holder.binding.productStatus.setVisibility(View.VISIBLE);
+//        } else {
+//            holder.binding.productStatus.setVisibility(View.GONE);
+//        }
 
         // Configurar click listener para redirigir a la actividad de detalles del producto
         holder.itemView.setOnClickListener(v -> {
@@ -66,15 +68,12 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
     }
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
-        TextView productName, productPrice, productStatus;
-        ImageView productImage;
 
-        public ProductViewHolder(@NonNull View itemView) {
-            super(itemView);
-            productName = itemView.findViewById(R.id.productName);
-            productPrice = itemView.findViewById(R.id.productPrice);
-            productStatus = itemView.findViewById(R.id.productStatus);
-            productImage = itemView.findViewById(R.id.productImage);
+        ItemProductoBinding binding;
+
+        public ProductViewHolder(ItemProductoBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 }

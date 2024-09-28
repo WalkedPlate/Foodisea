@@ -2,8 +2,8 @@
     <string name="app_name">Foodisea</string>
 
     <!-- Cliente main -->
-    <string name="btnProfile">boton perfil</string>
-    <string name="btnOrders">boton historial pedidos</string>
+    <string name="btnProfile">Boton perfil</string>
+    <string name="btnOrders">Boton historial pedidos</string>
     <!-- Colocar el nombre del usuario -->
     <string name="welcome">¡Hola, John! ¿Qué te gustaría pedir hoy?</string>
     <string name="categorias">Categorías</string>
@@ -17,4 +17,20 @@
     <string name="nameRest">Nombre del restaurante</string>
     <string name="rateRest">X.Y</string>
     <string name="catRest">Parrilladas - Marina - Postres</string>
+
+    <!-- Cliente restaurante-->
+    <string name="btnBack">Boton de regreso</string>
+    <string name="btnCarrito">Boton de carrito</string>
+    <string name="cantProducts">5</string>
+    <string name="btnFavorite">Boton de favorito</string>
+    <string name="descripcionRest">
+        Restaurante especializado en hamburguesas artesanales, donde la calidad de los ingredientes y el sabor único se combinan para ofrecer una experiencia culinaria inigualable.
+    </string>
+
+    <!-- Item Producto -->
+    <string name="imgProduct">Imagen del producto</string>
+    <string name="nameProduct">Nombre del producto</string>
+    <string name="priceProduct">S/. %1$.2f</string>
+
+
 </resources>

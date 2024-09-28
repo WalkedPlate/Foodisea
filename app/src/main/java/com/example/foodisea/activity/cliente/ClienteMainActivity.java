@@ -21,7 +21,6 @@ import java.util.List;
 public class ClienteMainActivity extends AppCompatActivity {
 
     ActivityClienteMainBinding binding;
-    private List<Restaurante> restaurantList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +40,7 @@ public class ClienteMainActivity extends AppCompatActivity {
 
 
         // Crear una lista de restaurantes
-        restaurantList = new ArrayList<>();
+        List<Restaurante> restaurantList = new ArrayList<>();
 
         // Datos de la lista
         restaurantList.add(new Restaurante("Rose Garden Restaurant", "Burger - Chicken - Ribs - Wings", 4.7f, R.drawable.restaurant_image, "2118 Thornridge Cir. Syracuse"));

@@ -104,4 +104,7 @@
 <!--    <color name="btn_category_equis">#DE1717</color>-->
 <!--    <color name="btn_icon_medium">#FA4834</color>-->
 
+    <color name="semi_transparent_black">#80000000</color>
+
+
 </resources>
