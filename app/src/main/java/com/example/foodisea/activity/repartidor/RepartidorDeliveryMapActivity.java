@@ -68,10 +68,17 @@ public class RepartidorDeliveryMapActivity extends AppCompatActivity {
             startActivity(intentToChatView);
         });
 
+        // Botón llamada
         binding.phoneButton.setOnClickListener(v -> {
             Intent intentToCallView = new Intent(RepartidorDeliveryMapActivity.this, RepartidorLlamadaActivity.class);
             intentToCallView.putExtra("customerName", customerName);
             startActivity(intentToCallView);
         });
+
+        // Botón cerrar
+        binding.btnClose.setOnClickListener(v -> {
+            finish();
+        });
+
     }
 }

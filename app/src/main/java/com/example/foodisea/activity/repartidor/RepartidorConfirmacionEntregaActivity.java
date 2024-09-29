@@ -30,5 +30,11 @@ public class RepartidorConfirmacionEntregaActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Botón cerrar
+        binding.btnClose.setOnClickListener(v -> {
+            finish();
+        });
+
     }
 }

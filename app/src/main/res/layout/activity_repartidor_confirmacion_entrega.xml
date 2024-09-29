@@ -17,12 +17,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/confirmacion" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btnClose"
-        style="?attr/materialIconButtonFilledTonalStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:icon="@drawable/baseline_close_24"
+        android:backgroundTint="@color/dark_gray"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_close"
+        app:tint="@android:color/white"
+        android:background="@drawable/circle_button_background"
         app:layout_constraintBottom_toTopOf="@+id/tvFelicidades"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.955"

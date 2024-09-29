@@ -7,29 +7,45 @@
     android:layout_height="match_parent"
     tools:context=".activity.repartidor.RepartidorDeliveryMapActivity">
 
-    <!-- Toolbar -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <!-- Título flotante -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_close"
-        app:title="Recojo en restaurante" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp">
 
-    <!-- Contenedor del mapa -->
-    <FrameLayout
-        android:id="@+id/mapContainer"
+        <!-- Título de la actividad (sin usar Toolbar) -->
+        <TextView
+            android:id="@+id/estadoOrden"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Entregando orden"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Botón de cierre flotante (X) -->
+        <ImageButton
+            android:id="@+id/btnClose"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/circle_button_background"
+            android:src="@drawable/ic_close"
+            app:tint="@android:color/white"
+            android:backgroundTint="@color/dark_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/estadoOrden" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/mapImage"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_weight="1">
-
-        <ImageView
-            android:id="@+id/mapImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/delivery_map" />
-    </FrameLayout>
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/mapa" />
 
     <!-- BottomSheet -->
     <androidx.core.widget.NestedScrollView
