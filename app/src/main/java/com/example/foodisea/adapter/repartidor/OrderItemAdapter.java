@@ -1,4 +1,4 @@
-package com.example.foodisea.adapter;
+package com.example.foodisea.adapter.repartidor;
 
 import android.view.LayoutInflater;
 import android.view.View;

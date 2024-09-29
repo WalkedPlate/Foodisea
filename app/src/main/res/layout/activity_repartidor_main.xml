@@ -27,31 +27,34 @@
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="Profile"
-                app:icon="@drawable/rounded_person_24" />
+                android:contentDescription="@string/btnProfile"
+                app:icon="@drawable/rounded_person_24"
+                app:iconTint="@color/btn_medium"
+                android:backgroundTint="@color/bg_gray_light"/>
 
             <!-- Logo Foodisea -->
             <ImageView
                 android:id="@+id/ivLogoFoodisea"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
+                android:contentDescription="@string/app_name"
                 app:srcCompat="@drawable/foodisea" />
 
-            <!-- Icono de historial de pedidos -->
+            <!-- Icono de delivery -->
             <Button
                 android:id="@+id/btnOrders"
-                style="?attr/materialIconButtonFilledTonalStyle"
+                style="?attr/materialIconButtonFilledStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="Historial"
-                app:icon="@drawable/ic_delivery_dining" />
+                android:contentDescription="@string/btnDelivery"
+                app:icon="@drawable/ic_delivery_dining"
+                android:backgroundTint="@color/btn_medium"/>
         </LinearLayout>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/headerLayout"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <androidx.constraintlayout.widget.ConstraintLayout

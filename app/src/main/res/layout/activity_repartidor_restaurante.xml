@@ -8,39 +8,59 @@
     android:id="@+id/main"
     tools:context=".activity.repartidor.RepartidorRestauranteActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:layout_constraintTop_toTopOf="parent">
+    <!-- Contenedor con la imagen del restaurante y botones -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivRestaurantImage"
+        android:layout_width="0dp"
+        android:layout_height="250dp"
+        android:contentDescription="@string/imgRest"
+        android:scaleType="centerCrop"
+        android:src="@drawable/restaurant_image"
+        app:shapeAppearanceOverlay="@style/RoundedBottomCornersShape"
+        android:alpha="0.95"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <!-- Botón de regresar -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="8dp"
+        android:layout_marginStart="4dp"
+        android:background="@drawable/circle_button_background"
+        android:backgroundTint="#66000000"
+        android:contentDescription="@string/btnBack"
+        android:elevation="8dp"
+        android:src="@drawable/baseline_arrow_back_ios_new_24"
+        app:layout_constraintBottom_toBottomOf="@id/ivRestaurantImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.123"
+        app:tint="@android:color/white" />
 
-            <ImageButton
-                android:id="@+id/btnBack"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/baseline_arrow_back_ios_new_24"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <ImageButton
-                android:id="@+id/btnFavorite"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="16dp"
 
-                android:src="@drawable/baseline_favorite_24"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+    <!-- Botón de favoritos -->
+    <ImageButton
+        android:id="@+id/btnFavorite"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/circle_button_background"
+        android:backgroundTint="#66000000"
+        android:contentDescription="@string/btnFavorite"
+        android:elevation="8dp"
+        android:src="@drawable/baseline_favorite_24"
+        app:layout_constraintBottom_toBottomOf="@id/ivRestaurantImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.153"
+        app:tint="#FF7622" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.appcompat.widget.Toolbar>
+    <!-- Tarjeta con la información del restaurante -->
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardRestaurantInfo"
@@ -50,7 +70,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         app:cardCornerRadius="16dp"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/ivRestaurantImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -67,7 +87,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvRestaurantAddress"
@@ -77,7 +97,7 @@
                 android:drawableStart="@drawable/ic_location"
                 android:drawablePadding="4dp"
                 app:layout_constraintStart_toStartOf="@id/tvRestaurantName"
-                app:layout_constraintTop_toBottomOf="@id/tvRestaurantName"/>
+                app:layout_constraintTop_toBottomOf="@id/tvRestaurantName" />
 
             <TextView
                 android:id="@+id/tvRestaurantDescription"
@@ -87,11 +107,12 @@
                 android:text="Maecenas sed diam eget risus varius blandit sit amet non magna. Integer posuere erat a ante venenatis dapibus posuere velit aliquet."
                 app:layout_constraintStart_toStartOf="@id/tvRestaurantAddress"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvRestaurantAddress"/>
+                app:layout_constraintTop_toBottomOf="@id/tvRestaurantAddress" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <!-- Título Pedidos -->
     <TextView
         android:id="@+id/tvPedidosTitle"
         android:layout_width="wrap_content"
@@ -102,8 +123,9 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardRestaurantInfo"/>
+        app:layout_constraintTop_toBottomOf="@id/cardRestaurantInfo" />
 
+    <!-- RecyclerView para la lista de pedidos -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPedidos"
         android:layout_width="0dp"
@@ -113,10 +135,8 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvPedidosTitle"
-        app:layout_constraintVertical_bias="1.0"
         tools:listitem="@layout/item_pedido" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.repartidor.MessageAdapter;
+import com.example.foodisea.databinding.ActivityRepartidorChatBinding;
+import com.example.foodisea.databinding.ActivityRepartidorMainBinding;
 import com.example.foodisea.models.Message;
 
 import java.util.ArrayList;
@@ -19,28 +21,31 @@ import java.util.List;
 
 public class RepartidorChatActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerViewMessages;
     private MessageAdapter messageAdapter;
     private List<Message> messageList;
+
+    ActivityRepartidorChatBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_repartidor_chat);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+
+        // binding
+        binding = ActivityRepartidorChatBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        // Configurar los insets de la ventana para adaptarse a las barras del sistema
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-
-        // Inicializar RecyclerView
-        recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
-        recyclerViewMessages.setLayoutManager(new LinearLayoutManager(this));
+        // Inicializar RecyclerView usando binding
+        binding.recyclerViewMessages.setLayoutManager(new LinearLayoutManager(this));
 
         // Inicializar lista de mensajes y agregar mensajes de prueba
-        // Lista de mensajes de prueba con hora de envío
         messageList = new ArrayList<>();
         messageList.add(new Message("¿Estás en camino?", true, R.drawable.rounded_person_24, "8:10 pm"));
         messageList.add(new Message("Sí, estoy en camino al restaurante", false, R.drawable.rounded_person_24, "8:11 pm"));
@@ -50,7 +55,6 @@ public class RepartidorChatActivity extends AppCompatActivity {
 
         // Inicializar el adaptador y asignarlo al RecyclerView
         messageAdapter = new MessageAdapter(this, messageList);
-        recyclerViewMessages.setAdapter(messageAdapter);
-
+        binding.recyclerViewMessages.setAdapter(messageAdapter);
     }
 }

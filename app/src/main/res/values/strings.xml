@@ -38,4 +38,9 @@
     <string name="btnCarta">Platos y/o bebidas</string>
     <string name="btnPedidos">Lista de pedidos</string>
     <string name="btnReporte">Reportes de ventas</string>
+
+
+
+    <!-- Repartidor main -->
+    <string name="btnDelivery">Reportes de ventas</string>
 </resources>

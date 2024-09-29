@@ -13,80 +13,65 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
+import com.example.foodisea.databinding.ActivityRepartidorDeliveryMapBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 public class RepartidorDeliveryMapActivity extends AppCompatActivity {
 
     private BottomSheetBehavior<View> bottomSheetBehavior;
+    private ActivityRepartidorDeliveryMapBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_repartidor_delivery_map);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+
+        // Usar ViewBinding en lugar de setContentView(R.layout.activity_repartidor_delivery_map)
+        binding = ActivityRepartidorDeliveryMapBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        // Configurar los insets de la ventana para adaptarse a las barras del sistema
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-
-        // Obtener la vista del BottomSheet desde el XML
-        View bottomSheet = findViewById(R.id.bottomSheet);
-
-        // Instanciar el BottomSheetBehavior desde la vista del BottomSheet
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        // Obtener la vista del BottomSheet desde el binding
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet);
 
         // Configurar el comportamiento del BottomSheet
         bottomSheetBehavior.setPeekHeight(200); // Altura visible en estado colapsado
         bottomSheetBehavior.setHideable(false); // No permitir ocultar completamente el BottomSheet
 
         // Ejemplo: Cambiar el estado del BottomSheet cuando se haga click en un botón
-        TextView pickupButton = findViewById(R.id.pickupButton);
-        pickupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED); // Expandir el BottomSheet
-                } else {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED); // Colapsar el BottomSheet
-                }
+        binding.pickupButton.setOnClickListener(v -> {
+            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED); // Expandir el BottomSheet
+            } else {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED); // Colapsar el BottomSheet
             }
         });
 
-        //Botones:
-
+        // Configurar los botones de chat y llamada
         setupButtonListeners();
-
-
     }
-
 
     private void setupButtonListeners() {
         Intent intent = getIntent();
         String customerName = intent.getStringExtra("customerName");
 
-
-        ImageButton chatButton = findViewById(R.id.chatButton);
-        ImageButton phoneButton = findViewById(R.id.phoneButton);
-
-
-        chatButton.setOnClickListener(v -> {
-            Intent intentToCallView = new Intent(RepartidorDeliveryMapActivity.this, RepartidorChatActivity.class);
-            intentToCallView.putExtra("customerName",customerName);
-            startActivity(intentToCallView);
-
-        });
-
-        phoneButton.setOnClickListener(v -> {
-            Intent intentToChatView = new Intent(RepartidorDeliveryMapActivity.this, RepartidorLlamadaActivity.class);
-            intentToChatView.putExtra("customerName",customerName);
+        // Obtener botones desde el binding
+        binding.chatButton.setOnClickListener(v -> {
+            Intent intentToChatView = new Intent(RepartidorDeliveryMapActivity.this, RepartidorChatActivity.class);
+            intentToChatView.putExtra("customerName", customerName);
             startActivity(intentToChatView);
         });
 
-
+        binding.phoneButton.setOnClickListener(v -> {
+            Intent intentToCallView = new Intent(RepartidorDeliveryMapActivity.this, RepartidorLlamadaActivity.class);
+            intentToCallView.putExtra("customerName", customerName);
+            startActivity(intentToCallView);
+        });
     }
-
-
-
 }

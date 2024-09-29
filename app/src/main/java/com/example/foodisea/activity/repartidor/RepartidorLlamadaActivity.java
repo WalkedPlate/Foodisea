@@ -13,91 +13,85 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
+import com.example.foodisea.databinding.ActivityRepartidorLlamadaBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 public class RepartidorLlamadaActivity extends AppCompatActivity {
 
     private BottomSheetBehavior<View> bottomSheetBehavior;
+    private ActivityRepartidorLlamadaBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_repartidor_llamada);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+
+        // Utilizar ViewBinding
+        binding = ActivityRepartidorLlamadaBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        // Configurar insets del sistema para la ventana
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        View bottomSheet = findViewById(R.id.bottomSheet);
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        // Inicializar BottomSheet usando ViewBinding
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet);
 
-        // Set the initial state
+        // Configurar el comportamiento inicial del BottomSheet
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-        // Set up callback
+        // Configurar callbacks para cambios de estado del BottomSheet
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_COLLAPSED:
-                        Log.d("BottomSheet", "State Collapsed");
+                        Log.d("BottomSheet", "Estado: Colapsado");
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
-                        Log.d("BottomSheet", "State Expanded");
+                        Log.d("BottomSheet", "Estado: Expandido");
                         break;
                     case BottomSheetBehavior.STATE_DRAGGING:
-                        Log.d("BottomSheet", "State Dragging");
+                        Log.d("BottomSheet", "Estado: Arrastrando");
                         break;
                     case BottomSheetBehavior.STATE_SETTLING:
-                        Log.d("BottomSheet", "State Settling");
+                        Log.d("BottomSheet", "Estado: Ajustándose");
                         break;
                     case BottomSheetBehavior.STATE_HIDDEN:
-                        Log.d("BottomSheet", "State Hidden");
+                        Log.d("BottomSheet", "Estado: Oculto");
                         break;
                 }
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                Log.d("BottomSheet", "Sliding Offset: " + slideOffset);
-                // You can animate views here based on slideOffset
+                Log.d("BottomSheet", "Desplazamiento: " + slideOffset);
+                // Puedes animar vistas aquí basándote en el desplazamiento
             }
         });
 
-        //Botones
+        // Configurar los botones
         setupButtonListeners();
-
     }
 
     private void setupButtonListeners() {
-        ImageButton muteButton = findViewById(R.id.muteButton);
-        ImageButton endCallButton = findViewById(R.id.endCallButton);
-        ImageButton speakerButton = findViewById(R.id.speakerButton);
-
-        muteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle mute functionality
-            }
+        // Utilizar binding para referenciar los botones
+        binding.muteButton.setOnClickListener(v -> {
+            // Funcionalidad para silenciar
+            Log.d("ButtonAction", "Mute button clicked");
         });
 
-        endCallButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle end call functionality
-            }
+        binding.endCallButton.setOnClickListener(v -> {
+            // Funcionalidad para finalizar la llamada
+            Log.d("ButtonAction", "End call button clicked");
         });
 
-        speakerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle speaker functionality
-            }
+        binding.speakerButton.setOnClickListener(v -> {
+            // Funcionalidad para activar el altavoz
+            Log.d("ButtonAction", "Speaker button clicked");
         });
     }
-
-
-
 }
