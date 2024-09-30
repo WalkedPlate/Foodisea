@@ -243,34 +243,6 @@
     </LinearLayout>
 
 
-    <!-- Bottom Navigation -->
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:background="@drawable/rounded_background"-->
-<!--        android:padding="12dp"-->
-<!--        android:gravity="center"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent">-->
-
-<!--        <ImageView-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="28dp"-->
-<!--            android:layout_weight="1"-->
-<!--            android:src="@drawable/ic_notifications" />-->
-
-<!--        <ImageView-->
-<!--            android:layout_width="47dp"-->
-<!--            android:layout_height="46dp"-->
-<!--            android:src="@drawable/ic_dashboard" />-->
-
-<!--        <ImageView-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="31dp"-->
-<!--            android:layout_weight="1"-->
-<!--            android:src="@drawable/ic_profile" />-->
-<!--    </LinearLayout>-->
-
     <!-- FloatingActionButton en la parte inferior izquierda -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnDashboard"
