@@ -29,13 +29,13 @@ public class AdminResCartaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAdminResCartaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        /*EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_admin_res_carta);
+
+        EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
-        });*/
+        });
 
         // Inicializa la lista de productos
         List<Producto> productList = new ArrayList<>();
@@ -60,6 +60,11 @@ public class AdminResCartaActivity extends AppCompatActivity {
         // funcion de los botones
         binding.btnBack.setOnClickListener(v -> {
             finish(); // Cierra la actividad actual y regresa
+        });
+
+        binding.btnAddProduct.setOnClickListener(v ->{
+            Intent intent = new Intent(this, AdminResNuevoProductoActivity.class);
+            startActivity(intent);
         });
 
     }

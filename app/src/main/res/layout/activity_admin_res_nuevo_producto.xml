@@ -1,160 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_color"
     tools:context=".activity.adminRes.AdminResNuevoProductoActivity">
+
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <!-- botón de regreso -->
+        <Button
+            android:id="@+id/btnBack"
+            style="?attr/materialIconButtonFilledTonalStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/btnBack"
+            app:icon="@drawable/baseline_arrow_back_ios_new_24"
+            android:backgroundTint="@color/bg_color"/>
+
+        <TextView
+            android:id="@+id/tvNewProduct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Nuevo Producto"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/sen_font" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        android:paddingHorizontal="18dp"
+        android:text="Nombre del Producto:"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/sen_font"/>
+
+    <EditText
+        android:id="@+id/etNameProduct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_marginHorizontal="16dp"
+        android:ems="10"
+        android:hint="Ingrese el nombre del producto"
+        android:background="@drawable/rounded_box"
+        android:layout_marginBottom="26dp"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="18dp"
+        android:text="Fotos del producto:"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/sen_font"
+        android:layout_marginBottom="8dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <!-- Header con logo y opciones -->
-        <LinearLayout
-            android:id="@+id/headerLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp">
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:layout_marginBottom="26dp">
 
-            <!-- Icono de perfil -->
-            <Button
-                android:id="@+id/btnRegreso"
-                style="?attr/materialIconButtonFilledTonalStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="Regresar"
-                app:icon="@drawable/baseline_arrow_back_ios_new_24" />
+        <ImageButton
+            android:id="@+id/btnUploadImg1"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginEnd="16dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_add_img"
+            android:contentDescription="Agregar imagen 1"
+            android:background="?attr/selectableItemBackgroundBorderless"/>
 
-            <TextView
-                android:id="@+id/tvWelcome"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="Nuevo Producto"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="Nombre del Producto:"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/editTextText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="10dp"
-            android:ems="10"
-            android:hint="Ingrese el nombre del producto"
-            android:inputType="text" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="Cargar Foto/Video:"
-            android:textSize="18sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="16dp"> <!-- Añade un padding general -->
-
-            <Button
-                android:id="@+id/btnUploadImage1"
-                android:layout_width="0dp"
-                android:layout_height="110dp"
-                android:layout_marginHorizontal="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/subir"
-                />
-
-            <Button
-                android:id="@+id/btnUploadImage2"
-                android:layout_width="0dp"
-                android:layout_height="110dp"
-                android:layout_marginHorizontal="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/subir" />
-
-            <Button
-                android:id="@+id/btnUploadImage3"
-                android:layout_width="0dp"
-                android:layout_height="110dp"
-                android:layout_marginHorizontal="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/subir" />
-
-        </LinearLayout>
-
-
-        <!-- Campo para ingresar el precio -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:paddingTop="10dp"
-            android:text="Precio:"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:hint="Ingrese el Precio"
-            android:inputType="numberDecimal"
-            android:padding="12dp"
-            android:textColor="@color/black" />
-
-        <!-- Campo para ingresar los detalles -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:paddingTop="10dp"
-            android:text="Detalles"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="60dp"
-            android:gravity="top"
-            android:hint="Detalles del producto"
-            android:minLines="4"
-            android:padding="12dp"
-            android:textColor="@color/black" />
-
-        <!-- Botón para añadir producto -->
-        <Button
-            android:id="@+id/btnAddProduct"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginTop="20dp"
-            android:backgroundTint="#FB6F3D"
-            android:text="AÑADIR PRODUCTO"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
+        <ImageButton
+            android:id="@+id/btnUploadImg2"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_add_img"
+            android:contentDescription="Agregar imagen 2"
+            android:background="?attr/selectableItemBackgroundBorderless" />
 
 
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!-- Campo para ingresar el precio -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="18dp"
+        android:text="Precio del producto:"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:fontFamily="@font/sen_font"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ingrese el precio del producto"
+        android:inputType="numberDecimal"
+        android:padding="16dp"
+        android:background="@drawable/rounded_box"
+        android:textColor="@color/black"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="26dp"/>
+
+    <!-- Campo para ingresar los detalles -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:text="Detalles del producto:"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:fontFamily="@font/sen_font"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:hint="Ingrese una breve descripción del producto"
+        android:minLines="4"
+        android:padding="16dp"
+        android:textColor="@color/black"
+        android:background="@drawable/rounded_box"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="28dp"/>
+
+    <!-- Botón para añadir producto -->
+    <Button
+        android:id="@+id/btnAddProduct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:padding="16dp"
+        android:backgroundTint="@color/btn_medium"
+        android:text="AÑADIR PRODUCTO"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white" />
+
+
+</LinearLayout>

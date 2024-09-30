@@ -21,7 +21,7 @@
         <!-- Botón de regresar (flecha) -->
         <Button
             android:id="@+id/btnBack"
-            style="?attr/materialIconButtonFilledStyle"
+            style="?attr/materialIconButtonFilledTonalStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/btnBack"

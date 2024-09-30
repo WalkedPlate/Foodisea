@@ -8,18 +8,18 @@
     android:background="@color/bg_color"
     tools:context=".activity.superadmin.SuperadminMainActivity">
 
-
+    <!-- Contenedor principal que mantiene todos los elementos -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/headerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="12dp">
 
             <!-- Icono de perfil -->
             <Button
@@ -27,10 +27,10 @@
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/bg_gray_light"
                 android:contentDescription="@string/btnProfile"
                 app:icon="@drawable/rounded_person_24"
-                app:iconTint="@color/btn_medium"
-                android:backgroundTint="@color/bg_gray_light"/>
+                app:iconTint="@color/btn_medium" />
 
             <!-- Logo Foodisea -->
             <ImageView
@@ -47,25 +47,25 @@
                 style="?attr/materialIconButtonFilledStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/btn_medium"
                 android:contentDescription="Logs"
-                app:icon="@drawable/ic_notifications"
-                android:backgroundTint="@color/btn_medium"/>
+                app:icon="@drawable/ic_notifications" />
         </LinearLayout>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/sen_font"
+            android:padding="16dp"
             android:text="Hola *Admin NAME*, ¡Buen Día!"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:padding="16dp"/>
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:orientation="horizontal">
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:padding="16dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -116,7 +116,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/rounded_background"
             android:orientation="vertical"
             android:padding="16dp">
@@ -159,70 +161,22 @@
                 android:src="@drawable/estadisticas" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Reseñas"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ver todas las reseñas"
-                android:textColor="#FF5722" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_star"
-                app:tint="#FF5722" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="4.9"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Total 20 Reseñas" />
-        </LinearLayout>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
+            android:fontFamily="@font/sen_font"
+            android:padding="16dp"
             android:text="Restaurantes con más ventas"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:orientation="horizontal">
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp">
 
             <View
                 android:layout_width="0dp"
@@ -230,14 +184,14 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/restaurant_image"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop" />
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/restaurant_image"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop" />
         </LinearLayout>
 
     </LinearLayout>
@@ -251,7 +205,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="20dp"
         android:clickable="true"
-        android:backgroundTint="#FB6F3D"
+        android:backgroundTint="@color/btn_dark"
         android:src="@drawable/ic_dashboard"
         app:tint="@android:color/white"
         android:contentDescription="Agregar nuevo producto"/>

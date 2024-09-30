@@ -1,5 +1,6 @@
 package com.example.foodisea.activity.superadmin;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -10,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
 import com.example.foodisea.databinding.ActivitySuperAdminGestionUsuariosBinding;
+import com.example.foodisea.databinding.ActivitySuperadminMainBinding;
 
 public class SuperAdminGestionUsuariosActivity extends AppCompatActivity {
 
@@ -32,6 +34,11 @@ public class SuperAdminGestionUsuariosActivity extends AppCompatActivity {
         //funcion de botones:
         binding.btnBack.setOnClickListener(v -> {
             finish(); // Cierra la actividad actual y regresa
+        });
+
+        binding.btnHome.setOnClickListener(v -> {
+            Intent home = new Intent(this, SuperadminMainActivity.class);
+            startActivity(home);
         });
     }
 }

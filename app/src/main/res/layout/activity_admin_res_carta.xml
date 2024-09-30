@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.adminRes.AdminResCartaActivity">
+    tools:context=".activity.adminRes.AdminResCartaActivity"
+    android:background="@color/bg_color">
 
     <!-- Contenedor principal que mantiene todos los elementos -->
     <LinearLayout
@@ -19,27 +20,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="12dp">
+            android:padding="12dp"
+            android:gravity="center_vertical">
 
-            <!-- Icono de perfil -->
             <Button
                 android:id="@+id/btnBack"
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="Profile"
-                app:icon="@drawable/baseline_arrow_back_ios_new_24" />
+                android:contentDescription="@string/btnBack"
+                app:icon="@drawable/baseline_arrow_back_ios_new_24"
+                android:backgroundTint="@color/bg_color"/>
 
             <TextView
                 android:id="@+id/tvWelcome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/headerLayout"
-                android:padding="10dp"
+                android:fontFamily="@font/sen_font"
+                android:padding="8dp"
                 android:text="Platos y bebidas"
                 android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <!-- Barra de búsqueda -->
@@ -47,93 +48,107 @@
             android:id="@+id/svRestaurants"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_marginVertical="8dp"
+            android:layout_marginHorizontal="16dp"
             android:background="@drawable/search_view_bg"
             app:iconifiedByDefault="false"
             app:queryHint="Buscar platos..." />
 
-        <TextView
-            android:id="@+id/tvCategory"
+<!--        <TextView-->
+<!--            android:id="@+id/tvCategory"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="16dp"-->
+<!--            android:text="@string/categorias"-->
+<!--            android:textColor="@android:color/black"-->
+<!--            android:textSize="20sp"-->
+<!--            android:textStyle="bold"-->
+<!--            android:fontFamily="@font/sen_font"/>-->
+
+        <!-- Lista de categorías horizontal -->
+        <HorizontalScrollView
+            android:id="@+id/hsvCategories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="Categorías"
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:scrollbars="none"
+            android:fillViewport="true">
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="522dp"
-            android:layout_height="49dp"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal"
-            android:paddingHorizontal="10dp">
-
-            <!-- Botones con las categorías -->
-            <Button
-                style="?attr/materialIconButtonFilledStyle"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#FB6F3D"
-                android:paddingHorizontal="18dp"
-                android:text="Burger" />
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:layout_marginTop="16dp">
 
-            <Button
-                style="?attr/materialIconButtonFilledTonalStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="18dp"
-                android:text="Sandwich" />
+                <!-- Botones con las categorías -->
+                <Button
+                    style="?attr/materialIconButtonFilledStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="18dp"
+                    android:text="@string/todas"
+                    android:fontFamily="@font/sen_font"
+                    android:textStyle="bold"
+                    android:backgroundTint="@color/btn_dark"/>
 
-            <Button
-                style="?attr/materialIconButtonFilledTonalStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="18dp"
-                android:text="Postres" />
+                <Button
+                    style="?attr/materialIconButtonFilledTonalStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="18dp"
+                    android:fontFamily="@font/sen_font"
+                    android:text="@string/nombreCategoria"
+                    android:backgroundTint="@color/btn_light"/>
 
-            <Button
-                style="?attr/materialIconButtonFilledTonalStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="18dp"
-                android:text="Bebidas" />
+                <Button
+                    style="?attr/materialIconButtonFilledTonalStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="18dp"
+                    android:text="@string/nombreCategoria"
+                    android:fontFamily="@font/sen_font"
+                    android:backgroundTint="@color/btn_light"/>
 
-            <Button
-                style="?attr/materialIconButtonFilledTonalStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="18dp"
-                android:text="Parrilladas" />
-        </LinearLayout>
+                <Button
+                    style="?attr/materialIconButtonFilledTonalStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="18dp"
+                    android:text="@string/nombreCategoria"
+                    android:fontFamily="@font/sen_font"
+                    android:backgroundTint="@color/btn_light"/>
 
-        <TextView
-            android:id="@+id/subtitulo2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:padding="10dp"
-            android:text="Burger(10)"
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
+                <Button
+                    style="?attr/materialIconButtonFilledTonalStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="18dp"
+                    android:text="@string/nombreCategoria"
+                    android:fontFamily="@font/sen_font"
+                    android:backgroundTint="@color/btn_light"/>
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvProductos"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="12dp"/>
     </LinearLayout>
 
     <!-- FloatingActionButton en la parte inferior izquierda -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/btnAddProduct"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="20dp"
         android:clickable="true"
-        android:backgroundTint="#FB6F3D"
+        android:backgroundTint="@color/btn_dark"
         app:srcCompat="@drawable/baseline_add_24"
         app:tint="@android:color/white"
         android:contentDescription="Agregar nuevo producto"/>
 
-</FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

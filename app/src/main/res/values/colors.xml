@@ -107,4 +107,9 @@
     <color name="semi_transparent_black">#80000000</color>
 
 
+<!--Colores del switch-->
+    <color name="active_thumb_color">#166809</color>
+    <color name="active_track_color">#CD99D59E</color>
+
+
 </resources>

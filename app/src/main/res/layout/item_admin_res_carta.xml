@@ -1,45 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="12dp"
+    android:background="@drawable/border_bottom"
+    android:backgroundTint="@color/white">
 
-    <!-- Imagen del restaurante con bordes curvados -->
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/platoImage"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:scaleType="centerCrop"
-        android:contentDescription="@string/imgRest"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.RoundedCorners16dp"
-        android:layout_marginBottom="8dp" />
-    <TextView
-        android:id="@+id/nameProducto"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp"
         android:gravity="center"
-        android:text="Burger Ferguson"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:fontFamily="@font/sen_font"/>
-    <TextView
-        android:id="@+id/precioProducto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="$40"
-        android:textStyle="bold"
-        android:textSize="30dp"
-        android:fontFamily="@font/sen_font"/>
+        android:foreground="?attr/selectableItemBackground">
 
-    <!-- Indicador de "Agotado" (opcional) -->
-    <TextView
-        android:id="@+id/productStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@android:color/holo_red_dark"
-        android:visibility="gone" />
-</LinearLayout>
+        <!-- Imagen del producto -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/platoImage"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:contentDescription="@string/imgProduct"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.RoundedCorners16dp"
+            android:padding="8dp"
+            android:scaleType="centerCrop" />
+
+        <!-- Nombre del prodcuto -->
+        <TextView
+            android:id="@+id/nameProducto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nameProduct"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:fontFamily="@font/sen_font"
+            android:layout_margin="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"/>
+
+        <!-- Precio del producto -->
+        <TextView
+            android:id="@+id/precioProducto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/priceProduct"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_margin="4dp"
+            android:textColor="@color/btn_dark"/>
+
+        <!-- Indicador de "Agotado" (opcional) -->
+        <TextView
+            android:id="@+id/productStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/holo_red_dark"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
+
+
+
+</com.google.android.material.card.MaterialCardView>

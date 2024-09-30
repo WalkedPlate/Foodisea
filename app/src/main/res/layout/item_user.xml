@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:padding="16dp"
     android:background="@drawable/border_bottom"
@@ -31,20 +32,21 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/tvUserRole"
+            android:id="@+id/tvCorreo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Administrador Restaurante"
+            android:text="correo@gmail.com"
             android:textColor="#808080"
             android:textSize="14sp" />
     </LinearLayout>
 
-    <androidx.appcompat.widget.SwitchCompat
+
+    <!-- Switch -->
+    <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/swUserActive"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_margin="8dp"
-        android:textOff="Inactivo"
-        android:textOn="Activo"/>
+        android:layout_height="wrap_content"
+        app:thumbTint="@color/thumb_tint"
+        app:trackTint="@color/track_tint"/>
 
 </LinearLayout>

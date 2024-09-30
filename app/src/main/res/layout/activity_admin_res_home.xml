@@ -48,7 +48,6 @@
         android:text="@string/welcome"
         android:textColor="@android:color/black"
         android:textSize="16sp"
-        android:textStyle="bold"
         android:fontFamily="@font/sen_font"/>
 
     <ImageView

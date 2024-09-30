@@ -11,24 +11,20 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="725dp"
-        android:orientation="vertical"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="11dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="8dp"
+            android:padding="12dp"
             android:gravity="center_vertical">
 
             <!-- Botón de regresar (flecha) -->
             <Button
                 android:id="@+id/btnBack"
-                style="?attr/materialIconButtonFilledStyle"
+                style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/btnBack"
@@ -40,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Gestión Clientes"
+                android:text="Gestión de clientes"
                 android:textSize="20sp"
                 android:textColor="@color/black"
                 android:fontFamily="@font/sen_font"
@@ -48,7 +44,7 @@
 
             <!-- Icono de home -->
             <Button
-                android:id="@+id/btnLogs"
+                android:id="@+id/btnHome"
                 style="?attr/materialIconButtonFilledStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -58,41 +54,17 @@
         </LinearLayout>
 
 
-
-        <LinearLayout
+        <!-- Barra de búsqueda -->
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/svRestaurants"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
+            android:layout_marginVertical="8dp"
+            android:layout_marginHorizontal="16dp"
+            app:queryHint="Buscar clientes"
+            app:iconifiedByDefault="false"
+            android:background="@drawable/search_view_bg"/>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Foto"
-                android:textColor="#808080" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="Nombre"
-                android:textColor="#808080" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="Tipo"
-                android:textColor="#808080" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Acción"
-                android:textColor="#808080" />
-        </LinearLayout>
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -101,8 +73,8 @@
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
             android:layout_weight="1"
+            android:paddingHorizontal="16dp"
             tools:listitem="@layout/item_user" />
-
 
 
     </LinearLayout>
