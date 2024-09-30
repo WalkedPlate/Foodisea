@@ -1,197 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1F1F1F"
+    android:background="@color/bg_color"
+    android:orientation="vertical"
     tools:context=".activity.superadmin.SuperAdminSelectionActivity">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="412dp"
-        android:layout_height="746dp"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="24dp"
-        app:cardBackgroundColor="@android:color/transparent"
-        app:cardElevation="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+    <!-- Top Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center_vertical">
+
+        <!-- Botón de regresar (flecha) -->
+        <Button
+            android:id="@+id/btnBack"
+            style="?attr/materialIconButtonFilledStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:contentDescription="@string/btnBack"
+            app:icon="@drawable/baseline_arrow_back_ios_new_24"
+            app:iconTint="@color/black"
+            android:backgroundTint="@color/bg_color"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gestión administrativa"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/sen_font"
+            android:padding="8dp"/>
+
+    </LinearLayout>
+
+    <!-- Opciones adminitrativas -->
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="20dp"
+        android:layout_marginTop="40dp">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/gradient_background"
-                android:orientation="vertical"
-                android:padding="24dp"
-                android:gravity="center">
+                app:cardCornerRadius="8dp"
+                android:layout_margin="10dp"
+                app:strokeColor="@color/gray_medium"
+                app:strokeWidth="1dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:backgroundTint="@color/btn_light">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:gravity="center">
 
-                    <ImageButton
-                        android:id="@+id/btnBack"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_margin="10dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="TODO"
-                        android:src="@drawable/ic_back" />
-
-                    <LinearLayout
+                    <!-- Texto del botón -->
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:text="Restaurantes"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:gravity="center"/>
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="100dp"
-                            android:src="@drawable/ic_logo_superadmin"
-                            android:adjustViewBounds="true" />
-
-                    </LinearLayout>
+                    <!-- Imagen debajo del texto -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:src="@drawable/icon_restaurant"
+                        android:layout_marginTop="8dp"/>
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="Selecciona la interfaz"
-                    android:textColor="@android:color/white"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="que desea gestionar"
-                    android:textColor="@android:color/white"
-                    android:textSize="22sp" />
+            </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Por favor, selecciona una gestión para continuar"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:background="@drawable/content_background"
-                android:orientation="vertical">
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="8dp"
+                app:strokeColor="@color/gray_medium"
+                app:strokeWidth="1dp"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:backgroundTint="@color/btn_light">
 
-                <GridLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:columnCount="2"
-                    android:padding="20dp">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:gravity="center">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
+                    <!-- Texto del botón -->
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:layout_margin="8dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:text="Administradores"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:gravity="center"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="4dp"
-                            android:text="RESTAURANTES"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                    <!-- Imagen debajo del texto -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:src="@drawable/icon_admin"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </TableRow>
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="4dp">
 
-                        <ImageView
-                            android:layout_width="150dp"
-                            android:layout_height="150dp"
-                            android:src="@drawable/ic_log" />
-                    </LinearLayout>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="8dp"
+                app:strokeWidth="1dp"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:backgroundTint="@color/btn_light"
+                app:strokeColor="@color/gray_medium">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:gravity="center">
+
+                    <!-- Texto del botón -->
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:layout_margin="8dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:text="Repartidores"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:gravity="center"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="4dp"
-                            android:text="ADMINISTRADORES"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                    <!-- Imagen debajo del texto -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_repartidor"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
 
-                        <ImageView
-                            android:layout_width="150dp"
-                            android:layout_height="150dp"
-                            android:src="@drawable/ic_ventas" />
-                    </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="166dp"
-                        android:layout_columnWeight="1"
-                        android:layout_margin="8dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
+            </com.google.android.material.card.MaterialCardView>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="4dp"
-                            android:text="REPARTIDORES"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
 
-                        <ImageView
-                            android:layout_width="150dp"
-                            android:layout_height="150dp"
-                            android:src="@drawable/ic_repartidor" />
-                    </LinearLayout>
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnClientes"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="8dp"
+                app:strokeWidth="1dp"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:backgroundTint="@color/btn_light"
+                app:strokeColor="@color/gray_medium">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:gravity="center">
+
+                    <!-- Texto del botón -->
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:layout_margin="8dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:text="Clientes"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:gravity="center"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="4dp"
-                            android:text="CLIENTES"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                    <!-- Imagen debajo del texto -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:src="@drawable/icon_cliente"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </TableRow>
 
-                        <ImageView
-                            android:layout_width="150dp"
-                            android:layout_height="150dp"
-                            android:src="@drawable/ic_usuarios" />
-                    </LinearLayout>
-
-                </GridLayout>
-            </LinearLayout>
+    </TableLayout>
 
 
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

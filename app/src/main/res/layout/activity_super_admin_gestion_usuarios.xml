@@ -18,37 +18,46 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="11dp">
 
-        <ImageView
-            android:id="@+id/ivLogoFoodisea"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            app:srcCompat="@drawable/foodisea" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Gestión de Usuarios"
-            android:textColor="#000000"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center_vertical">
+
+            <!-- Botón de regresar (flecha) -->
+            <Button
+                android:id="@+id/btnBack"
+                style="?attr/materialIconButtonFilledStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/btnBack"
+                app:icon="@drawable/baseline_arrow_back_ios_new_24"
+                app:iconTint="@color/black"
+                android:backgroundTint="@color/bg_color"/>
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Usuarios Registrados"
-                android:textColor="#000000"
-                android:textSize="18sp" />
+                android:text="Gestión Clientes"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/sen_font"
+                android:padding="8dp"/>
 
+            <!-- Icono de home -->
+            <Button
+                android:id="@+id/btnLogs"
+                style="?attr/materialIconButtonFilledStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="Home"
+                app:icon="@drawable/ic_home"
+                android:backgroundTint="@color/btn_medium"/>
         </LinearLayout>
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -96,34 +105,5 @@
 
 
 
-    </LinearLayout>
-
-    <!-- Bottom Navigation -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_background"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="28dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_notifications" />
-
-
-        <ImageView
-            android:layout_width="47dp"
-            android:layout_height="46dp"
-            android:background="@drawable/ic_add" />
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="31dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_profile" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
