@@ -110,7 +110,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
-                            android:text="LOG DE EVENTOS"
+                            android:text="RESTAURANTES"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
@@ -132,7 +132,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
-                            android:text="REPORTE DE VENTAS"
+                            android:text="ADMINISTRADORES"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
@@ -176,7 +176,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
-                            android:text="USUARIOS"
+                            android:text="CLIENTES"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 

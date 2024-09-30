@@ -5,13 +5,12 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFF0F0"
+    android:background="@color/bg_color"
     tools:context=".activity.superadmin.SuperadminMainActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
@@ -31,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="Hey *Admin NAME*, ¡Buen Día!"
+                android:text="Hola *Admin NAME*, ¡Buen Día!"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -114,15 +113,9 @@
 
                     <Spinner
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="48dp"
                         android:entries="@array/period_options" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="See Details"
-                        android:textColor="#FF5722" />
                 </LinearLayout>
 
                 <TextView
@@ -136,7 +129,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/sales_graph" />
+                    android:src="@drawable/estadisticas" />
             </LinearLayout>
 
             <LinearLayout
@@ -148,7 +141,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Reviews"
+                    android:text="Reseñas"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -160,7 +153,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="See All Reviews"
+                    android:text="Ver todas las reseñas"
                     android:textColor="#FF5722" />
             </LinearLayout>
 
@@ -188,7 +181,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Total 20 Reviews" />
+                    android:text="Total 20 Reseñas" />
             </LinearLayout>
 
             <TextView
@@ -201,21 +194,23 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="90dp"
                 android:orientation="horizontal">
 
                 <View
                     android:layout_width="0dp"
-                    android:layout_height="88dp"
+                    android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
-                    android:background="@drawable/rounded_background" />
+                    android:background="@drawable/restaurant_image"
+                    android:scaleType="centerCrop"/>
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/rounded_background" />
+                    android:background="@drawable/restaurant_image"
+                    android:scaleType="centerCrop"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -227,26 +222,20 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/rounded_background"
-        android:padding="16dp"
+        android:padding="12dp"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
             android:layout_width="0dp"
-            android:layout_height="31dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_dashboard" />
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="31dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_list" />
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="31dp"
+            android:layout_height="28dp"
             android:layout_weight="1"
             android:src="@drawable/ic_notifications" />
+
+        <ImageView
+            android:layout_width="47dp"
+            android:layout_height="46dp"
+            android:src="@drawable/ic_dashboard" />
 
         <ImageView
             android:layout_width="0dp"

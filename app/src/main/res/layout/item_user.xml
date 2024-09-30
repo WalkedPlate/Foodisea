@@ -11,7 +11,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
-        android:background="@drawable/rounded_image_background"
+        android:background="@drawable/rounded_background"
         android:scaleType="centerCrop" />
 
     <LinearLayout
@@ -39,13 +39,12 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/swUserActive"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:trackTint="@color/colorAccent"
+        android:layout_height="48dp"
+        android:layout_margin="8dp"
         android:textOff="Inactivo"
-        android:textOn="Activo"
-        android:textColor="#FF5722" />
+        android:textOn="Activo"/>
 
 </LinearLayout>
