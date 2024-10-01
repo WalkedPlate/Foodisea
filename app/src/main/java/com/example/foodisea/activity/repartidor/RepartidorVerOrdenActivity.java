@@ -15,7 +15,7 @@ import com.example.foodisea.R;
 import com.example.foodisea.adapter.repartidor.OrderItemAdapter;
 import com.example.foodisea.databinding.ActivityRepartidorVerOrdenBinding;
 import com.example.foodisea.entity.OrderItem;
-import com.example.foodisea.entity.Pedido;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +43,10 @@ public class RepartidorVerOrdenActivity extends AppCompatActivity {
 
         // Obtén los datos pasados desde el intent
         Intent intent = getIntent();
-        String orderNumber = intent.getStringExtra("orderNumber");
-        String customerName = intent.getStringExtra("customerName");
-        String address = intent.getStringExtra("address");
-        double price = intent.getDoubleExtra("price", 0);
+        String orderNumber = intent.getStringExtra("pedidoId");
+        String customerName = intent.getStringExtra("clienteNombre");
+        String address = intent.getStringExtra("direccionEntrega");
+        double price = intent.getDoubleExtra("precio", 0);
 
         // Setear los datos de la orden
         binding.tvTotalPrice.setText(String.format("%.2f", price));

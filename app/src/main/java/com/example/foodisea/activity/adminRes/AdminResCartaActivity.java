@@ -15,10 +15,17 @@ import com.example.foodisea.R;
 import com.example.foodisea.activity.cliente.ClienteCarritoActivity;
 import com.example.foodisea.adapter.adminRes.CartaAdapter;
 import com.example.foodisea.databinding.ActivityAdminResCartaBinding;
-import com.example.foodisea.entity.Producto;
+import com.example.foodisea.model.Cliente;
+import com.example.foodisea.model.CodigoQR;
+import com.example.foodisea.model.Pago;
+import com.example.foodisea.model.Pedido;
+import com.example.foodisea.model.Plato;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class AdminResCartaActivity extends AppCompatActivity {
 
@@ -37,19 +44,10 @@ public class AdminResCartaActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Inicializa la lista de productos
-        List<Producto> productList = new ArrayList<>();
-        // Agregar productos a la lista
-        productList.add(new Producto("Burger Ferguson", 40.00, R.drawable.burger, false));
-        productList.add(new Producto("Rockin' Burgers", 45.00, R.drawable.burger, true));
-        productList.add(new Producto("Burger Ferguson", 40.00, R.drawable.burger, false));
-        productList.add(new Producto("Rockin' Burgers", 45.00, R.drawable.burger, true));
-        productList.add(new Producto("Burger Ferguson", 40.00, R.drawable.burger, false));
-        productList.add(new Producto("Rockin' Burgers", 45.00, R.drawable.burger, true));
 
         CartaAdapter adapter = new CartaAdapter();
         adapter.setContext(AdminResCartaActivity.this);
-        adapter.setListaProductos(productList);
+        adapter.setListaPlatos(getPlatosList());
 
         // Configura el GridLayoutManager con 2 columnas
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2); // 2 columnas
@@ -68,4 +66,75 @@ public class AdminResCartaActivity extends AppCompatActivity {
         });
 
     }
+
+
+    private List<Plato> getPlatosList() {
+        List<Plato> platoList = new ArrayList<>();
+
+    // Agregar platos a la lista
+        platoList.add(new Plato(
+                UUID.randomUUID().toString(), // Generar un ID único para el Plato
+                "Burger Ferguson",             // Nombre del Plato
+                "Deliciosa hamburguesa con queso y bacon", // Descripción
+                40.00,                         // Precio
+                Arrays.asList("burger_image"), // Lista de URLs de imágenes
+                "Plato",                       // Categoría
+                false                          // Disponibilidad (outOfStock)
+        ));
+
+        platoList.add(new Plato(
+                UUID.randomUUID().toString(),
+                "Rockin' Burgers",
+                "Hamburguesa clásica con ingredientes frescos",
+                45.00,
+                Arrays.asList("burger_image"),
+                "Plato",
+                true
+        ));
+
+        platoList.add(new Plato(
+                UUID.randomUUID().toString(),
+                "Soda",
+                "Refresco de cola",
+                10.00,
+                Arrays.asList("burger_image"),
+                "Bebida",
+                false
+        ));
+
+        platoList.add(new Plato(
+                UUID.randomUUID().toString(),
+                "Soda",
+                "Refresco de cola",
+                10.00,
+                Arrays.asList("burger_image"),
+                "Bebida",
+                false
+        ));
+
+
+        platoList.add(new Plato(
+                UUID.randomUUID().toString(),
+                "Rockin' Burgers",
+                "Hamburguesa clásica con ingredientes frescos",
+                45.00,
+                Arrays.asList("burger_image"),
+                "Plato",
+                true
+        ));
+
+        platoList.add(new Plato(
+                UUID.randomUUID().toString(),
+                "Rockin' Burgers",
+                "Hamburguesa clásica con ingredientes frescos",
+                45.00,
+                Arrays.asList("burger_image"),
+                "Plato",
+                true
+        ));
+
+
+        return platoList;
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.example.foodisea.models;
+package com.example.foodisea.model;
 
 import java.util.Date;
 import java.util.Map;

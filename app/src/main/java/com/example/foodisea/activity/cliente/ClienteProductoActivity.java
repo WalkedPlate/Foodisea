@@ -36,12 +36,12 @@ public class ClienteProductoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String name = intent.getStringExtra("productName");
         double price = intent.getDoubleExtra("productPrice", 0);
-        int imageResource = intent.getIntExtra("productImage", R.drawable.burger);
+        String imageResource = intent.getStringExtra("productImage");
 
         // Configurar la vista con los datos recibidos
         productName.setText(name);
         productPrice.setText("S/." + price);
-        productImage.setImageResource(imageResource);
+        productImage.setImageResource(getResources().getIdentifier(imageResource, "drawable", getPackageName()));
 
 
         // funcion de los botones

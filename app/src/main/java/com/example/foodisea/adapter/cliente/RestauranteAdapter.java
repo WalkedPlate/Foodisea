@@ -1,13 +1,9 @@
-package com.example.foodisea.adapter;
-
+package com.example.foodisea.adapter.cliente;
 
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.foodisea.R;
 import com.example.foodisea.activity.cliente.ClienteRestauranteActivity;
 import com.example.foodisea.databinding.ItemRestaurantBinding;
-import com.example.foodisea.entity.Restaurante;
+import com.example.foodisea.model.Restaurante;
 
 import java.util.List;
 
@@ -39,20 +35,38 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position) {
-        Restaurante restaurant = restaurantes.get(position);
+        Restaurante restaurante = restaurantes.get(position);
 
-        holder.binding.restaurantName.setText(restaurant.getName());
-        holder.binding.restCategories.setText(restaurant.getCategories());
-        holder.binding.restaurantRating.setText(String.valueOf(restaurant.getRating()));
-        holder.binding.restaurantImage.setImageResource(restaurant.getImageResource());
+        holder.binding.restaurantName.setText(restaurante.getNombre());
 
+        // Convertir la lista de categorías en un String concatenado
+        String categorias = String.join(" - ", restaurante.getCategorias());
+        holder.binding.restCategories.setText(categorias);
+
+        // Mostrar la calificación del restaurante
+        holder.binding.restaurantRating.setText(String.valueOf(restaurante.getRating()));
+
+        // Cargar la primera imagen del restaurante desde recursos locales
+        holder.binding.restaurantImage.setImageResource(R.drawable.restaurant_image); // Imagen por defecto
+        if (!restaurante.getImagenes().isEmpty()) {
+            // Asumiendo que tienes un recurso con nombre que coincide con la primera imagen de la lista
+            int imageResId = context.getResources().getIdentifier(restaurante.getImagenes().get(0), "drawable", context.getPackageName());
+            if (imageResId != 0) {
+                holder.binding.restaurantImage.setImageResource(imageResId);
+            } else {
+                holder.binding.restaurantImage.setImageResource(R.drawable.restaurant_image); // Imagen por defecto si no se encuentra
+            }
+        }
 
         // Añadir el onClickListener para abrir la actividad de detalles
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ClienteRestauranteActivity.class);
-            intent.putExtra("name", restaurant.getName());
-            intent.putExtra("rating", restaurant.getRating());
-            intent.putExtra("image", restaurant.getImageResource());
+            intent.putExtra("restauranteId", restaurante.getId());  // Pasar el ID del restaurante
+            intent.putExtra("name", restaurante.getNombre());
+            intent.putExtra("rating", restaurante.getRating());
+            if (!restaurante.getImagenes().isEmpty()) {
+                intent.putExtra("image", restaurante.getImagenes().get(0));  // Pasar la primera imagen
+            }
             context.startActivity(intent);
         });
     }
@@ -70,6 +84,4 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
             this.binding = binding;
         }
     }
-
-
 }

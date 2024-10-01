@@ -1,4 +1,4 @@
-package com.example.foodisea.adapter;
+package com.example.foodisea.adapter.repartidor;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,9 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
-import com.example.foodisea.activity.repartidor.RepartidorRestauranteActivity;
 import com.example.foodisea.activity.repartidor.RepartidorVerOrdenActivity;
-import com.example.foodisea.entity.Pedido;
+import com.example.foodisea.model.Pedido;
 
 import java.util.List;
 
@@ -43,14 +42,12 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoVi
         // Añadir el onClickListener para abrir la actividad de detalles
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, RepartidorVerOrdenActivity.class);
-            intent.putExtra("orderNumber", pedido.getOrderNumber());
-            intent.putExtra("customerName", pedido.getCustomerName());
-            intent.putExtra("address", pedido.getAddress());
-            intent.putExtra("price", pedido.getPrice());
+            intent.putExtra("pedidoId", pedido.getId());
+            intent.putExtra("clienteNombre", pedido.getCliente().getNombres() + " " + pedido.getCliente().getApellidos());
+            intent.putExtra("direccionEntrega", pedido.getDireccionEntrega());
+            intent.putExtra("precio", pedido.getPago().getMonto());
             context.startActivity(intent);
         });
-
-
     }
 
     @Override
@@ -72,11 +69,11 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoVi
         }
 
         void bind(Pedido pedido) {
-            tvOrderNumber.setText(pedido.getOrderNumber());
-            tvCustomerName.setText(pedido.getCustomerName());
-            tvAddress.setText(pedido.getAddress());
-            tvPrice.setText(String.format("S/. %.2f", pedido.getPrice()));
-            // You can set the delivery icon here if it changes based on the order
+            tvOrderNumber.setText(pedido.getId());  // Usando el ID del pedido como el número del pedido
+            tvCustomerName.setText(pedido.getCliente().getNombres() + " " + pedido.getCliente().getApellidos());
+            tvAddress.setText(pedido.getDireccionEntrega());
+            tvPrice.setText(String.format("S/. %.2f", pedido.getPago().getMonto()));
+            // Si el ícono de entrega cambia basado en el estado del pedido
             // ivDelivery.setImageResource(R.drawable.ic_delivery);
         }
     }

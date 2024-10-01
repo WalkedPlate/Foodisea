@@ -10,24 +10,24 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
-import com.example.foodisea.adapter.CarritoAdapter;
-import com.example.foodisea.entity.ProductoCarrito;
+import com.example.foodisea.adapter.cliente.CarritoAdapter;
+import com.example.foodisea.model.Plato;
+import com.example.foodisea.model.PlatoCantidad;
 
-import android.os.Bundle;
 import android.widget.Button;
-import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class ClienteCarritoActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private CarritoAdapter adapter;
-    private List<ProductoCarrito> productoCarritos;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +45,9 @@ public class ClienteCarritoActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rvCartItems);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Inicializar la lista de productos del carrito
-        productoCarritos = new ArrayList<>();
-
-        // Agregar ítems de prueba al carrito
-        productoCarritos.add(new ProductoCarrito("Hamburguesa",64.00, R.drawable.burger, 2));
-        productoCarritos.add(new ProductoCarrito("Hamburguesa VB", 32.00, R.drawable.burger, 1));
 
         // Inicializar el adaptador y asignarlo al RecyclerView
-        adapter = new CarritoAdapter(productoCarritos);
+        adapter = new CarritoAdapter(this,getPlatosCarrito());
         recyclerView.setAdapter(adapter);
 
         // funcion de los botones
@@ -71,4 +65,20 @@ public class ClienteCarritoActivity extends AppCompatActivity {
             startActivity(checkout);
         });
     }
+
+    // Obtener desde bd
+    private List<PlatoCantidad> getPlatosCarrito() {
+        // Inicializar la lista de productos del carrito
+        List<PlatoCantidad> platoCarritos = new ArrayList<>();
+
+        // Agregar ítems de prueba al carrito
+        platoCarritos.add(new PlatoCantidad("PlatoId1",3));
+        platoCarritos.add(new PlatoCantidad("PlatoId2", 4));
+        platoCarritos.add(new PlatoCantidad("PlatoId3",13));
+        platoCarritos.add(new PlatoCantidad("PlatoId4", 24));
+
+
+        return platoCarritos;
+    }
+
 }

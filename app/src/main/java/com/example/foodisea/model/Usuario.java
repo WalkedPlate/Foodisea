@@ -1,4 +1,4 @@
-package com.example.foodisea.models;
+package com.example.foodisea.model;
 
 public class Usuario {
     protected String id;
@@ -11,9 +11,19 @@ public class Usuario {
     protected String fechaNacimiento;
     protected String foto;
     protected String estado;  // "Activo", "Inactivo"
+    protected String tipoUsuario;  // "Cliente", "AdministradorRestaurante", "Repartidor", "Superadmin"
+
+
 
     //Constructor, getter y setter
 
+    public String getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(String tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
+    }
 
     public String getId() {
         return id;

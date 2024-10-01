@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
-import com.example.foodisea.models.Message;
+import com.example.foodisea.model.Message;
 
 import java.util.List;
 

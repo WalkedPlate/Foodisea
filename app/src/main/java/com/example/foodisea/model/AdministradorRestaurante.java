@@ -1,4 +1,4 @@
-package com.example.foodisea.models;
+package com.example.foodisea.model;
 
 public class AdministradorRestaurante extends Usuario {
     private String restauranteId;

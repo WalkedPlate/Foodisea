@@ -1,4 +1,4 @@
-package com.example.foodisea.models;
+package com.example.foodisea.model;
 
 import java.util.Date;
 
@@ -10,6 +10,15 @@ public class CodigoQR {
     private Date fechaGeneracion;
 
     //Constructor, getter y setter
+
+    // Constructor de la clase CodigoQR
+    public CodigoQR(String id, String pedidoId, String codigo, String estado, Date fechaGeneracion) {
+        this.id = id;
+        this.pedidoId = pedidoId;
+        this.codigo = codigo;
+        this.estado = estado;
+        this.fechaGeneracion = fechaGeneracion;
+    }
 
 
     public String getId() {

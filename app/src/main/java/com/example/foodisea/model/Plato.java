@@ -1,4 +1,4 @@
-package com.example.foodisea.models;
+package com.example.foodisea.model;
 
 import java.util.List;
 
@@ -8,10 +8,28 @@ public class Plato {
     private String descripcion;
     private double precio;
     private List<String> imagenes;  // Mínimo 2 imágenes
-    private String categoria;  // "Plato" o "Bebida"
+    private String categoria; // "Plato" o "Bebida"
+    private boolean outOfStock;
 
     // Constructor, getters y setters
+    public Plato(String id, String nombre, String descripcion, double precio, List<String> imagenes, String categoria, boolean outOfStock) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precio = precio;
+        this.imagenes = imagenes;
+        this.categoria = categoria;
+        this.outOfStock = outOfStock;
+    }
 
+
+    public boolean isOutOfStock() {
+        return outOfStock;
+    }
+
+    public void setOutOfStock(boolean outOfStock) {
+        this.outOfStock = outOfStock;
+    }
 
     public String getId() {
         return id;

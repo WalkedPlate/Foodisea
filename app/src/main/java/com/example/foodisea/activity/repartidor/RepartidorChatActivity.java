@@ -8,13 +8,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.repartidor.MessageAdapter;
 import com.example.foodisea.databinding.ActivityRepartidorChatBinding;
-import com.example.foodisea.databinding.ActivityRepartidorMainBinding;
-import com.example.foodisea.models.Message;
+import com.example.foodisea.model.Message;
 
 import java.util.ArrayList;
 import java.util.List;

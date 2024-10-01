@@ -1,4 +1,4 @@
-package com.example.foodisea.models;
+package com.example.foodisea.model;
 
 import java.util.Date;
 
@@ -10,6 +10,18 @@ public class Pago {
     private String estadoPago;  // Ej. "Pendiente", "Completado"
     private Date fechaPago;
 
+    // Constructor de la clase Pago
+    public Pago(String id, String pedidoId, double monto, String metodoPago, String estadoPago, Date fechaPago) {
+        this.id = id;
+        this.pedidoId = pedidoId;
+        this.monto = monto;
+        this.metodoPago = metodoPago;
+        this.estadoPago = estadoPago;
+        this.fechaPago = fechaPago;
+    }
+
+
+    // Getters y Setters
     public String getId() {
         return id;
     }

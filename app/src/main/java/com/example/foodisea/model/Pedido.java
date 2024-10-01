@@ -1,4 +1,4 @@
-package com.example.foodisea.models;
+package com.example.foodisea.model;
 
 import java.util.Date;
 import java.util.List;
@@ -8,16 +8,33 @@ public class Pedido {
     private String id;
     private Cliente cliente;  // Referencia al objeto Cliente que hizo el pedido
     private String restauranteId;  // ID del Restaurante donde se hizo el pedido
-    private List<String> platosIds;  // IDs de los platos y bebidas solicitados
+    private List<PlatoCantidad> platos;  // Lista de platos y sus cantidades solicitadas
     private Repartidor repartidor;  // Referencia al repartidor (si ya está asignado)
     private String estado;  // "Recibido", "En preparación", "En camino", "Entregado"
     private Date fechaPedido;
     private String direccionEntrega;
     private CodigoQR qrCode;  // Referencia al objeto CodigoQR
-    private Pago pago;  // Referencia al objeto Pago
+    private Pago pago;  // Referenc
 
 
     //Constructor, getter y setter
+
+    // Constructor
+    public Pedido(String id, Cliente cliente, String restauranteId, List<PlatoCantidad> platos,
+                  Repartidor repartidor, String estado, Date fechaPedido, String direccionEntrega,
+                  CodigoQR qrCode, Pago pago) {
+        this.id = id;
+        this.cliente = cliente;
+        this.restauranteId = restauranteId;
+        this.platos = platos;
+        this.repartidor = repartidor;
+        this.estado = estado;
+        this.fechaPedido = fechaPedido;
+        this.direccionEntrega = direccionEntrega;
+        this.qrCode = qrCode;
+        this.pago = pago;
+    }
+
     public String getId() {
         return id;
     }
@@ -42,12 +59,12 @@ public class Pedido {
         this.restauranteId = restauranteId;
     }
 
-    public List<String> getPlatosIds() {
-        return platosIds;
+    public List<PlatoCantidad> getPlatos() {
+        return platos;
     }
 
-    public void setPlatosIds(List<String> platosIds) {
-        this.platosIds = platosIds;
+    public void setPlatos(List<PlatoCantidad> platos) {
+        this.platos = platos;
     }
 
     public Repartidor getRepartidor() {

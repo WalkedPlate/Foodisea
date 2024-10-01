@@ -2,27 +2,24 @@ package com.example.foodisea.activity.cliente;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 
 import com.example.foodisea.R;
-import com.example.foodisea.adapter.ProductoAdapter;
-import com.example.foodisea.databinding.ActivityClienteMainBinding;
+import com.example.foodisea.adapter.cliente.PlatoAdapter;
 import com.example.foodisea.databinding.ActivityClienteRestauranteBinding;
-import com.example.foodisea.entity.Producto;
+import com.example.foodisea.model.Plato;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class ClienteRestauranteActivity extends AppCompatActivity {
 
@@ -47,19 +44,9 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2); // 2 columnas
         binding.rvProducts.setLayoutManager(gridLayoutManager);
 
-        // Inicializa la lista de productos
-        List<Producto> productList = new ArrayList<>();
-
-        // Agregar productos a la lista
-        productList.add(new Producto("Burger Ferguson", 40.00, R.drawable.burger, false));
-        productList.add(new Producto("Rockin' Burgers", 45.00, R.drawable.burger, true));
-        productList.add(new Producto("Burger Ferguson", 40.00, R.drawable.burger, false));
-        productList.add(new Producto("Rockin' Burgers", 45.00, R.drawable.burger, true));
-        productList.add(new Producto("Burger Ferguson", 40.00, R.drawable.burger, false));
-        productList.add(new Producto("Rockin' Burgers", 45.00, R.drawable.burger, true));
 
         // Configura el adaptador (el adaptador que has creado para mostrar los productos)
-        ProductoAdapter adapter = new ProductoAdapter(this, productList);
+        PlatoAdapter adapter = new PlatoAdapter(this, getPlatosList());
         binding.rvProducts.setAdapter(adapter);
 
 
@@ -67,10 +54,10 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String restaurantName = intent.getStringExtra("name");
         float restaurantRating = intent.getFloatExtra("rating", 0);
-        int restaurantImage = intent.getIntExtra("image", R.drawable.restaurant_image);
+        String restaurantImage = intent.getStringExtra("image");
 
         // Configura la vista con los datos recibidos
-        binding.ivRestaurantImage.setImageResource(restaurantImage);
+        binding.ivRestaurantImage.setImageResource(getResources().getIdentifier(restaurantImage, "drawable", getPackageName()));
         binding.tvRestaurantName.setText(restaurantName);
         binding.tvRestaurantRating.setText(String.valueOf(restaurantRating));
 
@@ -88,4 +75,75 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
 
 
     }
+
+    // Obtener desde bd
+    private List<Plato> getPlatosList() {
+        List<Plato> platoList = new ArrayList<>();
+
+        // Agregar platos a la lista
+        platoList.add(new Plato(
+                UUID.randomUUID().toString(), // Generar un ID único para el Plato
+                "Burger Ferguson",             // Nombre del Plato
+                "Deliciosa hamburguesa con queso y bacon", // Descripción
+                40.00,                         // Precio
+                Arrays.asList("burger_image"), // Lista de URLs de imágenes
+                "Plato",                       // Categoría
+                false                          // Disponibilidad (outOfStock)
+        ));
+
+        platoList.add(new Plato(
+                UUID.randomUUID().toString(),
+                "Rockin' Burgers",
+                "Hamburguesa clásica con ingredientes frescos",
+                45.00,
+                Arrays.asList("burger_image"),
+                "Plato",
+                true
+        ));
+
+        platoList.add(new Plato(
+                UUID.randomUUID().toString(),
+                "Soda",
+                "Refresco de cola",
+                10.00,
+                Arrays.asList("restaurant_image"),
+                "Bebida",
+                false
+        ));
+
+        platoList.add(new Plato(
+                UUID.randomUUID().toString(),
+                "Soda",
+                "Refresco de cola",
+                10.00,
+                Arrays.asList("burger_image"),
+                "Bebida",
+                false
+        ));
+
+
+        platoList.add(new Plato(
+                UUID.randomUUID().toString(),
+                "Rockin' Burgers",
+                "Hamburguesa clásica con ingredientes frescos",
+                45.00,
+                Arrays.asList("burger_image"),
+                "Plato",
+                true
+        ));
+
+        platoList.add(new Plato(
+                UUID.randomUUID().toString(),
+                "Rockin' Burgers",
+                "Hamburguesa clásica con ingredientes frescos",
+                45.00,
+                Arrays.asList("burger_image"),
+                "Plato",
+                true
+        ));
+
+
+        return platoList;
+    }
+
 }

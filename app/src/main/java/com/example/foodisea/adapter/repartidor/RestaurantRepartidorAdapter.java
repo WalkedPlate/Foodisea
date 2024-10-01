@@ -12,10 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
-import com.example.foodisea.activity.cliente.ClienteRestauranteActivity;
 import com.example.foodisea.activity.repartidor.RepartidorRestauranteActivity;
-import com.example.foodisea.adapter.RestauranteAdapter;
-import com.example.foodisea.entity.Restaurante;
+import com.example.foodisea.model.Restaurante;
 
 import java.util.List;
 
@@ -38,20 +36,30 @@ public class RestaurantRepartidorAdapter extends RecyclerView.Adapter<Restaurant
 
     @Override
     public void onBindViewHolder(@NonNull RestaurantRepartidorAdapter.RestauranteViewHolder holder, int position) {
-        Restaurante restaurant = restaurantes.get(position);
+        Restaurante restaurante = restaurantes.get(position);
 
-        holder.tvNombre.setText(restaurant.getName());
-        holder.tvDireccion.setText(restaurant.getLocation());
-        holder.ivImagen.setImageResource(restaurant.getImageResource());
+        holder.tvNombre.setText(restaurante.getNombre());
+        holder.tvDireccion.setText(restaurante.getDireccion());
 
+        // Cargar la primera imagen de la lista de imágenes
+        if (!restaurante.getImagenes().isEmpty()) {
+            int imageResId = context.getResources().getIdentifier(restaurante.getImagenes().get(0), "drawable", context.getPackageName());
+            if (imageResId != 0) {
+                holder.ivImagen.setImageResource(imageResId);
+            } else {
+                holder.ivImagen.setImageResource(R.drawable.restaurant_image); // Imagen por defecto si no se encuentra
+            }
+        } else {
+            holder.ivImagen.setImageResource(R.drawable.restaurant_image); // Imagen por defecto si no hay imágenes
+        }
 
         // Añadir el onClickListener para abrir la actividad de detalles
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, RepartidorRestauranteActivity.class);
-            intent.putExtra("name", restaurant.getName());
-            intent.putExtra("rating", restaurant.getRating());
-            intent.putExtra("image", restaurant.getImageResource());
-            intent.putExtra("location", restaurant.getLocation());
+            intent.putExtra("name", restaurante.getNombre());
+            intent.putExtra("rating", restaurante.getRating());
+            intent.putExtra("image", restaurante.getImagenes().isEmpty() ? null : restaurante.getImagenes().get(0)); // Pasar la primera imagen
+            intent.putExtra("location", restaurante.getDireccion());
             context.startActivity(intent);
         });
     }
@@ -62,7 +70,6 @@ public class RestaurantRepartidorAdapter extends RecyclerView.Adapter<Restaurant
     }
 
     public static class RestauranteViewHolder extends RecyclerView.ViewHolder {
-
         TextView tvNombre, tvDireccion;
         ImageView ivImagen;
 

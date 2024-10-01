@@ -1,4 +1,4 @@
-package com.example.foodisea.models;
+package com.example.foodisea.model;
 
 public class Repartidor extends Usuario {
     private double latitud;
