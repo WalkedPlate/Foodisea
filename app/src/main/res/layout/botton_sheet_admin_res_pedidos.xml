@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Orden:"
+            android:textSize="25dp"/>
+        <TextView
+            android:id="@+id/nombreCliente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="John Gomez"
+            android:textSize="25dp"/>
+        <TextView
+            android:id="@+id/idPedido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#162432"
+            android:textSize="25dp"
+            android:layout_marginLeft="50dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ordenado el 06 SET 10:00"
+            android:textSize="25dp"/>
+    </LinearLayout>
+
+    <!-- Paso 1: Pedido recibido -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="30dp">
+
+        <ImageView
+            android:id="@+id/step1_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/cart"
+            app:tint="@color/orange" />
+
+        <TextView
+            android:id="@+id/step1_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="La orden ha sido recibida"
+            android:textColor="@color/orange"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Línea entre pasos -->
+    <View
+        android:layout_width="2dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="41dp"
+        android:background="@color/orange" />
+
+    <!-- Paso 2: Pedido en preparación -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="30dp">
+
+        <ImageView
+            android:id="@+id/step2_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/cooking_time"
+            app:tint="@color/orange" />
+
+        <TextView
+            android:id="@+id/step2_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="El restaurante está preparando el pedido"
+            android:textColor="@color/orange"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Línea entre pasos -->
+    <View
+        android:layout_width="2dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="41dp"
+        android:background="@color/gray" />
+
+    <!-- Paso 3: Pedido en camino -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="31dp">
+
+        <ImageView
+            android:id="@+id/step3_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/delivery"
+            app:tint="@color/gray" />
+
+        <TextView
+            android:id="@+id/step3_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="El pedido está en camino a su destino"
+            android:textColor="@color/gray"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Línea entre pasos -->
+    <View
+        android:layout_width="2dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="41dp"
+        android:background="@color/gray" />
+
+    <!-- Paso 4: Pedido entregado -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="31dp">
+
+        <ImageView
+            android:id="@+id/step4_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/tick_inside_circle"
+            app:tint="@color/gray" />
+
+        <TextView
+            android:id="@+id/step4_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="El pedido ha sido entregado"
+            android:textColor="@color/gray"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="VER DETALLES DE COMPRA"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="40dp"/>
+
+
+</LinearLayout>

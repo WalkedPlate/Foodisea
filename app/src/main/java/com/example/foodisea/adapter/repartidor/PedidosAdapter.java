@@ -11,7 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.foodisea.AdminResPedidosActivity;
 import com.example.foodisea.R;
+import com.example.foodisea.activity.repartidor.RepartidorRestauranteActivity;
 import com.example.foodisea.activity.repartidor.RepartidorVerOrdenActivity;
 import com.example.foodisea.model.Pedido;
 
@@ -41,12 +43,18 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoVi
 
         // Añadir el onClickListener para abrir la actividad de detalles
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, RepartidorVerOrdenActivity.class);
-            intent.putExtra("pedidoId", pedido.getId());
-            intent.putExtra("clienteNombre", pedido.getCliente().getNombres() + " " + pedido.getCliente().getApellidos());
-            intent.putExtra("direccionEntrega", pedido.getDireccionEntrega());
-            intent.putExtra("precio", pedido.getPago().getMonto());
-            context.startActivity(intent);
+            
+            if(context instanceof RepartidorRestauranteActivity) {
+                Intent intent = new Intent(context, RepartidorVerOrdenActivity.class);
+                intent.putExtra("pedidoId", pedido.getId());
+                intent.putExtra("clienteNombre", pedido.getCliente().getNombres() + " " + pedido.getCliente().getApellidos());
+                intent.putExtra("direccionEntrega", pedido.getDireccionEntrega());
+                intent.putExtra("precio", pedido.getPago().getMonto());
+                context.startActivity(intent);    
+            } else if (context instanceof AdminResPedidosActivity) {
+                ((AdminResPedidosActivity)context).mostrarBottonSheet(pedido);
+            }
+
         });
     }
 
