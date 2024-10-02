@@ -85,8 +85,8 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
                 UUID.randomUUID().toString(), // Generar un ID único para el Plato
                 "Burger Ferguson",             // Nombre del Plato
                 "Deliciosa hamburguesa con queso y bacon", // Descripción
-                40.00,                         // Precio
-                Arrays.asList("burger_image"), // Lista de URLs de imágenes
+                10.00,                         // Precio
+                Arrays.asList("burger"), // Lista de URLs de imágenes
                 "Plato",                       // Categoría
                 false                          // Disponibilidad (outOfStock)
         ));
@@ -95,28 +95,28 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
                 UUID.randomUUID().toString(),
                 "Rockin' Burgers",
                 "Hamburguesa clásica con ingredientes frescos",
-                45.00,
-                Arrays.asList("burger_image"),
+                15.30,
+                Arrays.asList("burger2"),
                 "Plato",
                 true
         ));
 
         platoList.add(new Plato(
                 UUID.randomUUID().toString(),
-                "Soda",
+                "Coca Cola",
                 "Refresco de cola",
-                10.00,
-                Arrays.asList("restaurant_image"),
+                5.00,
+                Arrays.asList("soda"),
                 "Bebida",
                 false
         ));
 
         platoList.add(new Plato(
                 UUID.randomUUID().toString(),
-                "Soda",
+                "Pepsi",
                 "Refresco de cola",
-                10.00,
-                Arrays.asList("burger_image"),
+                4.50,
+                Arrays.asList("soda2"),
                 "Bebida",
                 false
         ));
@@ -124,20 +124,20 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
 
         platoList.add(new Plato(
                 UUID.randomUUID().toString(),
-                "Rockin' Burgers",
+                "Chirox' Burgers",
                 "Hamburguesa clásica con ingredientes frescos",
-                45.00,
-                Arrays.asList("burger_image"),
+                12.80,
+                Arrays.asList("burger3"),
                 "Plato",
                 true
         ));
 
         platoList.add(new Plato(
                 UUID.randomUUID().toString(),
-                "Rockin' Burgers",
+                "Crack' Burgers",
                 "Hamburguesa clásica con ingredientes frescos",
-                45.00,
-                Arrays.asList("burger_image"),
+                45.90,
+                Arrays.asList("burger4"),
                 "Plato",
                 true
         ));

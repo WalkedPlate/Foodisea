@@ -9,7 +9,8 @@
     <string name="categorias">Categorías</string>
     <string name="todas">Todas</string>
     <!-- Colocar las distintas categorías -->
-    <string name="nombreCategoria">Postres</string>
+    <string name="catPlatos">Platos</string>
+    <string name="catBebidas">Bebidas</string>
     <string name="restaurantes">Restaurantes</string>
 
     <!-- Item restaurant -->
@@ -21,7 +22,7 @@
     <!-- Cliente restaurante-->
     <string name="btnBack">Boton de regreso</string>
     <string name="btnCarrito">Boton de carrito</string>
-    <string name="cantProducts">5</string>
+    <string name="cantProducts">4</string>
     <string name="btnFavorite">Boton de favorito</string>
     <string name="descripcionRest">
         Restaurante especializado en hamburguesas artesanales, donde la calidad de los ingredientes

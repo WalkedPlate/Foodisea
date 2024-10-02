@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
+    android:background="#121223"
     tools:context=".activity.cliente.ClienteCarritoActivity">
 
 
@@ -24,7 +24,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:icon="@drawable/baseline_arrow_back_ios_new_24"
-            android:contentDescription="@string/btnBack"/>
+            android:contentDescription="@string/btnBack"
+            app:iconTint="@color/black"
+            android:backgroundTint="@color/bg_color"/>
 
         <!-- Texto "carrito" -->
         <TextView
@@ -46,7 +48,6 @@
         android:layout_height="match_parent"
         android:layout_below="@id/header"
         android:layout_above="@id/containerBottom"
-        android:padding="16dp"
         android:clipToPadding="false"/>
 
 
@@ -59,8 +60,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:padding="16dp"
-        android:background="@android:color/white"
-        android:elevation="8dp">
+        android:background="@drawable/rounded_top">
 
         <!-- Total consumo -->
         <LinearLayout
@@ -68,15 +68,15 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="8dp"
-            android:elevation="4dp"
             android:gravity="center_vertical">
 
             <!-- Precio -->
             <TextView
                 android:id="@+id/tvTotalLabel"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="TOTAL CONSUMO:"
+                android:fontFamily="@font/sen_font"
                 android:textSize="18sp"
                 android:textColor="@android:color/black"
                 android:layout_weight="1"/>
@@ -99,10 +99,10 @@
             android:layout_height="wrap_content"
             android:text="REALIZAR PEDIDO"
             android:textSize="18sp"
-            android:backgroundTint="@android:color/holo_red_light"
+            android:backgroundTint="@color/btn_medium"
             android:textColor="@android:color/white"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="14dp"
             android:padding="16dp"
             android:textStyle="bold"/>
     </LinearLayout>

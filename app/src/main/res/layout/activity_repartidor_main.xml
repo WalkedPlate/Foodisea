@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main"
-    tools:context=".activity.repartidor.RepartidorMainActivity">
+    tools:context=".activity.repartidor.RepartidorMainActivity"
+    android:background="@color/bg_color">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,49 +58,42 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tvGreeting"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:text="Hey John, ¡Buen Día!"
+                    android:padding="16dp"
+                    android:text="Hola John, ¡Buen Día!"
                     android:textColor="@android:color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:textSize="16sp"
+                    android:fontFamily="@font/sen_font" />
 
-                <EditText
-                    android:id="@+id/etSearch"
-                    android:layout_width="0dp"
+                <!-- Barra de búsqueda -->
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/svRestaurants"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@color/gray_light"
-                    android:drawableStart="@drawable/round_search_24"
-                    android:drawablePadding="8dp"
-                    android:hint="Search dishes, restaurants"
-                    android:padding="12dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/tvGreeting"
-                    app:layout_constraintTop_toBottomOf="@+id/tvGreeting" />
+                    android:layout_marginVertical="8dp"
+                    android:layout_marginHorizontal="16dp"
+                    app:queryHint="Buscar restaurante"
+                    app:iconifiedByDefault="false"
+                    android:background="@drawable/search_view_bg"/>
 
                 <TextView
                     android:id="@+id/tvRestaurantes"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:text="Restaurantes"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="@+id/etSearch"
-                    app:layout_constraintTop_toBottomOf="@+id/etSearch" />
+                    android:padding="16dp"
+                    android:text="@string/restaurantes"
+                    android:textSize="20sp"
+                    android:layout_marginVertical="10dp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/sen_font" />
 
 
                 <!-- RecyclerView para mostrar los restaurantes -->
@@ -107,18 +101,11 @@
                     android:id="@+id/recyclerViewRestaurantes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginStart="16dp"
-                    android:scrollbars="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/tvRestaurantes"
-                    app:layout_constraintTop_toBottomOf="@+id/tvRestaurantes"/>
+                    android:scrollbars="vertical" />
 
 
 
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
 

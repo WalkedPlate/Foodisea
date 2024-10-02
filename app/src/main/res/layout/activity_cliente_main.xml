@@ -85,81 +85,6 @@
                     app:iconifiedByDefault="false"
                     android:background="@drawable/search_view_bg"/>
 
-                <!-- Todas las categorías -->
-                <TextView
-                    android:id="@+id/tvCategory"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:text="@string/categorias"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/sen_font"/>
-
-                <!-- Lista de categorías horizontal -->
-                <HorizontalScrollView
-                    android:id="@+id/hsvCategories"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="none"
-                    android:fillViewport="true">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="12dp">
-
-                        <!-- Botones con las categorías -->
-                        <Button
-                            style="?attr/materialIconButtonFilledStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingHorizontal="18dp"
-                            android:text="@string/todas"
-                            android:fontFamily="@font/sen_font"
-                            android:textStyle="bold"
-                            android:backgroundTint="@color/btn_dark"/>
-
-                        <Button
-                            style="?attr/materialIconButtonFilledTonalStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingHorizontal="18dp"
-                            android:fontFamily="@font/sen_font"
-                            android:text="@string/nombreCategoria"
-                            android:backgroundTint="@color/btn_light"/>
-
-                        <Button
-                            style="?attr/materialIconButtonFilledTonalStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingHorizontal="18dp"
-                            android:text="@string/nombreCategoria"
-                            android:fontFamily="@font/sen_font"
-                            android:backgroundTint="@color/btn_light"/>
-
-                        <Button
-                            style="?attr/materialIconButtonFilledTonalStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingHorizontal="18dp"
-                            android:text="@string/nombreCategoria"
-                            android:fontFamily="@font/sen_font"
-                            android:backgroundTint="@color/btn_light"/>
-
-                        <Button
-                            style="?attr/materialIconButtonFilledTonalStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingHorizontal="18dp"
-                            android:text="@string/nombreCategoria"
-                            android:fontFamily="@font/sen_font"
-                            android:backgroundTint="@color/btn_light"/>
-                    </LinearLayout>
-
-                </HorizontalScrollView>
 
                 <!-- Restaurantes -->
                 <TextView
@@ -169,8 +94,7 @@
                     android:padding="16dp"
                     android:text="@string/restaurantes"
                     android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginVertical="10dp"
                     android:textColor="@color/black"
                     android:fontFamily="@font/sen_font"/>
 

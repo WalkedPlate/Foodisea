@@ -38,11 +38,11 @@
                 <!-- Botón de regresar (flecha) -->
                 <Button
                     android:id="@+id/btnBack"
-                    style="?attr/materialIconButtonFilledStyle"
+                    style="?attr/materialIconButtonFilledTonalStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:layout_margin="16dp"
+                    android:layout_margin="12dp"
                     android:contentDescription="@string/btnBack"
                     app:icon="@drawable/baseline_arrow_back_ios_new_24"
                     app:iconTint="@color/black"
@@ -55,7 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_margin="16dp"
+                    android:layout_margin="12dp"
                     android:contentDescription="@string/btnCarrito"
                     app:icon="@drawable/outline_shopping"
                     android:backgroundTint="@color/black"/>
@@ -151,13 +151,15 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingHorizontal="16dp"
-                    android:layout_marginTop="16dp">
+                    android:layout_marginTop="16dp"
+                    android:gravity="center_horizontal">
 
                     <Button
                         style="?attr/materialIconButtonFilledStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingHorizontal="18dp"
+                        android:paddingHorizontal="20dp"
+                        android:layout_marginHorizontal="4dp"
                         android:text="@string/todas"
                         android:fontFamily="@font/sen_font"
                         android:textStyle="bold"
@@ -167,17 +169,9 @@
                         style="?attr/materialIconButtonFilledTonalStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingHorizontal="18dp"
-                        android:fontFamily="@font/sen_font"
-                        android:text="@string/nombreCategoria"
-                        android:backgroundTint="@color/btn_light"/>
-
-                    <Button
-                        style="?attr/materialIconButtonFilledTonalStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="18dp"
-                        android:text="@string/nombreCategoria"
+                        android:paddingHorizontal="20dp"
+                        android:layout_marginHorizontal="4dp"
+                        android:text="@string/catPlatos"
                         android:fontFamily="@font/sen_font"
                         android:backgroundTint="@color/btn_light"/>
 
@@ -185,17 +179,9 @@
                         style="?attr/materialIconButtonFilledTonalStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingHorizontal="18dp"
-                        android:text="@string/nombreCategoria"
-                        android:fontFamily="@font/sen_font"
-                        android:backgroundTint="@color/btn_light"/>
-
-                    <Button
-                        style="?attr/materialIconButtonFilledTonalStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="18dp"
-                        android:text="@string/nombreCategoria"
+                        android:paddingHorizontal="20dp"
+                        android:layout_marginHorizontal="4dp"
+                        android:text="@string/catBebidas"
                         android:fontFamily="@font/sen_font"
                         android:backgroundTint="@color/btn_light"/>
                 </LinearLayout>

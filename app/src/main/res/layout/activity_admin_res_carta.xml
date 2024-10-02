@@ -78,14 +78,15 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingHorizontal="12dp"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:gravity="center_horizontal">
 
                 <!-- Botones con las categorías -->
                 <Button
                     style="?attr/materialIconButtonFilledStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="18dp"
+                    android:paddingHorizontal="20dp"
                     android:text="@string/todas"
                     android:fontFamily="@font/sen_font"
                     android:textStyle="bold"
@@ -95,35 +96,18 @@
                     style="?attr/materialIconButtonFilledTonalStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="18dp"
+                    android:paddingHorizontal="20dp"
                     android:fontFamily="@font/sen_font"
-                    android:text="@string/nombreCategoria"
+                    android:text="@string/catPlatos"
                     android:backgroundTint="@color/btn_light"/>
+
 
                 <Button
                     style="?attr/materialIconButtonFilledTonalStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="18dp"
-                    android:text="@string/nombreCategoria"
-                    android:fontFamily="@font/sen_font"
-                    android:backgroundTint="@color/btn_light"/>
-
-                <Button
-                    style="?attr/materialIconButtonFilledTonalStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="18dp"
-                    android:text="@string/nombreCategoria"
-                    android:fontFamily="@font/sen_font"
-                    android:backgroundTint="@color/btn_light"/>
-
-                <Button
-                    style="?attr/materialIconButtonFilledTonalStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="18dp"
-                    android:text="@string/nombreCategoria"
+                    android:paddingHorizontal="20dp"
+                    android:text="@string/catBebidas"
                     android:fontFamily="@font/sen_font"
                     android:backgroundTint="@color/btn_light"/>
             </LinearLayout>
