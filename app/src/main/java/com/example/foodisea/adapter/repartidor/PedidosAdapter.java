@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.foodisea.AdminResPedidosActivity;
+import com.example.foodisea.activity.adminRes.AdminResPedidosActivity;
 import com.example.foodisea.R;
 import com.example.foodisea.activity.repartidor.RepartidorRestauranteActivity;
 import com.example.foodisea.activity.repartidor.RepartidorVerOrdenActivity;

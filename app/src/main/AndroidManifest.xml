@@ -13,13 +13,13 @@
         android:theme="@style/Theme.Foodisea"
         tools:targetApi="31">
         <activity
-            android:name=".AdminResDetallesPedidosActivity"
+            android:name=".activity.adminRes.AdminResDetallesPedidosActivity"
             android:exported="false" />
         <activity
-            android:name=".AdminResPedidosActivity"
+            android:name=".activity.adminRes.AdminResPedidosActivity"
             android:exported="false" />
         <activity
-            android:name=".AdminResDetallesProductoActivity"
+            android:name=".activity.adminRes.AdminResDetallesProductoActivity"
             android:exported="false" />
         <activity
             android:name=".activity.superadmin.SuperAdminSelectionActivity"

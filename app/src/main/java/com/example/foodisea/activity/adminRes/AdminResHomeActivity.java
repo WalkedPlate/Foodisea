@@ -9,9 +9,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.foodisea.AdminResPedidosActivity;
 import com.example.foodisea.R;
-import com.example.foodisea.activity.cliente.ClienteCarritoActivity;
 import com.example.foodisea.databinding.ActivityAdminResHomeBinding;
 
 public class AdminResHomeActivity extends AppCompatActivity {

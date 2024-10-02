@@ -1,16 +1,16 @@
-package com.example.foodisea;
+package com.example.foodisea.activity.adminRes;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.example.foodisea.R;
 import com.example.foodisea.adapter.repartidor.PedidosAdapter;
 import com.example.foodisea.databinding.ActivityAdminResPedidosBinding;
 import com.example.foodisea.model.Cliente;
