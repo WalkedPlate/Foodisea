@@ -13,7 +13,20 @@ public class Usuario {
     protected String estado;  // "Activo", "Inactivo"
     protected String tipoUsuario;  // "Cliente", "AdministradorRestaurante", "Repartidor", "Superadmin"
 
-
+    // Constructor con todos los parámetros
+    public Usuario(String id, String nombre, String apellido, String email, String telefono, String direccion, String dni, String fechaNacimiento, String foto, String estado, String rol) {
+        this.id = id;
+        this.nombres = nombre;
+        this.apellidos = apellido;
+        this.correo = email;
+        this.telefono = telefono;
+        this.direccion = direccion;
+        this.documentoId = documentoId;
+        this.fechaNacimiento = fechaNacimiento;
+        this.foto = foto;
+        this.estado = estado;
+        this.tipoUsuario = tipoUsuario;
+    }
 
     //Constructor, getter y setter
 

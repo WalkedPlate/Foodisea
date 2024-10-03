@@ -5,6 +5,8 @@ public class Cliente extends Usuario {
     // Constructor de la clase Cliente
     public Cliente(String id, String nombres, String apellidos, String correo, String telefono, String direccion,
                    String documentoId, String fechaNacimiento, String foto, String estado, String tipoUsuario) {
+        // Llamar al constructor de la clase Usuario usando super()
+        super(id, nombres, apellidos, correo, telefono, direccion, documentoId, fechaNacimiento, foto, estado, tipoUsuario);
         this.id = id;  // Heredado de Usuario
         this.nombres = nombres;  // Heredado de Usuario
         this.apellidos = apellidos;  // Heredado de Usuario

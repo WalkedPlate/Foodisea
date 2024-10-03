@@ -1,5 +1,6 @@
-package com.example.foodisea.activity.cliente;
+package com.example.foodisea.activity.superadmin;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -11,24 +12,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.cliente.RestauranteAdapter;
-import com.example.foodisea.databinding.ActivityClienteMainBinding;
+import com.example.foodisea.databinding.ActivitySuperAdminGestionRestauranteBinding;
+import com.example.foodisea.databinding.ActivitySuperAdminSelectionBinding;
 import com.example.foodisea.model.Restaurante;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ClienteMainActivity extends AppCompatActivity {
-    ActivityClienteMainBinding binding;
+public class SuperAdminGestionRestauranteActivity extends AppCompatActivity {
+    ActivitySuperAdminGestionRestauranteBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // binding
-        binding = ActivityClienteMainBinding.inflate(getLayoutInflater());
+        binding = ActivitySuperAdminGestionRestauranteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // limites de pantalla
         EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -36,7 +36,15 @@ public class ClienteMainActivity extends AppCompatActivity {
             return insets;
         });
 
+        //funcion de botones:
+        binding.btnBack.setOnClickListener(v -> {
+            finish(); // Cierra la actividad actual y regresa
+        });
 
+        binding.btnHome.setOnClickListener(v -> {
+            Intent home = new Intent(this, SuperadminMainActivity.class);
+            startActivity(home);
+        });
 
         // Configurar el adaptador
         RestauranteAdapter adapter = new RestauranteAdapter(this, getRestauranteList());
@@ -68,6 +76,4 @@ public class ClienteMainActivity extends AppCompatActivity {
 
         return restaurantList ;
     }
-
-
 }

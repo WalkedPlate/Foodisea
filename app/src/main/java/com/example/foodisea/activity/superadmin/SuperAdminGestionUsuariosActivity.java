@@ -8,10 +8,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.foodisea.R;
+import com.example.foodisea.adapter.cliente.RestauranteAdapter;
+import com.example.foodisea.adapter.superAdmin.UsuarioAdapter;
 import com.example.foodisea.databinding.ActivitySuperAdminGestionUsuariosBinding;
 import com.example.foodisea.databinding.ActivitySuperadminMainBinding;
+import com.example.foodisea.model.Restaurante;
+import com.example.foodisea.model.Usuario;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SuperAdminGestionUsuariosActivity extends AppCompatActivity {
 
@@ -40,5 +49,22 @@ public class SuperAdminGestionUsuariosActivity extends AppCompatActivity {
             Intent home = new Intent(this, SuperadminMainActivity.class);
             startActivity(home);
         });
+
+        // Configurar el adaptador
+        UsuarioAdapter adapter = new UsuarioAdapter(this, getUsuariosList());
+        binding.rvUsers.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvUsers.setAdapter(adapter);
+    }
+
+    // Método que devuelve una lista de usuarios de ejemplo
+    private List<Usuario> getUsuariosList() {
+        List<Usuario> usuarioList = new ArrayList<>();
+
+        // Agregar usuarios de ejemplo
+        usuarioList.add(new Usuario("1", "Juan", "Pérez", "juan.perez@mail.com", "123456789", "123 Calle Falsa", "12345678", "01/01/1990", "", "Activo", "Cliente"));
+        usuarioList.add(new Usuario("2", "María", "Gómez", "maria.gomez@mail.com", "987654321", "456 Avenida Real", "87654321", "02/02/1985", "", "Inactivo", "Superadmin"));
+        usuarioList.add(new Usuario("3", "Carlos", "López", "carlos.lopez@mail.com", "112233445", "789 Calle Principal", "65432189", "03/03/1988", "", "Activo", "AdministradorRestaurante"));
+
+        return usuarioList;
     }
 }

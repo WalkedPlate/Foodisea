@@ -10,17 +10,17 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
+import com.example.foodisea.databinding.ActivitySuperAdminGestionAdministradoresBinding;
+import com.example.foodisea.databinding.ActivitySuperAdminGestionUsuariosBinding;
 import com.example.foodisea.databinding.ActivitySuperAdminSelectionBinding;
 
-public class SuperAdminSelectionActivity extends AppCompatActivity {
-
-    ActivitySuperAdminSelectionBinding binding;
-
+public class SuperAdminGestionAdministradoresActivity extends AppCompatActivity {
+    ActivitySuperAdminGestionAdministradoresBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivitySuperAdminSelectionBinding.inflate(getLayoutInflater());
+        binding = ActivitySuperAdminGestionAdministradoresBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         EdgeToEdge.enable(this);
@@ -30,29 +30,14 @@ public class SuperAdminSelectionActivity extends AppCompatActivity {
             return insets;
         });
 
-        // funcion de botones
+        //funcion de botones:
         binding.btnBack.setOnClickListener(v -> {
             finish(); // Cierra la actividad actual y regresa
         });
 
-        binding.btnClientes.setOnClickListener(v ->{
-            Intent clientes = new Intent(this, SuperAdminGestionUsuariosActivity.class);
-            startActivity(clientes);
-        });
-
-        binding.btnRestaurantes.setOnClickListener(v ->{
-            Intent restaurantes = new Intent(this, SuperAdminGestionRestauranteActivity.class);
-            startActivity(restaurantes);
-        });
-
-        binding.btnRepartidores.setOnClickListener(v ->{
-            Intent repartidores = new Intent(this, SuperAdminGestionRepartidorActivity.class);
-            startActivity(repartidores);
-        });
-
-        binding.btnAdministradores.setOnClickListener(v ->{
-            Intent administradores = new Intent(this, SuperAdminGestionAdministradoresActivity.class);
-            startActivity(administradores);
+        binding.btnHome.setOnClickListener(v -> {
+            Intent home = new Intent(this, SuperadminMainActivity.class);
+            startActivity(home);
         });
     }
 }

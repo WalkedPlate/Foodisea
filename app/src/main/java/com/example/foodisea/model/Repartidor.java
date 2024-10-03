@@ -5,6 +5,16 @@ public class Repartidor extends Usuario {
     private double longitud;
     private String estado;  // "Disponible", "Ocupado"
 
+    // Constructor que llama a la clase Usuario
+    public Repartidor(String id, String nombres, String apellidos, String correo, String telefono, String direccion,
+                      String documentoId, String fechaNacimiento, String foto, String estadoUsuario, String tipoUsuario,
+                      double latitud, double longitud, String estado) {
+        super(id, nombres, apellidos, correo, telefono, direccion, documentoId, fechaNacimiento, foto, estadoUsuario, tipoUsuario);
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.estado = estado;
+    }
+
     public void recogerPedido(String pedidoId) {
         // Lógica para recoger el pedido
     }
