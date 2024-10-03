@@ -161,6 +161,7 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/buttonVerDetalles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="VER DETALLES DE COMPRA"

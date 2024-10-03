@@ -1,7 +1,9 @@
 package com.example.foodisea.activity.adminRes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,7 +12,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.example.foodisea.MainActivity;
 import com.example.foodisea.R;
+import com.example.foodisea.activity.superadmin.SuperadminMainActivity;
 import com.example.foodisea.adapter.repartidor.PedidosAdapter;
 import com.example.foodisea.databinding.ActivityAdminResPedidosBinding;
 import com.example.foodisea.model.Cliente;
@@ -109,6 +113,20 @@ public class AdminResPedidosActivity extends AppCompatActivity {
 
         TextView textViewIdPedido = bottomSheetView.findViewById(R.id.idPedido);
         textViewIdPedido.setText(pedido.getId());
+
+        Button botonDetallePedido = bottomSheetView.findViewById(R.id.buttonVerDetalles);
+        botonDetallePedido.setOnClickListener(view -> {
+            //Falta pasar datos al activity
+            Intent intent = new Intent(this, AdminResDetallesPedidosActivity.class);
+
+            intent.putExtra("idPedido",pedido.getId());
+            intent.putExtra("direccionDestino",pedido.getDireccionEntrega());
+            intent.putExtra("nombreCliente",pedido.getCliente().getNombres() + " " + pedido.getCliente().getApellidos());
+            intent.putExtra("telefono",pedido.getCliente().getTelefono());
+            intent.putExtra("metodoPago",pedido.getPago().getMetodoPago());
+            intent.putExtra("estadoPago",pedido.getPago().getEstadoPago());
+            startActivity(intent);
+        });
 
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
