@@ -36,8 +36,6 @@ public class ClienteMainActivity extends AppCompatActivity {
             return insets;
         });
 
-
-
         // Configurar el adaptador
         RestauranteAdapter adapter = new RestauranteAdapter(this, getRestauranteList());
         binding.rvRestaurants.setLayoutManager(new LinearLayoutManager(this));

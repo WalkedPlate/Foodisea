@@ -60,11 +60,20 @@ public class SuperAdminGestionUsuariosActivity extends AppCompatActivity {
     private List<Usuario> getUsuariosList() {
         List<Usuario> usuarioList = new ArrayList<>();
 
-        // Agregar usuarios de ejemplo
+        // Agregar usuarios de diferentes tipos
         usuarioList.add(new Usuario("1", "Juan", "Pérez", "juan.perez@mail.com", "123456789", "123 Calle Falsa", "12345678", "01/01/1990", "", "Activo", "Cliente"));
-        usuarioList.add(new Usuario("2", "María", "Gómez", "maria.gomez@mail.com", "987654321", "456 Avenida Real", "87654321", "02/02/1985", "", "Inactivo", "Superadmin"));
-        usuarioList.add(new Usuario("3", "Carlos", "López", "carlos.lopez@mail.com", "112233445", "789 Calle Principal", "65432189", "03/03/1988", "", "Activo", "AdministradorRestaurante"));
+        usuarioList.add(new Usuario("2", "María", "Gómez", "maria.gomez@mail.com", "987654321", "456 Avenida Real", "87654321", "02/02/1985", "", "Inactivo", "Cliente"));
+        usuarioList.add(new Usuario("3", "Carlos", "López", "carlos.lopez@mail.com", "112233445", "789 Calle Principal", "65432189", "03/03/1988", "", "Activo", "Repartidor"));
+        usuarioList.add(new Usuario("4", "Ana", "Ramírez", "ana.ramirez@mail.com", "123789456", "321 Calle Secundaria", "13254687", "04/04/1991", "", "Activo", "AdministradorRestaurante"));
 
-        return usuarioList;
+        // Filtrar solo los usuarios de tipo "Cliente"
+        List<Usuario> usuariosClientes = new ArrayList<>();
+        for (Usuario usuario : usuarioList) {
+            if ("Cliente".equals(usuario.getTipoUsuario())) {
+                usuariosClientes.add(usuario);
+            }
+        }
+
+        return usuariosClientes;
     }
 }
