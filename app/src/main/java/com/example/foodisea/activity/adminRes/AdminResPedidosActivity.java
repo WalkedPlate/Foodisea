@@ -52,7 +52,10 @@ public class AdminResPedidosActivity extends AppCompatActivity {
         // Configurar RecyclerView para mostrar los pedidos
         binding.rvPedidos.setLayoutManager(new GridLayoutManager(this, 2)); // 2 columnas
 
-        //mostrarBottonSheet();
+        binding.btnBack.setOnClickListener(view -> {
+            Intent home = new Intent(this, AdminResHomeActivity.class);
+            startActivity(home);
+        });
     }
 
     private List<Pedido> getPedidosList() {

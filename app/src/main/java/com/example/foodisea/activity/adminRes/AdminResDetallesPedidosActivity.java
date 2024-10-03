@@ -43,5 +43,9 @@ public class AdminResDetallesPedidosActivity extends AppCompatActivity {
         binding.idTelefono.setText(telefono);
         binding.metodoPago.setText(metodoPago);
         binding.estadoPago.setText(estadoPago);
+        binding.btnBack.setOnClickListener(view -> {
+            Intent pedidos = new Intent(this, AdminResPedidosActivity.class);
+            startActivity(pedidos);
+        });
     }
 }
