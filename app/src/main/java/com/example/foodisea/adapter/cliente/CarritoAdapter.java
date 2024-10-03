@@ -15,39 +15,70 @@ import com.example.foodisea.model.PlatoCantidad;
 
 
 import java.util.List;
+import java.util.Locale;
 
-public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CartViewHolder> {
+
+public class CarritoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int VIEW_TYPE_CARRITO = 0;
+    private static final int VIEW_TYPE_CHECKOUT = 1;
 
     private List<PlatoCantidad> cartItemList;
     private Context context; // Añadido contexto
+    private boolean isCheckout;
 
     // Constructor del adaptador
-    public CarritoAdapter(Context context, List<PlatoCantidad> cartItemList) {
+    public CarritoAdapter(Context context, List<PlatoCantidad> cartItemList, boolean isCheckout) {
         this.context = context; // Asignar el contexto
         this.cartItemList = cartItemList;
+        this.isCheckout = isCheckout;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return isCheckout ? VIEW_TYPE_CHECKOUT : VIEW_TYPE_CARRITO;
     }
 
     @NonNull
     @Override
-    public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_producto_carrito, parent, false);
-        return new CartViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_CARRITO) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_producto_carrito, parent, false);
+            return new CartViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_product_checkout, parent, false);
+            return new CheckoutViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         PlatoCantidad cartItem = cartItemList.get(position);
-
-        // Supongamos que tienes una forma de obtener un objeto Plato desde el ID
         Plato plato = obtenerPlatoPorId(cartItem.getPlatoId());
 
-        holder.productName.setText(plato.getNombre()); // Muestra el nombre del plato
-        holder.productPrice.setText("S/. " + plato.getPrecio()); // Muestra el precio del plato
-        holder.productQuantity.setText(String.valueOf(cartItem.getCantidad())); // Muestra la cantidad
-        // Muestra la primera imagen del plato
-        if (!plato.getImagenes().isEmpty()) {
-            // Cargar la primera imagen del plato
-            holder.productImage.setImageResource(getImageResource(plato.getImagenes().get(0))); // Cargar la primera imagen
+        if (holder instanceof CartViewHolder) {
+            CartViewHolder cartViewHolder = (CartViewHolder) holder;
+            cartViewHolder.productName.setText(plato.getNombre());
+            cartViewHolder.productPrice.setText(String.format(Locale.getDefault(), "S/. %.2f", plato.getPrecio()));
+            cartViewHolder.productQuantity.setText(String.valueOf(cartItem.getCantidad()));
+
+            // Cargar la imagen correspondiente
+            if (!plato.getImagenes().isEmpty()) {
+                int imageResource = getImageResource(plato.getImagenes().get(0));
+                cartViewHolder.productImage.setImageResource(imageResource);
+            }
+
+        } else if (holder instanceof CheckoutViewHolder) {
+            CheckoutViewHolder checkoutViewHolder = (CheckoutViewHolder) holder;
+            checkoutViewHolder.productName.setText(plato.getNombre());
+            checkoutViewHolder.productPrice.setText(String.format(Locale.getDefault(), "S/. %.2f", plato.getPrecio()));
+            checkoutViewHolder.productQuantity1.setText(String.valueOf(cartItem.getCantidad()));
+
+            // Cargar la imagen correspondiente
+            if (!plato.getImagenes().isEmpty()) {
+                int imageResource = getImageResource(plato.getImagenes().get(0));
+                ((ImageView) holder.itemView.findViewById(R.id.productImage)).setImageResource(imageResource);
+            }
         }
     }
 
@@ -70,13 +101,38 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CartView
         }
     }
 
-    // Método para obtener el plato por su ID (debes implementar esta lógica)
-    private Plato obtenerPlatoPorId(String platoId) {
-        // Aquí debes implementar la lógica para obtener el objeto Plato basado en su ID.
-        // Esto puede ser a través de una base de datos, una lista en memoria, etc.
-        return new Plato(platoId, "Hamburguesa", "DescripciónEjemplo", 10.0,
-                List.of("burger_image"), "CategoriaEjemplo", false); // Cambia esto según tus necesidades
+
+    public static class CheckoutViewHolder extends RecyclerView.ViewHolder {
+        TextView productName, productPrice, productQuantity1;
+
+        public CheckoutViewHolder(@NonNull View itemView) {
+            super(itemView);
+            productName = itemView.findViewById(R.id.productName);
+            productPrice = itemView.findViewById(R.id.productPrice);
+            productQuantity1 = itemView.findViewById(R.id.productQuantity1);
+        }
     }
+
+    private Plato obtenerPlatoPorId(String platoId) {
+        switch (platoId) {
+            case "PlatoId1":
+                return new Plato(platoId, "Burger Ferguson", "Pizza clásica con tomate y mozzarella", 10.00,
+                        List.of("burger"), "Platos", false);
+            case "PlatoId2":
+                return new Plato(platoId, "Rockin' Burgers", "Hamburguesa con queso cheddar y lechuga", 15.30,
+                        List.of("burger2"), "Platos", false);
+            case "PlatoId3":
+                return new Plato(platoId, "Coca Cola", "Ensalada con pollo, lechuga y salsa César", 5.00,
+                        List.of("soda"), "Bebidas", true);
+            case "PlatoId4":
+                return new Plato(platoId, "Crack' Burgers", "Taco con carne de cerdo y piña", 25.00,
+                        List.of("burger2"), "Tacos", false);
+            default:
+                return new Plato(platoId, "Plato Desconocido", "Descripción no disponible", 0.0,
+                        List.of("default_image"), "Desconocido", false);
+        }
+    }
+
 
     // Método para obtener el recurso de imagen (debes implementar esta lógica)
     private int getImageResource(String imagen) {

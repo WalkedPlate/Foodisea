@@ -14,17 +14,16 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginTop="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="12dp">
 
         <!-- Botón de regresar -->
         <ImageButton
             android:id="@+id/btnBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_margin="8dp"
             android:background="@drawable/circle_button_background"
             android:backgroundTint="@color/gray_dark"
             android:contentDescription="@string/btnBack"
@@ -189,7 +188,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        android:background="@android:color/white"
+        android:background="@drawable/rounded_top"
         android:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -216,7 +215,7 @@
                 android:id="@+id/tvTotalPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="S/.25"
+                android:text="S/. 15.00"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black" />

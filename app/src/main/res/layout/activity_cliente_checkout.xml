@@ -5,50 +5,48 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.cliente.ClienteCheckoutActivity">
+    tools:context=".activity.cliente.ClienteCheckoutActivity"
+    android:background="@color/bg_color">
 
-    <!-- Header con botón de regresar y título -->
     <LinearLayout
-        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:orientation="vertical">
 
-        <!-- Botón de regresar (flecha) -->
-        <Button
-            style="?attr/materialIconButtonFilledTonalStyle"
-            android:id="@+id/btnBack"
-            android:layout_width="wrap_content"
+        <!-- Header con botón de regresar y título -->
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_margin="16dp"
-            app:icon="@drawable/baseline_arrow_back_ios_new_24"
-            android:contentDescription="regresar"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="12dp">
 
-        <!-- Texto "Resumen de pedido" -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Resumen de pedido"
-            android:textSize="20sp"
-            android:textStyle="bold">
-        </TextView>
-    </LinearLayout>
+            <!-- Botón de regresar (flecha) -->
+            <Button
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/baseline_arrow_back_ios_new_24"
+                android:contentDescription="@string/btnBack"
+                android:backgroundTint="@color/bg_color"/>
 
-    <!-- Contenido desplazable -->
-    <ScrollView
-        android:id="@+id/scrollViewContent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/header"
-        android:layout_above="@id/containerBottom"
-        android:padding="16dp">
+            <!-- Texto "Resumen de pedido" -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Resumen del pedido"
+                android:textSize="20sp"
+                android:fontFamily="@font/sen_font">
+            </TextView>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp">
 
             <!-- Dirección de destino -->
             <LinearLayout
@@ -77,6 +75,7 @@
                             android:layout_weight="1"
                             android:text="DIRECCION DESTINO"
                             android:textColor="@android:color/darker_gray"
+                            android:fontFamily="@font/sen_font"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -98,7 +97,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:background="@drawable/search_view_bg"
-                        android:padding="10dp"
+                        android:padding="12dp"
                         android:text="2118 Thornridge Cir. Syracuse"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
@@ -111,7 +110,7 @@
             <!-- Detalles del pedido -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="240dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/rounded_box">
 
@@ -134,6 +133,7 @@
                             android:layout_height="wrap_content"
                             android:text="BURGER BISTRO"
                             android:textSize="16sp"
+                            android:fontFamily="@font/sen_font"
                             android:textStyle="bold"
                             android:textColor="@android:color/darker_gray"
                             android:layout_weight="1" />
@@ -149,129 +149,20 @@
                     </LinearLayout>
 
 
-                <!-- Productos del pedido -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <!-- Primer producto -->
+                    <!-- Productos del pedido -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="6dp">
+                        android:orientation="vertical"
+                        android:padding="8dp">
 
-                        <!-- Imagen del producto -->
-                        <ImageView
-                            android:id="@+id/productImage1"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/burger"/>
-
-                        <!-- Información del producto -->
-                        <LinearLayout
-                            android:layout_width="0dp"
+                        <!-- RecyclerView para Detalles del pedido -->
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/orderItemsRecyclerView"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_weight="1"
-                            android:paddingStart="8dp">
-
-                            <!-- Nombre del producto -->
-                            <TextView
-                                android:id="@+id/productName1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Pizza Calzone European"
-                                android:textSize="16sp"
-                                android:textColor="@android:color/black"
-                                android:textStyle="bold" />
-
-                            <!-- Precio del producto -->
-                            <TextView
-                                android:id="@+id/productDetails1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="S/. 64"
-                                android:textSize="14sp"
-                                android:textColor="@android:color/darker_gray" />
-                        </LinearLayout>
-
-                        <!-- Cantidad del producto -->
-                        <TextView
-                            android:id="@+id/productQuantity1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="2"
-                            android:textSize="16sp"
-                            android:layout_marginEnd="8dp"
-                            android:textColor="@android:color/white"
-                            android:background="@drawable/rounded_circle"
-                            android:paddingHorizontal="8dp"
-                            android:paddingVertical="2dp" />
+                            android:padding="2dp"/>
                     </LinearLayout>
-
-                    <!-- Segundo producto (estructura similar al primer producto) -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="6dp">
-
-                        <!-- Imagen del producto -->
-                        <ImageView
-                            android:id="@+id/productImage2"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/burger" />
-
-                        <!-- Información del producto -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_weight="1"
-                            android:paddingStart="8dp">
-
-                            <!-- Nombre del producto -->
-                            <TextView
-                                android:id="@+id/productName2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Pizza Calzone European"
-                                android:textSize="16sp"
-                                android:textColor="@android:color/black"
-                                android:textStyle="bold" />
-
-                            <!-- Precio del producto -->
-                            <TextView
-                                android:id="@+id/productDetails2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="S/. 32"
-                                android:textSize="14sp"
-                                android:textColor="@android:color/darker_gray" />
-                        </LinearLayout>
-
-                        <!-- Cantidad del producto -->
-                        <TextView
-                            android:id="@+id/productQuantity2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1"
-                            android:textSize="16sp"
-                            android:layout_marginEnd="8dp"
-                            android:textColor="@android:color/white"
-                            android:background="@drawable/rounded_circle"
-                            android:paddingHorizontal="8dp"
-                            android:paddingVertical="2dp" />
-                    </LinearLayout>
-                </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
@@ -296,13 +187,14 @@
                         android:layout_height="wrap_content"
                         android:text="Total consumo:"
                         android:textSize="16sp"
+                        android:fontFamily="@font/sen_font"
                         android:textColor="@android:color/darker_gray"
                         android:layout_weight="1" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="S/. 96"
+                        android:text="S/. 96.00"
                         android:textSize="16sp"
                         android:textColor="@android:color/black" />
                 </LinearLayout>
@@ -319,44 +211,23 @@
                         android:layout_height="wrap_content"
                         android:text="Delivery:"
                         android:textSize="16sp"
+                        android:fontFamily="@font/sen_font"
                         android:textColor="@android:color/darker_gray"
                         android:layout_weight="1" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="S/. 4"
+                        android:text="S/. 15.00"
                         android:textSize="16sp"
                         android:textColor="@android:color/black" />
                 </LinearLayout>
 
-                <!-- Total -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="TOTAL:"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/black"
-                        android:layout_weight="1" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="S/. 100"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/black" />
-                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
+
+
 
 
     <!-- Contenedor del precio y "Realizar pedido", ubicado en la parte inferior -->
@@ -367,8 +238,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:padding="16dp"
-        android:background="@android:color/white"
-        android:elevation="8dp">
+        android:background="@drawable/rounded_top">
 
         <!-- Total consumo -->
         <LinearLayout
@@ -384,8 +254,9 @@
                 android:id="@+id/tvTotalLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TOTAL:"
+                android:text="PAGO TOTAL:"
                 android:textSize="18sp"
+                android:fontFamily="@font/sen_font"
                 android:textColor="@android:color/black"
                 android:layout_weight="1"/>
 
@@ -394,7 +265,7 @@
                 android:id="@+id/tvTotalPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="S/.100"
+                android:text="S/. 296.20"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black" />
@@ -410,7 +281,7 @@
             android:backgroundTint="@android:color/holo_red_light"
             android:textColor="@android:color/white"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="12dp"
             android:padding="16dp"
             android:textStyle="bold"/>
     </LinearLayout>

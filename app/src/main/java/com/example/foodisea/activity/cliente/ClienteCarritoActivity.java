@@ -47,7 +47,7 @@ public class ClienteCarritoActivity extends AppCompatActivity {
 
 
         // Inicializar el adaptador y asignarlo al RecyclerView
-        adapter = new CarritoAdapter(this,getPlatosCarrito());
+        adapter = new CarritoAdapter(this,getPlatosCarrito(),false);
         recyclerView.setAdapter(adapter);
 
         // funcion de los botones
@@ -74,8 +74,8 @@ public class ClienteCarritoActivity extends AppCompatActivity {
         // Agregar ítems de prueba al carrito
         platoCarritos.add(new PlatoCantidad("PlatoId1",3));
         platoCarritos.add(new PlatoCantidad("PlatoId2", 4));
-        platoCarritos.add(new PlatoCantidad("PlatoId3",13));
-        platoCarritos.add(new PlatoCantidad("PlatoId4", 24));
+        platoCarritos.add(new PlatoCantidad("PlatoId3",8));
+        platoCarritos.add(new PlatoCantidad("PlatoId4", 6));
 
 
         return platoCarritos;

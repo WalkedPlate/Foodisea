@@ -138,7 +138,7 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
                 UUID.randomUUID().toString(),
                 "Crack' Burgers",
                 "Hamburguesa clásica con ingredientes frescos",
-                45.90,
+                25.00,
                 Arrays.asList("burger4"),
                 "Plato",
                 true

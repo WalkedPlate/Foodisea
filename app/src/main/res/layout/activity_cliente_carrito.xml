@@ -86,7 +86,7 @@
                 android:id="@+id/tvTotalPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="S/.96"
+                android:text="S/. 281.20"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black" />
