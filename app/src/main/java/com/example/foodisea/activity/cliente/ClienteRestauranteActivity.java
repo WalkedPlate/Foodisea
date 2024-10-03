@@ -53,13 +53,15 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
         // Obtén los datos pasados desde el intent
         Intent intent = getIntent();
         String restaurantName = intent.getStringExtra("name");
-        float restaurantRating = intent.getFloatExtra("rating", 0);
+        double restaurantRating = intent.getDoubleExtra("rating", 0);
         String restaurantImage = intent.getStringExtra("image");
+        String restaurantDesc = intent.getStringExtra("descripcion");
 
         // Configura la vista con los datos recibidos
         binding.ivRestaurantImage.setImageResource(getResources().getIdentifier(restaurantImage, "drawable", getPackageName()));
         binding.tvRestaurantName.setText(restaurantName);
         binding.tvRestaurantRating.setText(String.valueOf(restaurantRating));
+        binding.tvDescripcionRest.setText(restaurantDesc);
 
         // funcion de los botones
         binding.btnBack.setOnClickListener(v -> {

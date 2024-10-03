@@ -14,11 +14,12 @@ public class Restaurante {
     private double rating;  // Calificación del restaurante
     private List<String> imagenes;  // Lista de URLs o recursos de imágenes
     private AdministradorRestaurante administrador;  // Referencia al administrador
+    private String descripcion;
 
     //Constructor, getter y setter
 
     // Constructor con parámetros
-    public Restaurante(String nombre, String direccion, String telefono, List<String> categorias, double rating, List<String> imagenes, AdministradorRestaurante administrador) {
+    public Restaurante(String nombre, String direccion, String telefono, List<String> categorias, double rating, List<String> imagenes, AdministradorRestaurante administrador, String descripcion) {
         this.id = generateId(); // Asigna un ID único, si es necesario
         this.nombre = nombre;
         this.direccion = direccion;
@@ -28,6 +29,7 @@ public class Restaurante {
         this.imagenes = imagenes; // Lista de nombres de recursos de imágenes
         this.administrador = administrador;
         this.estado = "Activo"; // Estado predeterminado
+        this.descripcion = descripcion;
     }
 
     // Método para generar un ID único (por ahora)
@@ -116,4 +118,6 @@ public class Restaurante {
     public void setAdministrador(AdministradorRestaurante administrador) {
         this.administrador = administrador;
     }
+
+    public String getDescripcion(){return descripcion;}
 }

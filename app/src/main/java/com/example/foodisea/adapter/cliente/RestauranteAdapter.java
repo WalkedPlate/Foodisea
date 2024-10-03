@@ -64,6 +64,7 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
             intent.putExtra("restauranteId", restaurante.getId());  // Pasar el ID del restaurante
             intent.putExtra("name", restaurante.getNombre());
             intent.putExtra("rating", restaurante.getRating());
+            intent.putExtra("descripcion", restaurante.getDescripcion());
             if (!restaurante.getImagenes().isEmpty()) {
                 intent.putExtra("image", restaurante.getImagenes().get(0));  // Pasar la primera imagen
             }
