@@ -63,6 +63,7 @@ public class PlatoAdapter extends RecyclerView.Adapter<PlatoAdapter.PlatoViewHol
             Intent intent = new Intent(context, ClienteProductoActivity.class);
             intent.putExtra("productName", plato.getNombre());
             intent.putExtra("productPrice", plato.getPrecio());
+            intent.putExtra("productDescription", plato.getDescripcion());
             // Se puede agregar un campo para la imagen si se necesita en la actividad de detalles
             intent.putExtra("productImage", plato.getImagenes().get(0)); // Obtener la primera imagen como ejemplo
             context.startActivity(intent);

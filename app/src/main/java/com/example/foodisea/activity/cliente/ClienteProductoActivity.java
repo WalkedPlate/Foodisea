@@ -29,18 +29,21 @@ public class ClienteProductoActivity extends AppCompatActivity {
 
         ImageView productImage = findViewById(R.id.productDetailImage);
         TextView productName = findViewById(R.id.productDetailName);
+        TextView productDescription = findViewById(R.id.tvDescripcionProduct);
         TextView productPrice = findViewById(R.id.productDetailPrice);
 
 
         // Obtener los datos del intent
         Intent intent = getIntent();
         String name = intent.getStringExtra("productName");
+        String descripcion = intent.getStringExtra("productDescription");
         double price = intent.getDoubleExtra("productPrice", 0);
         String imageResource = intent.getStringExtra("productImage");
 
         // Configurar la vista con los datos recibidos
         productName.setText(name);
         productPrice.setText("S/." + price);
+        productDescription.setText(descripcion);
         productImage.setImageResource(getResources().getIdentifier(imageResource, "drawable", getPackageName()));
 
 

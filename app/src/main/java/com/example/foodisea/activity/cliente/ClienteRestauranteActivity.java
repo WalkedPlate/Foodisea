@@ -86,7 +86,7 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
         platoList.add(new Plato(
                 UUID.randomUUID().toString(), // Generar un ID único para el Plato
                 "Burger Ferguson",             // Nombre del Plato
-                "Deliciosa hamburguesa con queso y bacon", // Descripción
+                "Deliciosa hamburguesa con queso y bacon, preparada con los mejores ingredientes para satisfacer tu antojo.", // Descripción
                 10.00,                         // Precio
                 Arrays.asList("burger"), // Lista de URLs de imágenes
                 "Plato",                       // Categoría
@@ -96,7 +96,7 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
         platoList.add(new Plato(
                 UUID.randomUUID().toString(),
                 "Rockin' Burgers",
-                "Hamburguesa clásica con ingredientes frescos",
+                "La hamburguesa clásica combina carne de res a la parrilla, queso cheddar, pan brioche, lechuga fresca, tomate, cebolla morada, pepinillos y una salsa especial para un sabor único y equilibrado.",
                 15.30,
                 Arrays.asList("burger2"),
                 "Plato",
@@ -106,7 +106,7 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
         platoList.add(new Plato(
                 UUID.randomUUID().toString(),
                 "Coca Cola",
-                "Refresco de cola",
+                "El refresco de cola es una bebida burbujeante y refrescante, con un sabor distintivo que combina notas dulces y ligeramente ácidas. Su efervescencia intensa lo convierte en el acompañante perfecto para cualquier comida, ofreciendo un toque revitalizante en cada sorbo. Ideal para disfrutar bien frío y acompañado de hielo.",
                 5.00,
                 Arrays.asList("soda"),
                 "Bebida",
@@ -116,7 +116,7 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
         platoList.add(new Plato(
                 UUID.randomUUID().toString(),
                 "Pepsi",
-                "Refresco de cola",
+                "Pepsi es una gaseosa refrescante con un sabor único, que combina dulzura y un toque ácido. Con su efervescencia burbujeante, es perfecta para disfrutar bien fría en cualquier momento.",
                 4.50,
                 Arrays.asList("soda2"),
                 "Bebida",
@@ -127,7 +127,8 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
         platoList.add(new Plato(
                 UUID.randomUUID().toString(),
                 "Chirox' Burgers",
-                "Hamburguesa clásica con ingredientes frescos",
+                "\n" +
+                        "Nuestra hamburguesa está hecha con una jugosa carne de res a la parrilla, acompañada de queso cheddar fundido, crujiente lechuga, tomate fresco, cebolla morada y pepinillos.",
                 12.80,
                 Arrays.asList("burger3"),
                 "Plato",
