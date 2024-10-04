@@ -1,6 +1,7 @@
 package com.example.foodisea.adapter.adminRes;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
+import com.example.foodisea.activity.adminRes.AdminResDetallesProductoActivity;
+import com.example.foodisea.activity.repartidor.RepartidorVerOrdenActivity;
 import com.example.foodisea.model.Plato;
 
 import java.util.List;
@@ -70,6 +73,11 @@ public class CartaAdapter extends RecyclerView.Adapter<CartaAdapter.PlatoViewHol
         } else {
             textViewStatus.setVisibility(View.GONE);
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, AdminResDetallesProductoActivity.class);
+            context.startActivity(intent);
+        });
     }
 
     @Override
