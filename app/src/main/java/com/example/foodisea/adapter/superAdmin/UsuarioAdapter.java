@@ -44,6 +44,17 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
         holder.binding.tvUserName.setText(nombreCompleto);
         holder.binding.tvCorreo.setText(usuario.getCorreo());
 
+        if (!usuario.getFoto().isEmpty()) {
+            int imageResId = context.getResources().getIdentifier(usuario.getFoto(), "drawable", context.getPackageName());
+            if (imageResId != 0) {
+                holder.binding.ivUserPhoto.setImageResource(imageResId);
+            } else {
+                holder.binding.ivUserPhoto.setImageResource(R.drawable.ic_usuarios); // Imagen por defecto si no se encuentra
+            }
+        } else {
+            holder.binding.ivUserPhoto.setImageResource(R.drawable.ic_usuarios); // Imagen por defecto si no hay imágenes
+        }
+
         // Configurar el MaterialSwitch según el estado del usuario
         holder.binding.swUserActive.setChecked(usuario.getEstado().equals("Activo"));
 

@@ -9,7 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
+import com.example.foodisea.activity.cliente.ClienteMainActivity;
 import com.example.foodisea.activity.cliente.ClienteRestauranteActivity;
+import com.example.foodisea.activity.superadmin.SuperAdminGestionRestauranteActivity;
+import com.example.foodisea.activity.superadmin.SuperAdminRestaurantesReportesActivity;
 import com.example.foodisea.databinding.ItemRestaurantBinding;
 import com.example.foodisea.model.Restaurante;
 
@@ -35,6 +38,7 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position) {
+
         Restaurante restaurante = restaurantes.get(position);
 
         holder.binding.restaurantName.setText(restaurante.getNombre());
@@ -60,15 +64,29 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
 
         // Añadir el onClickListener para abrir la actividad de detalles
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, ClienteRestauranteActivity.class);
-            intent.putExtra("restauranteId", restaurante.getId());  // Pasar el ID del restaurante
-            intent.putExtra("name", restaurante.getNombre());
-            intent.putExtra("rating", restaurante.getRating());
-            intent.putExtra("descripcion", restaurante.getDescripcion());
-            if (!restaurante.getImagenes().isEmpty()) {
-                intent.putExtra("image", restaurante.getImagenes().get(0));  // Pasar la primera imagen
+
+            if (context instanceof ClienteMainActivity){
+                Intent intent = new Intent(context, ClienteRestauranteActivity.class);
+                intent.putExtra("restauranteId", restaurante.getId());  // Pasar el ID del restaurante
+                intent.putExtra("name", restaurante.getNombre());
+                intent.putExtra("rating", restaurante.getRating());
+                intent.putExtra("descripcion", restaurante.getDescripcion());
+                if (!restaurante.getImagenes().isEmpty()) {
+                    intent.putExtra("image", restaurante.getImagenes().get(0));  // Pasar la primera imagen
+                }
+                context.startActivity(intent);
+            }else if (context instanceof SuperAdminGestionRestauranteActivity){
+                Intent intent = new Intent(context, SuperAdminRestaurantesReportesActivity.class);
+                intent.putExtra("restauranteId", restaurante.getId());  // Pasar el ID del restaurante
+                intent.putExtra("name", restaurante.getNombre());
+                intent.putExtra("rating", restaurante.getRating());
+                intent.putExtra("descripcion", restaurante.getDescripcion());
+                if (!restaurante.getImagenes().isEmpty()) {
+                    intent.putExtra("image", restaurante.getImagenes().get(0));  // Pasar la primera imagen
+                }
+                context.startActivity(intent);
             }
-            context.startActivity(intent);
+
         });
     }
 
