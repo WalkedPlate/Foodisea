@@ -7,6 +7,7 @@ public class Plato {
     private String nombre;
     private String descripcion;
     private double precio;
+    private String restauranteId;
     private List<String> imagenes;  // Mínimo 2 imágenes
     private String categoria; // "Plato" o "Bebida"
     private boolean outOfStock;
@@ -22,6 +23,14 @@ public class Plato {
         this.outOfStock = outOfStock;
     }
 
+
+    public String getRestauranteId() {
+        return restauranteId;
+    }
+
+    public void setRestauranteId(String restauranteId) {
+        this.restauranteId = restauranteId;
+    }
 
     public boolean isOutOfStock() {
         return outOfStock;

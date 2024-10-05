@@ -107,13 +107,14 @@ public class RepartidorRestauranteActivity extends AppCompatActivity {
         platosPedido4.add(new PlatoCantidad("plato3", 2));  // 2 unidades del plato con ID "plato3"
 
         // Añadir pedidos a la lista
-        pedidos.add(new Pedido("#162432", cliente1, "restauranteId1", platosPedido1, null, "Recibido", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR1, pago1));
-        pedidos.add(new Pedido("#182432", cliente2, "restauranteId2", platosPedido2, null, "En preparación", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR2, pago2));
-        pedidos.add(new Pedido("#202432", cliente3, "restauranteId3", platosPedido3, null, "En camino", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR3, pago3));
-        pedidos.add(new Pedido("#222432", cliente4, "restauranteId4", platosPedido4, null, "Entregado", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR4, pago4));
-        pedidos.add(new Pedido("#262432", cliente4, "restauranteId4", platosPedido4, null, "Entregado", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR4, pago4));
-        pedidos.add(new Pedido("#232423", cliente4, "restauranteId4", platosPedido4, null, "Entregado", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR4, pago4));
-        pedidos.add(new Pedido("#274765", cliente4, "restauranteId4", platosPedido4, null, "Entregado", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR4, pago4));
+        // Añadir pedidos a la lista
+        pedidos.add(new Pedido("#162432", cliente1.getId(), "restauranteId1", platosPedido1, null, "Recibido", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR1.getId(), pago1.getId()));
+        pedidos.add(new Pedido("#182432", cliente2.getId(), "restauranteId2", platosPedido2, null, "En preparación", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR2.getId(), pago2.getId()));
+        pedidos.add(new Pedido("#202432", cliente3.getId(), "restauranteId3", platosPedido3, null, "En camino", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR3.getId(), pago3.getId()));
+        pedidos.add(new Pedido("#222432", cliente4.getId(), "restauranteId4", platosPedido4, null, "Entregado", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR4.getId(), pago4.getId()));
+        pedidos.add(new Pedido("#262432", cliente4.getId(), "restauranteId4", platosPedido4, null, "Entregado", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR4.getId(), pago4.getId()));
+        pedidos.add(new Pedido("#232423", cliente4.getId(), "restauranteId4", platosPedido4, null, "Entregado", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR4.getId(), pago4.getId()));
+        pedidos.add(new Pedido("#274765", cliente4.getId(), "restauranteId4", platosPedido4, null, "Entregado", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR4.getId(), pago4.getId()));
 
         return pedidos;
     }

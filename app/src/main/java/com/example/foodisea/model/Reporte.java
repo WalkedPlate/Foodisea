@@ -5,14 +5,15 @@ import java.util.Map;
 
 public class Reporte {
     private String id;
-    private Restaurante restaurante;  // Referencia al Restaurante del cual se generan las ventas
+    private String restauranteId;  // Referencia al Restaurante (ID)
     private Date fechaInicio;
     private Date fechaFin;
-    private Map<Plato, Integer> ventasPorPlato;  // Plato -> Cantidad vendida
+    private Map<String, Integer> ventasPorPlato;  // platoId -> Cantidad vendida
     private double totalVentas;
 
 
     //Constructor, getter y setter
+
 
     public String getId() {
         return id;
@@ -22,12 +23,12 @@ public class Reporte {
         this.id = id;
     }
 
-    public Restaurante getRestaurante() {
-        return restaurante;
+    public String getRestauranteId() {
+        return restauranteId;
     }
 
-    public void setRestaurante(Restaurante restaurante) {
-        this.restaurante = restaurante;
+    public void setRestauranteId(String restauranteId) {
+        this.restauranteId = restauranteId;
     }
 
     public Date getFechaInicio() {
@@ -46,11 +47,11 @@ public class Reporte {
         this.fechaFin = fechaFin;
     }
 
-    public Map<Plato, Integer> getVentasPorPlato() {
+    public Map<String, Integer> getVentasPorPlato() {
         return ventasPorPlato;
     }
 
-    public void setVentasPorPlato(Map<Plato, Integer> ventasPorPlato) {
+    public void setVentasPorPlato(Map<String, Integer> ventasPorPlato) {
         this.ventasPorPlato = ventasPorPlato;
     }
 

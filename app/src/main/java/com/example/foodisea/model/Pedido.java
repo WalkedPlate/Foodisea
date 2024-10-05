@@ -6,33 +6,33 @@ import java.util.List;
 public class Pedido {
 
     private String id;
-    private Cliente cliente;  // Referencia al objeto Cliente que hizo el pedido
-    private String restauranteId;  // ID del Restaurante donde se hizo el pedido
+    private String clienteId;  // Referencia al cliente que hizo el pedido (ID)
+    private String restauranteId;  // ID del restaurante donde se hizo el pedido
     private List<PlatoCantidad> platos;  // Lista de platos y sus cantidades solicitadas
-    private Repartidor repartidor;  // Referencia al repartidor (si ya está asignado)
+    private String repartidorId;  // Referencia al repartidor asignado (ID)
     private String estado;  // "Recibido", "En preparación", "En camino", "Entregado"
     private Date fechaPedido;
     private String direccionEntrega;
-    private CodigoQR qrCode;  // Referencia al objeto CodigoQR
-    private Pago pago;  // Referenc
+    private String codigoQrId;  // Referencia al Código QR (ID)
+    private String pagoId;  // Referencia al Pago (ID)
 
 
     //Constructor, getter y setter
 
     // Constructor
-    public Pedido(String id, Cliente cliente, String restauranteId, List<PlatoCantidad> platos,
-                  Repartidor repartidor, String estado, Date fechaPedido, String direccionEntrega,
-                  CodigoQR qrCode, Pago pago) {
+    public Pedido(String id, String clienteId, String restauranteId, List<PlatoCantidad> platos,
+                  String repartidorId, String estado, Date fechaPedido, String direccionEntrega,
+                  String codigoQrId, String pagoId) {
         this.id = id;
-        this.cliente = cliente;
+        this.clienteId = clienteId;
         this.restauranteId = restauranteId;
         this.platos = platos;
-        this.repartidor = repartidor;
+        this.repartidorId = repartidorId;
         this.estado = estado;
         this.fechaPedido = fechaPedido;
         this.direccionEntrega = direccionEntrega;
-        this.qrCode = qrCode;
-        this.pago = pago;
+        this.codigoQrId = codigoQrId;
+        this.pagoId = pagoId;
     }
 
     public String getId() {
@@ -43,12 +43,12 @@ public class Pedido {
         this.id = id;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public String getClienteId() {
+        return clienteId;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setClienteId(String clienteId) {
+        this.clienteId = clienteId;
     }
 
     public String getRestauranteId() {
@@ -67,12 +67,12 @@ public class Pedido {
         this.platos = platos;
     }
 
-    public Repartidor getRepartidor() {
-        return repartidor;
+    public String getRepartidorId() {
+        return repartidorId;
     }
 
-    public void setRepartidor(Repartidor repartidor) {
-        this.repartidor = repartidor;
+    public void setRepartidorId(String repartidorId) {
+        this.repartidorId = repartidorId;
     }
 
     public String getEstado() {
@@ -99,19 +99,19 @@ public class Pedido {
         this.direccionEntrega = direccionEntrega;
     }
 
-    public CodigoQR getQrCode() {
-        return qrCode;
+    public String getCodigoQrId() {
+        return codigoQrId;
     }
 
-    public void setQrCode(CodigoQR qrCode) {
-        this.qrCode = qrCode;
+    public void setCodigoQrId(String codigoQrId) {
+        this.codigoQrId = codigoQrId;
     }
 
-    public Pago getPago() {
-        return pago;
+    public String getPagoId() {
+        return pagoId;
     }
 
-    public void setPago(Pago pago) {
-        this.pago = pago;
+    public void setPagoId(String pagoId) {
+        this.pagoId = pagoId;
     }
 }
