@@ -12,9 +12,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import com.example.foodisea.MainActivity;
 import com.example.foodisea.R;
-import com.example.foodisea.activity.superadmin.SuperadminMainActivity;
 import com.example.foodisea.adapter.repartidor.PedidosAdapter;
 import com.example.foodisea.databinding.ActivityAdminResPedidosBinding;
 import com.example.foodisea.model.Cliente;
@@ -26,10 +24,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AdminResPedidosActivity extends AppCompatActivity {
     ActivityAdminResPedidosBinding binding;
+    private Map<String, Cliente> clientesMap = new HashMap<>();
+    private Map<String, Pago> pagosMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +46,10 @@ public class AdminResPedidosActivity extends AppCompatActivity {
             return insets;
         });
 
-
-        List<Pedido> pedidosList = getPedidosList(); // Método para obtener los datos de pedidos
-        PedidosAdapter adapter = new PedidosAdapter(this, pedidosList);
+        List<Pedido> pedidosList = getPedidosList();
+        PedidosAdapter adapter = new PedidosAdapter(this, pedidosList, clientesMap, pagosMap);
         binding.rvPedidos.setAdapter(adapter);
-
-        // Configurar RecyclerView para mostrar los pedidos
-        binding.rvPedidos.setLayoutManager(new GridLayoutManager(this, 2)); // 2 columnas
+        binding.rvPedidos.setLayoutManager(new GridLayoutManager(this, 2));
 
         binding.btnBack.setOnClickListener(view -> {
             Intent home = new Intent(this, AdminResHomeActivity.class);
@@ -59,7 +58,6 @@ public class AdminResPedidosActivity extends AppCompatActivity {
     }
 
     private List<Pedido> getPedidosList() {
-        // Obtener desde bd
         List<Pedido> pedidos = new ArrayList<>();
 
         // Crear instancias de Cliente
@@ -67,6 +65,11 @@ public class AdminResPedidosActivity extends AppCompatActivity {
         Cliente cliente2 = new Cliente("2", "David", "Fernandez", "david@example.com", "0987654321", "2118 Thornridge Cir. Syracuse", "87654321", "1992-05-10", null, "Activo", "Cliente");
         Cliente cliente3 = new Cliente("3", "Juan", "Perez", "juan@example.com", "1122334455", "2118 Thornridge Cir. Syracuse", "23456789", "1988-09-20", null, "Activo", "Cliente");
         Cliente cliente4 = new Cliente("4", "Maria", "Diaz", "maria@example.com", "2233445566", "2118 Thornridge Cir. Syracuse", "34567890", "1995-11-30", null, "Activo", "Cliente");
+
+        clientesMap.put(cliente1.getId(), cliente1);
+        clientesMap.put(cliente2.getId(), cliente2);
+        clientesMap.put(cliente3.getId(), cliente3);
+        clientesMap.put(cliente4.getId(), cliente4);
 
         // Crear instancias de CodigoQR
         CodigoQR codigoQR1 = new CodigoQR("qrCode1", "#162432", "codigo123", "Generado", new Date());
@@ -80,54 +83,57 @@ public class AdminResPedidosActivity extends AppCompatActivity {
         Pago pago3 = new Pago("pagoId3", "#202432", 15.0, "Tarjeta", "Completado", new Date());
         Pago pago4 = new Pago("pagoId4", "#262432", 15.0, "Efectivo", "Completado", new Date());
 
+        pagosMap.put(pago1.getId(), pago1);
+        pagosMap.put(pago2.getId(), pago2);
+        pagosMap.put(pago3.getId(), pago3);
+        pagosMap.put(pago4.getId(), pago4);
+
         // Crear listas de PlatoCantidad para cada pedido
         List<PlatoCantidad> platosPedido1 = new ArrayList<>();
-        platosPedido1.add(new PlatoCantidad("plato1", 2));  // 2 unidades del plato con ID "plato1"
-        platosPedido1.add(new PlatoCantidad("plato2", 1));  // 1 unidad del plato con ID "plato2"
+        platosPedido1.add(new PlatoCantidad("plato1", 2));
+        platosPedido1.add(new PlatoCantidad("plato2", 1));
 
         List<PlatoCantidad> platosPedido2 = new ArrayList<>();
-        platosPedido2.add(new PlatoCantidad("plato3", 1));  // 1 unidad del plato con ID "plato3"
+        platosPedido2.add(new PlatoCantidad("plato3", 1));
 
         List<PlatoCantidad> platosPedido3 = new ArrayList<>();
-        platosPedido3.add(new PlatoCantidad("plato4", 3));  // 3 unidades del plato con ID "plato4"
+        platosPedido3.add(new PlatoCantidad("plato4", 3));
 
         List<PlatoCantidad> platosPedido4 = new ArrayList<>();
-        platosPedido4.add(new PlatoCantidad("plato1", 1));  // 1 unidad del plato con ID "plato1"
-        platosPedido4.add(new PlatoCantidad("plato3", 2));  // 2 unidades del plato con ID "plato3"
+        platosPedido4.add(new PlatoCantidad("plato1", 1));
+        platosPedido4.add(new PlatoCantidad("plato3", 2));
 
         // Añadir pedidos a la lista
-        pedidos.add(new Pedido("#162432", cliente1, "restauranteId1", platosPedido1, null, "Recibido", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR1, pago1));
-        pedidos.add(new Pedido("#182432", cliente2, "restauranteId2", platosPedido2, null, "En preparación", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR2, pago2));
-        pedidos.add(new Pedido("#202432", cliente3, "restauranteId3", platosPedido3, null, "En camino", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR3, pago3));
-        pedidos.add(new Pedido("#222432", cliente4, "restauranteId4", platosPedido4, null, "Entregado", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR4, pago4));
-        pedidos.add(new Pedido("#262432", cliente4, "restauranteId4", platosPedido4, null, "Entregado", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR4, pago4));
-        pedidos.add(new Pedido("#232423", cliente4, "restauranteId4", platosPedido4, null, "Entregado", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR4, pago4));
-        pedidos.add(new Pedido("#274765", cliente4, "restauranteId4", platosPedido4, null, "Entregado", new Date(), "2118 Thornridge Cir. Syracuse", codigoQR4, pago4));
+        pedidos.add(new Pedido("#162432", "1", "restauranteId1", platosPedido1, null, "Recibido", new Date(), "2118 Thornridge Cir. Syracuse", "qrCode1", "pagoId1"));
+        pedidos.add(new Pedido("#182432", "2", "restauranteId2", platosPedido2, null, "En preparación", new Date(), "2118 Thornridge Cir. Syracuse", "qrCode2", "pagoId2"));
+        pedidos.add(new Pedido("#202432", "3", "restauranteId3", platosPedido3, null, "En camino", new Date(), "2118 Thornridge Cir. Syracuse", "qrCode3", "pagoId3"));
+        pedidos.add(new Pedido("#222432", "4", "restauranteId4", platosPedido4, null, "Entregado", new Date(), "2118 Thornridge Cir. Syracuse", "qrCode4", "pagoId4"));
 
         return pedidos;
     }
 
-    public void mostrarBottonSheet(Pedido pedido){
+    public void mostrarBottonSheet(Pedido pedido) {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(AdminResPedidosActivity.this);
-        View bottomSheetView = getLayoutInflater().inflate(R.layout.botton_sheet_admin_res_pedidos,null);
+        View bottomSheetView = getLayoutInflater().inflate(R.layout.botton_sheet_admin_res_pedidos, null);
+
+        Cliente cliente = clientesMap.get(pedido.getClienteId());
+        Pago pago = pagosMap.get(pedido.getPagoId());
 
         TextView textView = bottomSheetView.findViewById(R.id.nombreCliente);
-        textView.setText(pedido.getCliente().getNombres() + " " +pedido.getCliente().getApellidos());
+        textView.setText(cliente.getNombres() + " " + cliente.getApellidos());
 
         TextView textViewIdPedido = bottomSheetView.findViewById(R.id.idPedido);
         textViewIdPedido.setText(pedido.getId());
 
         Button botonDetallePedido = bottomSheetView.findViewById(R.id.buttonVerDetalles);
         botonDetallePedido.setOnClickListener(view -> {
-            //Falta pasar datos al activity
             Intent intent = new Intent(this, AdminResDetallesPedidosActivity.class);
-
-            intent.putExtra("idPedido",pedido.getId());
-            intent.putExtra("direccionDestino",pedido.getDireccionEntrega());
-            intent.putExtra("nombreCliente",pedido.getCliente().getNombres() + " " + pedido.getCliente().getApellidos());
-            intent.putExtra("telefono",pedido.getCliente().getTelefono());
-            intent.putExtra("metodoPago",pedido.getPago().getMetodoPago());
-            intent.putExtra("estadoPago",pedido.getPago().getEstadoPago());
+            intent.putExtra("idPedido", pedido.getId());
+            intent.putExtra("direccionDestino", pedido.getDireccionEntrega());
+            intent.putExtra("nombreCliente", cliente.getNombres() + " " + cliente.getApellidos());
+            intent.putExtra("telefono", cliente.getTelefono());
+            intent.putExtra("metodoPago", pago.getMetodoPago());
+            intent.putExtra("estadoPago", pago.getEstadoPago());
             startActivity(intent);
         });
 
