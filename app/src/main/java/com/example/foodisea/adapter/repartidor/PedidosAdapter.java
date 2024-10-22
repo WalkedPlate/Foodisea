@@ -11,22 +11,29 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.foodisea.activity.adminRes.AdminResPedidosActivity;
 import com.example.foodisea.R;
+import com.example.foodisea.activity.adminRes.AdminResPedidosActivity;
 import com.example.foodisea.activity.repartidor.RepartidorRestauranteActivity;
 import com.example.foodisea.activity.repartidor.RepartidorVerOrdenActivity;
+import com.example.foodisea.model.Cliente;
+import com.example.foodisea.model.Pago;
 import com.example.foodisea.model.Pedido;
 
 import java.util.List;
+import java.util.Map;
 
 public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoViewHolder> {
 
     private List<Pedido> pedidos;
     private Context context;
+    private Map<String, Cliente> clientesMap;
+    private Map<String, Pago> pagosMap;
 
-    public PedidosAdapter(Context context, List<Pedido> pedidos) {
+    public PedidosAdapter(Context context, List<Pedido> pedidos, Map<String, Cliente> clientesMap, Map<String, Pago> pagosMap) {
         this.pedidos = pedidos;
         this.context = context;
+        this.clientesMap = clientesMap;
+        this.pagosMap = pagosMap;
     }
 
     @NonNull
@@ -39,22 +46,21 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoVi
     @Override
     public void onBindViewHolder(@NonNull PedidoViewHolder holder, int position) {
         Pedido pedido = pedidos.get(position);
-        holder.bind(pedido);
+        holder.bind(pedido, clientesMap.get(pedido.getClienteId()), pagosMap.get(pedido.getPagoId()));
 
-        // Añadir el onClickListener para abrir la actividad de detalles
         holder.itemView.setOnClickListener(v -> {
-            
-            if(context instanceof RepartidorRestauranteActivity) {
+            if (context instanceof RepartidorRestauranteActivity) {
                 Intent intent = new Intent(context, RepartidorVerOrdenActivity.class);
                 intent.putExtra("pedidoId", pedido.getId());
-                intent.putExtra("clienteNombre", pedido.getCliente().getNombres() + " " + pedido.getCliente().getApellidos());
+                Cliente cliente = clientesMap.get(pedido.getClienteId());
+                intent.putExtra("clienteNombre", cliente.getNombres() + " " + cliente.getApellidos());
                 intent.putExtra("direccionEntrega", pedido.getDireccionEntrega());
-                intent.putExtra("precio", pedido.getPago().getMonto());
-                context.startActivity(intent);    
+                Pago pago = pagosMap.get(pedido.getPagoId());
+                intent.putExtra("precio", pago.getMonto());
+                context.startActivity(intent);
             } else if (context instanceof AdminResPedidosActivity) {
-                ((AdminResPedidosActivity)context).mostrarBottonSheet(pedido);
+                ((AdminResPedidosActivity) context).mostrarBottonSheet(pedido);
             }
-
         });
     }
 
@@ -76,13 +82,34 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoVi
             ivDelivery = itemView.findViewById(R.id.ivDelivery);
         }
 
-        void bind(Pedido pedido) {
-            tvOrderNumber.setText(pedido.getId());  // Usando el ID del pedido como el número del pedido
-            tvCustomerName.setText(pedido.getCliente().getNombres() + " " + pedido.getCliente().getApellidos());
+        void bind(Pedido pedido, Cliente cliente, Pago pago) {
+            tvOrderNumber.setText(pedido.getId());
+            tvCustomerName.setText(cliente.getNombres() + " " + cliente.getApellidos());
             tvAddress.setText(pedido.getDireccionEntrega());
-            tvPrice.setText(String.format("S/. %.2f", pedido.getPago().getMonto()));
-            // Si el ícono de entrega cambia basado en el estado del pedido
-            // ivDelivery.setImageResource(R.drawable.ic_delivery);
+            tvPrice.setText(String.format("S/. %.2f", pago.getMonto()));
+
+
+            // Actualizar el ícono basado en el estado del pedido
+            /*
+            switch (pedido.getEstado()) {
+                case "Recibido":
+                    ivDelivery.setImageResource(R.drawable.ic_order_received);
+                    break;
+                case "En preparación":
+                    ivDelivery.setImageResource(R.drawable.ic_order_preparing);
+                    break;
+                case "En camino":
+                    ivDelivery.setImageResource(R.drawable.ic_order_on_way);
+                    break;
+                case "Entregado":
+                    ivDelivery.setImageResource(R.drawable.ic_order_delivered);
+                    break;
+                default:
+                    ivDelivery.setImageResource(R.drawable.ic_order_default);
+                    break;
+            }
+
+             */
         }
     }
 }

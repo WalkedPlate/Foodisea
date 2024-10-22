@@ -4,15 +4,15 @@ import java.util.List;
 
 public class Carrito {
     private String id;
-    private Cliente cliente;
-    private String restauranteId;
-    private List<PlatoCantidad> platos;  // Cambiado para manejar platos y cantidades
+    private String clienteId;  // Referencia al cliente (ID)
+    private String restauranteId;  // ID del restaurante
+    private List<PlatoCantidad> platos;  // Lista de platos y cantidades
     private double total;
 
     // Constructor
-    public Carrito(String id, Cliente cliente, String restauranteId, List<PlatoCantidad> platos) {
+    public Carrito(String id, String clienteId, String restauranteId, List<PlatoCantidad> platos) {
         this.id = id;
-        this.cliente = cliente;
+        this.clienteId = clienteId;
         this.restauranteId = restauranteId;
         this.platos = platos;
         this.total = calcularTotal();  // Inicializa el total
@@ -46,12 +46,12 @@ public class Carrito {
         this.id = id;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public String getClienteId() {
+        return clienteId;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setClienteId(String clienteId) {
+        this.clienteId = clienteId;
     }
 
     public String getRestauranteId() {

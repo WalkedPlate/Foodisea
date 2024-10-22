@@ -8,18 +8,17 @@ public class Restaurante {
     private String nombre;
     private String direccion;
     private String telefono;
-    private List<String> platosIds;  // Lista de IDs de los platos o bebidas
     private String estado;  // "Activo" o "Inactivo"
     private List<String> categorias;  // Lista de categorías (e.g., "Burger", "Chicken", etc.)
     private double rating;  // Calificación del restaurante
     private List<String> imagenes;  // Lista de URLs o recursos de imágenes
-    private AdministradorRestaurante administrador;  // Referencia al administrador
+    private String administradorId;  // Referencia al administrador (ID)
     private String descripcion;
 
     //Constructor, getter y setter
 
     // Constructor con parámetros
-    public Restaurante(String nombre, String direccion, String telefono, List<String> categorias, double rating, List<String> imagenes, AdministradorRestaurante administrador, String descripcion) {
+    public Restaurante(String nombre, String direccion, String telefono, List<String> categorias, double rating, List<String> imagenes, String administradorId, String descripcion) {
         this.id = generateId(); // Asigna un ID único, si es necesario
         this.nombre = nombre;
         this.direccion = direccion;
@@ -27,7 +26,7 @@ public class Restaurante {
         this.categorias = categorias;
         this.rating = rating;
         this.imagenes = imagenes; // Lista de nombres de recursos de imágenes
-        this.administrador = administrador;
+        this.administradorId = administradorId;
         this.estado = "Activo"; // Estado predeterminado
         this.descripcion = descripcion;
     }
@@ -71,13 +70,6 @@ public class Restaurante {
         this.telefono = telefono;
     }
 
-    public List<String> getPlatosIds() {
-        return platosIds;
-    }
-
-    public void setPlatosIds(List<String> platosIds) {
-        this.platosIds = platosIds;
-    }
 
     public String getEstado() {
         return estado;
@@ -111,12 +103,16 @@ public class Restaurante {
         this.imagenes = imagenes;
     }
 
-    public AdministradorRestaurante getAdministrador() {
-        return administrador;
+    public String getAdministradorId() {
+        return administradorId;
     }
 
-    public void setAdministrador(AdministradorRestaurante administrador) {
-        this.administrador = administrador;
+    public void setAdministradorId(String administradorId) {
+        this.administradorId = administradorId;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public String getDescripcion(){return descripcion;}
