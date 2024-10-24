@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.cliente.PlatoAdapter;
 import com.example.foodisea.databinding.ActivityClienteRestauranteBinding;
-import com.example.foodisea.model.Plato;
+import com.example.foodisea.model.Producto;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,11 +79,11 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
     }
 
     // Obtener desde bd
-    private List<Plato> getPlatosList() {
-        List<Plato> platoList = new ArrayList<>();
+    private List<Producto> getPlatosList() {
+        List<Producto> productoList = new ArrayList<>();
 
         // Agregar platos a la lista
-        platoList.add(new Plato(
+        productoList.add(new Producto(
                 UUID.randomUUID().toString(), // Generar un ID único para el Plato
                 "Burger Ferguson",             // Nombre del Plato
                 "Deliciosa hamburguesa con queso y bacon, preparada con los mejores ingredientes para satisfacer tu antojo.", // Descripción
@@ -93,7 +93,7 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
                 false                          // Disponibilidad (outOfStock)
         ));
 
-        platoList.add(new Plato(
+        productoList.add(new Producto(
                 UUID.randomUUID().toString(),
                 "Rockin' Burgers",
                 "La hamburguesa clásica combina carne de res a la parrilla, queso cheddar, pan brioche, lechuga fresca, tomate, cebolla morada, pepinillos y una salsa especial para un sabor único y equilibrado.",
@@ -103,7 +103,7 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
                 true
         ));
 
-        platoList.add(new Plato(
+        productoList.add(new Producto(
                 UUID.randomUUID().toString(),
                 "Coca Cola",
                 "El refresco de cola es una bebida burbujeante y refrescante, con un sabor distintivo que combina notas dulces y ligeramente ácidas. Su efervescencia intensa lo convierte en el acompañante perfecto para cualquier comida, ofreciendo un toque revitalizante en cada sorbo. Ideal para disfrutar bien frío y acompañado de hielo.",
@@ -113,7 +113,7 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
                 false
         ));
 
-        platoList.add(new Plato(
+        productoList.add(new Producto(
                 UUID.randomUUID().toString(),
                 "Pepsi",
                 "Pepsi es una gaseosa refrescante con un sabor único, que combina dulzura y un toque ácido. Con su efervescencia burbujeante, es perfecta para disfrutar bien fría en cualquier momento.",
@@ -124,7 +124,7 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
         ));
 
 
-        platoList.add(new Plato(
+        productoList.add(new Producto(
                 UUID.randomUUID().toString(),
                 "Chirox' Burgers",
                 "\n" +
@@ -135,7 +135,7 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
                 true
         ));
 
-        platoList.add(new Plato(
+        productoList.add(new Producto(
                 UUID.randomUUID().toString(),
                 "Crack' Burgers",
                 "Hamburguesa clásica con ingredientes frescos",
@@ -146,7 +146,7 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
         ));
 
 
-        return platoList;
+        return productoList;
     }
 
 }

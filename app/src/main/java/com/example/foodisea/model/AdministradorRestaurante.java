@@ -12,8 +12,8 @@ public class AdministradorRestaurante extends Usuario {
         this.restauranteId = restauranteId;
     }
 
-    public void registrarPlato(Plato plato) {
-        // Lógica para registrar un plato
+    public void registrarProducto(Producto producto) {
+        // Lógica para registrar un producto
     }
 
     public void verReporteVentas() {

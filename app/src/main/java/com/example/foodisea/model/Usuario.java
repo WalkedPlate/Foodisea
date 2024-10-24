@@ -7,7 +7,7 @@ public class Usuario {
     protected String correo;
     protected String telefono;
     protected String direccion;
-    protected String documentoId;
+    protected String documentoId; //DNI
     protected String fechaNacimiento;
     protected String foto;
     protected String estado;  // "Activo", "Inactivo"

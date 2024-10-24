@@ -17,7 +17,7 @@ import com.example.foodisea.model.Cliente;
 import com.example.foodisea.model.CodigoQR;
 import com.example.foodisea.model.Pago;
 import com.example.foodisea.model.Pedido;
-import com.example.foodisea.model.PlatoCantidad;
+import com.example.foodisea.model.ProductoCantidad;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -104,19 +104,19 @@ public class RepartidorRestauranteActivity extends AppCompatActivity {
         pagosMap.put(pago4.getId(), pago4);
 
         // Crear listas de PlatoCantidad para cada pedido
-        List<PlatoCantidad> platosPedido1 = new ArrayList<>();
-        platosPedido1.add(new PlatoCantidad("plato1", 2));
-        platosPedido1.add(new PlatoCantidad("plato2", 1));
+        List<ProductoCantidad> platosPedido1 = new ArrayList<>();
+        platosPedido1.add(new ProductoCantidad("plato1", 2));
+        platosPedido1.add(new ProductoCantidad("plato2", 1));
 
-        List<PlatoCantidad> platosPedido2 = new ArrayList<>();
-        platosPedido2.add(new PlatoCantidad("plato3", 1));
+        List<ProductoCantidad> platosPedido2 = new ArrayList<>();
+        platosPedido2.add(new ProductoCantidad("plato3", 1));
 
-        List<PlatoCantidad> platosPedido3 = new ArrayList<>();
-        platosPedido3.add(new PlatoCantidad("plato4", 3));
+        List<ProductoCantidad> platosPedido3 = new ArrayList<>();
+        platosPedido3.add(new ProductoCantidad("plato4", 3));
 
-        List<PlatoCantidad> platosPedido4 = new ArrayList<>();
-        platosPedido4.add(new PlatoCantidad("plato1", 1));
-        platosPedido4.add(new PlatoCantidad("plato3", 2));
+        List<ProductoCantidad> platosPedido4 = new ArrayList<>();
+        platosPedido4.add(new ProductoCantidad("plato1", 1));
+        platosPedido4.add(new ProductoCantidad("plato3", 2));
 
         // Añadir pedidos a la lista
         pedidos.add(new Pedido("#162432", "1", "restauranteId1", platosPedido1, null, "Recibido", new Date(), "2118 Thornridge Cir. Syracuse", "qrCode1", "pagoId1"));

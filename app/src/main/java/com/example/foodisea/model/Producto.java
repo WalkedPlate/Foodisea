@@ -2,18 +2,20 @@ package com.example.foodisea.model;
 
 import java.util.List;
 
-public class Plato {
+public class Producto {
     private String id;
     private String nombre;
     private String descripcion;
     private double precio;
     private String restauranteId;
     private List<String> imagenes;  // Mínimo 2 imágenes
-    private String categoria; // "Plato" o "Bebida"
+    private String categoria; // "producto" o "Bebida"
     private boolean outOfStock;
 
+    public Producto(){}
+
     // Constructor, getters y setters
-    public Plato(String id, String nombre, String descripcion, double precio, List<String> imagenes, String categoria, boolean outOfStock) {
+    public Producto(String id, String nombre, String descripcion, double precio, List<String> imagenes, String categoria, boolean outOfStock) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;

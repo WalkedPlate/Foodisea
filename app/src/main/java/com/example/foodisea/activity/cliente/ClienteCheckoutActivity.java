@@ -14,11 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.cliente.CarritoAdapter;
-import com.example.foodisea.model.Plato;
-import com.example.foodisea.model.PlatoCantidad;
+import com.example.foodisea.model.ProductoCantidad;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,15 +69,15 @@ public class ClienteCheckoutActivity extends AppCompatActivity {
     }
 
     // Obtener desde bd
-    private List<PlatoCantidad> getPlatosCarrito() {
+    private List<ProductoCantidad> getPlatosCarrito() {
         // Inicializar la lista de productos del carrito
-        List<PlatoCantidad> platoCarritos = new ArrayList<>();
+        List<ProductoCantidad> platoCarritos = new ArrayList<>();
 
         // Agregar ítems de prueba al carrito
-        platoCarritos.add(new PlatoCantidad("PlatoId1",3));
-        platoCarritos.add(new PlatoCantidad("PlatoId2", 4));
-        platoCarritos.add(new PlatoCantidad("PlatoId3",8));
-        platoCarritos.add(new PlatoCantidad("PlatoId4", 3));
+        platoCarritos.add(new ProductoCantidad("PlatoId1",3));
+        platoCarritos.add(new ProductoCantidad("PlatoId2", 4));
+        platoCarritos.add(new ProductoCantidad("PlatoId3",8));
+        platoCarritos.add(new ProductoCantidad("PlatoId4", 3));
 
 
         return platoCarritos;

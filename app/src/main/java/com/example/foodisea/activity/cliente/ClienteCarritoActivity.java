@@ -11,17 +11,14 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.cliente.CarritoAdapter;
-import com.example.foodisea.model.Plato;
-import com.example.foodisea.model.PlatoCantidad;
+import com.example.foodisea.model.ProductoCantidad;
 
 import android.widget.Button;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 public class ClienteCarritoActivity extends AppCompatActivity {
 
@@ -67,15 +64,15 @@ public class ClienteCarritoActivity extends AppCompatActivity {
     }
 
     // Obtener desde bd
-    private List<PlatoCantidad> getPlatosCarrito() {
+    private List<ProductoCantidad> getPlatosCarrito() {
         // Inicializar la lista de productos del carrito
-        List<PlatoCantidad> platoCarritos = new ArrayList<>();
+        List<ProductoCantidad> platoCarritos = new ArrayList<>();
 
         // Agregar ítems de prueba al carrito
-        platoCarritos.add(new PlatoCantidad("PlatoId1",3));
-        platoCarritos.add(new PlatoCantidad("PlatoId2", 4));
-        platoCarritos.add(new PlatoCantidad("PlatoId3",8));
-        platoCarritos.add(new PlatoCantidad("PlatoId4", 6));
+        platoCarritos.add(new ProductoCantidad("PlatoId1",3));
+        platoCarritos.add(new ProductoCantidad("PlatoId2", 4));
+        platoCarritos.add(new ProductoCantidad("PlatoId3",8));
+        platoCarritos.add(new ProductoCantidad("PlatoId4", 6));
 
 
         return platoCarritos;

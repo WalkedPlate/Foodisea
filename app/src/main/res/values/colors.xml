@@ -111,5 +111,8 @@
     <color name="active_thumb_color">#166809</color>
     <color name="active_track_color">#CD99D59E</color>
 
+    <color name="gray_300">#E0E0E0</color>
+
+
 
 </resources>

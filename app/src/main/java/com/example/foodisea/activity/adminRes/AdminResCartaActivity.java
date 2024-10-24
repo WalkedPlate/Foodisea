@@ -9,21 +9,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
-import com.example.foodisea.activity.cliente.ClienteCarritoActivity;
 import com.example.foodisea.adapter.adminRes.CartaAdapter;
 import com.example.foodisea.databinding.ActivityAdminResCartaBinding;
-import com.example.foodisea.model.Cliente;
-import com.example.foodisea.model.CodigoQR;
-import com.example.foodisea.model.Pago;
-import com.example.foodisea.model.Pedido;
-import com.example.foodisea.model.Plato;
+import com.example.foodisea.model.Producto;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -68,11 +61,11 @@ public class AdminResCartaActivity extends AppCompatActivity {
     }
 
 
-    private List<Plato> getPlatosList() {
-        List<Plato> platoList = new ArrayList<>();
+    private List<Producto> getPlatosList() {
+        List<Producto> productoList = new ArrayList<>();
 
     // Agregar platos a la lista
-        platoList.add(new Plato(
+        productoList.add(new Producto(
                 UUID.randomUUID().toString(), // Generar un ID único para el Plato
                 "Burger Ferguson",             // Nombre del Plato
                 "Deliciosa hamburguesa con queso y bacon", // Descripción
@@ -82,7 +75,7 @@ public class AdminResCartaActivity extends AppCompatActivity {
                 false                          // Disponibilidad (outOfStock)
         ));
 
-        platoList.add(new Plato(
+        productoList.add(new Producto(
                 UUID.randomUUID().toString(),
                 "Rockin' Burgers",
                 "Hamburguesa clásica con ingredientes frescos",
@@ -92,7 +85,7 @@ public class AdminResCartaActivity extends AppCompatActivity {
                 true
         ));
 
-        platoList.add(new Plato(
+        productoList.add(new Producto(
                 UUID.randomUUID().toString(),
                 "Soda",
                 "Refresco de cola",
@@ -102,7 +95,7 @@ public class AdminResCartaActivity extends AppCompatActivity {
                 false
         ));
 
-        platoList.add(new Plato(
+        productoList.add(new Producto(
                 UUID.randomUUID().toString(),
                 "Soda",
                 "Refresco de cola",
@@ -113,7 +106,7 @@ public class AdminResCartaActivity extends AppCompatActivity {
         ));
 
 
-        platoList.add(new Plato(
+        productoList.add(new Producto(
                 UUID.randomUUID().toString(),
                 "Rockin' Burgers",
                 "Hamburguesa clásica con ingredientes frescos",
@@ -123,7 +116,7 @@ public class AdminResCartaActivity extends AppCompatActivity {
                 true
         ));
 
-        platoList.add(new Plato(
+        productoList.add(new Producto(
                 UUID.randomUUID().toString(),
                 "Rockin' Burgers",
                 "Hamburguesa clásica con ingredientes frescos",
@@ -134,7 +127,7 @@ public class AdminResCartaActivity extends AppCompatActivity {
         ));
 
 
-        return platoList;
+        return productoList;
     }
 
 }

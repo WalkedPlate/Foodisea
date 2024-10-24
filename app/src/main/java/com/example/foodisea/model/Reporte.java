@@ -8,7 +8,7 @@ public class Reporte {
     private String restauranteId;  // Referencia al Restaurante (ID)
     private Date fechaInicio;
     private Date fechaFin;
-    private Map<String, Integer> ventasPorPlato;  // platoId -> Cantidad vendida
+    private Map<String, Integer> ventasPorProducto;  // productoId -> Cantidad vendida
     private double totalVentas;
 
 
@@ -47,12 +47,12 @@ public class Reporte {
         this.fechaFin = fechaFin;
     }
 
-    public Map<String, Integer> getVentasPorPlato() {
-        return ventasPorPlato;
+    public Map<String, Integer> getVentasPorProducto() {
+        return ventasPorProducto;
     }
 
-    public void setVentasPorPlato(Map<String, Integer> ventasPorPlato) {
-        this.ventasPorPlato = ventasPorPlato;
+    public void setVentasPorProducto(Map<String, Integer> ventasPorProducto) {
+        this.ventasPorProducto = ventasPorProducto;
     }
 
     public double getTotalVentas() {

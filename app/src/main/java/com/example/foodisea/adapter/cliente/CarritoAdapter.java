@@ -10,8 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
-import com.example.foodisea.model.Plato;
-import com.example.foodisea.model.PlatoCantidad;
+import com.example.foodisea.model.Producto;
+import com.example.foodisea.model.ProductoCantidad;
 
 
 import java.util.List;
@@ -23,12 +23,12 @@ public class CarritoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final int VIEW_TYPE_CARRITO = 0;
     private static final int VIEW_TYPE_CHECKOUT = 1;
 
-    private List<PlatoCantidad> cartItemList;
+    private List<ProductoCantidad> cartItemList;
     private Context context; // Añadido contexto
     private boolean isCheckout;
 
     // Constructor del adaptador
-    public CarritoAdapter(Context context, List<PlatoCantidad> cartItemList, boolean isCheckout) {
+    public CarritoAdapter(Context context, List<ProductoCantidad> cartItemList, boolean isCheckout) {
         this.context = context; // Asignar el contexto
         this.cartItemList = cartItemList;
         this.isCheckout = isCheckout;
@@ -53,30 +53,30 @@ public class CarritoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        PlatoCantidad cartItem = cartItemList.get(position);
-        Plato plato = obtenerPlatoPorId(cartItem.getPlatoId());
+        ProductoCantidad cartItem = cartItemList.get(position);
+        Producto producto = obtenerPlatoPorId(cartItem.getProductoId());
 
         if (holder instanceof CartViewHolder) {
             CartViewHolder cartViewHolder = (CartViewHolder) holder;
-            cartViewHolder.productName.setText(plato.getNombre());
-            cartViewHolder.productPrice.setText(String.format(Locale.getDefault(), "S/. %.2f", plato.getPrecio()));
+            cartViewHolder.productName.setText(producto.getNombre());
+            cartViewHolder.productPrice.setText(String.format(Locale.getDefault(), "S/. %.2f", producto.getPrecio()));
             cartViewHolder.productQuantity.setText(String.valueOf(cartItem.getCantidad()));
 
             // Cargar la imagen correspondiente
-            if (!plato.getImagenes().isEmpty()) {
-                int imageResource = getImageResource(plato.getImagenes().get(0));
+            if (!producto.getImagenes().isEmpty()) {
+                int imageResource = getImageResource(producto.getImagenes().get(0));
                 cartViewHolder.productImage.setImageResource(imageResource);
             }
 
         } else if (holder instanceof CheckoutViewHolder) {
             CheckoutViewHolder checkoutViewHolder = (CheckoutViewHolder) holder;
-            checkoutViewHolder.productName.setText(plato.getNombre());
-            checkoutViewHolder.productPrice.setText(String.format(Locale.getDefault(), "S/. %.2f", plato.getPrecio()));
+            checkoutViewHolder.productName.setText(producto.getNombre());
+            checkoutViewHolder.productPrice.setText(String.format(Locale.getDefault(), "S/. %.2f", producto.getPrecio()));
             checkoutViewHolder.productQuantity1.setText(String.valueOf(cartItem.getCantidad()));
 
             // Cargar la imagen correspondiente
-            if (!plato.getImagenes().isEmpty()) {
-                int imageResource = getImageResource(plato.getImagenes().get(0));
+            if (!producto.getImagenes().isEmpty()) {
+                int imageResource = getImageResource(producto.getImagenes().get(0));
                 ((ImageView) holder.itemView.findViewById(R.id.productImage)).setImageResource(imageResource);
             }
         }
@@ -113,22 +113,22 @@ public class CarritoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    private Plato obtenerPlatoPorId(String platoId) {
+    private Producto obtenerPlatoPorId(String platoId) {
         switch (platoId) {
             case "PlatoId1":
-                return new Plato(platoId, "Burger Ferguson", "Pizza clásica con tomate y mozzarella", 10.00,
+                return new Producto(platoId, "Burger Ferguson", "Pizza clásica con tomate y mozzarella", 10.00,
                         List.of("burger"), "Platos", false);
             case "PlatoId2":
-                return new Plato(platoId, "Rockin' Burgers", "Hamburguesa con queso cheddar y lechuga", 15.30,
+                return new Producto(platoId, "Rockin' Burgers", "Hamburguesa con queso cheddar y lechuga", 15.30,
                         List.of("burger2"), "Platos", false);
             case "PlatoId3":
-                return new Plato(platoId, "Coca Cola", "Ensalada con pollo, lechuga y salsa César", 5.00,
+                return new Producto(platoId, "Coca Cola", "Ensalada con pollo, lechuga y salsa César", 5.00,
                         List.of("soda"), "Bebidas", true);
             case "PlatoId4":
-                return new Plato(platoId, "Crack' Burgers", "Taco con carne de cerdo y piña", 25.00,
+                return new Producto(platoId, "Crack' Burgers", "Taco con carne de cerdo y piña", 25.00,
                         List.of("burger2"), "Tacos", false);
             default:
-                return new Plato(platoId, "Plato Desconocido", "Descripción no disponible", 0.0,
+                return new Producto(platoId, "Plato Desconocido", "Descripción no disponible", 0.0,
                         List.of("default_image"), "Desconocido", false);
         }
     }

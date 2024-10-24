@@ -15,7 +15,9 @@ public class Restaurante {
     private String administradorId;  // Referencia al administrador (ID)
     private String descripcion;
 
-    //Constructor, getter y setter
+    //Constructor
+    public Restaurante() {
+    }
 
     // Constructor con parámetros
     public Restaurante(String nombre, String direccion, String telefono, List<String> categorias, double rating, List<String> imagenes, String administradorId, String descripcion) {
