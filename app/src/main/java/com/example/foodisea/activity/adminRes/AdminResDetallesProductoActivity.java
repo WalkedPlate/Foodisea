@@ -1,11 +1,15 @@
 package com.example.foodisea.activity.adminRes;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -23,6 +27,16 @@ public class AdminResDetallesProductoActivity extends AppCompatActivity {
     private ProductoRepository productoRepository;
     private String productoId;
     private ImageAdapter imageAdapter;
+
+    private final ActivityResultLauncher<Intent> editProductLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    // Recargar los datos del producto cuando regresamos de editar
+                    loadProductData();
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +102,7 @@ public class AdminResDetallesProductoActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void loadProductData() {
         showLoading(true);
         productoRepository.getProductoById(productoId)
@@ -99,6 +114,9 @@ public class AdminResDetallesProductoActivity extends AppCompatActivity {
                     // Cargar imágenes en el ViewPager
                     if (producto.getImagenes() != null && !producto.getImagenes().isEmpty()) {
                         imageAdapter.setImageUrls(producto.getImagenes());
+                        // Asegurarse de que el contador de imágenes se actualice
+                        updateImageCounter(0);
+                        imageAdapter.notifyDataSetChanged();
                     }
                     showLoading(false);
                 })
@@ -112,8 +130,9 @@ public class AdminResDetallesProductoActivity extends AppCompatActivity {
     private void setupButtons() {
         binding.btnEliminar.setOnClickListener(v -> mostrarAlertaEliminar());
         binding.btnEditar.setOnClickListener(v -> {
-            // TODO: Implementar edición
-            Toast.makeText(this, "Función de editar en desarrollo", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, AdminResEditarProductoActivity.class);
+            intent.putExtra("PRODUCTO_ID", productoId);
+            editProductLauncher.launch(intent); // Usar el launcher en lugar de startActivity
         });
     }
 

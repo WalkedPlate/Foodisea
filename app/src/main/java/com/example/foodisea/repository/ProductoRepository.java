@@ -183,5 +183,67 @@ public class ProductoRepository {
                 });
     }
 
+    public Task<Void> actualizarProducto(Producto producto) {
+        return db.collection(PRODUCTOS_COLLECTION)
+                .document(producto.getId())
+                .set(producto);
+    }
+
+    public Task<List<String>> subirImagenesProducto(String productoId, List<Uri> imagenesUri,
+                                                    UploadProgressListener progressListener) {
+        List<String> imageUrls = new ArrayList<>();
+        AtomicInteger completedUploads = new AtomicInteger(0);
+        int totalUploads = imagenesUri.size();
+
+        // Referencia a la carpeta del producto en Storage
+        StorageReference productoRef = storage.getReference()
+                .child(PRODUCTOS_STORAGE)
+                .child(productoId);
+
+        List<Task<Uri>> uploadTasks = new ArrayList<>();
+
+        // Iniciar subidas de imágenes
+        for (int i = 0; i < imagenesUri.size(); i++) {
+            Uri imageUri = imagenesUri.get(i);
+            String fileName = "imagen_" + UUID.randomUUID().toString() + ".jpg";
+            StorageReference imageRef = productoRef.child(fileName);
+
+            UploadTask uploadTask = imageRef.putFile(imageUri);
+            final int imageIndex = i;
+
+            // Monitorear progreso de subida
+            uploadTask.addOnProgressListener(snapshot -> {
+                double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+                if (progressListener != null) {
+                    progressListener.onProgress(imageIndex + 1, totalUploads, progress);
+                }
+            });
+
+            // Convertir UploadTask a Task<Uri>
+            Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+                return imageRef.getDownloadUrl();
+            }).addOnSuccessListener(uri -> {
+                imageUrls.add(uri.toString());
+                int completed = completedUploads.incrementAndGet();
+                if (progressListener != null) {
+                    progressListener.onImageUploaded(completed, totalUploads, uri.toString());
+                }
+            }).addOnFailureListener(e -> {
+                if (progressListener != null) {
+                    progressListener.onError("Error al subir imagen: " + e.getMessage());
+                }
+            });
+
+            uploadTasks.add(urlTask);
+        }
+
+        // Devolver una tarea que se complete cuando todas las imágenes se hayan subido
+        return Tasks.whenAllComplete(uploadTasks)
+                .continueWith(task -> imageUrls);
+    }
+
 
 }

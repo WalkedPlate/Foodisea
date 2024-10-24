@@ -13,18 +13,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
+
 public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapter.ImageViewHolder> {
-    private List<Uri> images;
+    private List<Uri> localImages;
+    private List<String> existingImageUrls;
     private OnImageDeleteListener deleteListener;
 
     public interface OnImageDeleteListener {
-        void onDelete(Uri uri);
+        void onLocalImageDelete(Uri uri);
+        void onExistingImageDelete(String url);
     }
 
-    public ImagePreviewAdapter(List<Uri> images, OnImageDeleteListener deleteListener) {
-        this.images = images;
+    public ImagePreviewAdapter(List<Uri> localImages, List<String> existingImageUrls, OnImageDeleteListener deleteListener) {
+        this.localImages = localImages != null ? localImages : new ArrayList<>();
+        this.existingImageUrls = existingImageUrls != null ? existingImageUrls : new ArrayList<>();
         this.deleteListener = deleteListener;
     }
 
@@ -38,23 +43,38 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-        Uri imageUri = images.get(position);
+        if (position < existingImageUrls.size()) {
+            // Cargar imagen existente
+            String imageUrl = existingImageUrls.get(position);
+            Glide.with(holder.itemView.getContext())
+                    .load(imageUrl)
+                    .centerCrop()
+                    .into(holder.imageView);
 
-        Glide.with(holder.itemView.getContext())
-                .load(imageUri)
-                .centerCrop()
-                .into(holder.imageView);
+            holder.deleteButton.setOnClickListener(v -> {
+                if (deleteListener != null) {
+                    deleteListener.onExistingImageDelete(imageUrl);
+                }
+            });
+        } else {
+            // Cargar imagen local nueva
+            Uri imageUri = localImages.get(position - existingImageUrls.size());
+            Glide.with(holder.itemView.getContext())
+                    .load(imageUri)
+                    .centerCrop()
+                    .into(holder.imageView);
 
-        holder.deleteButton.setOnClickListener(v -> {
-            if (deleteListener != null) {
-                deleteListener.onDelete(imageUri);
-            }
-        });
+            holder.deleteButton.setOnClickListener(v -> {
+                if (deleteListener != null) {
+                    deleteListener.onLocalImageDelete(imageUri);
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
-        return images.size();
+        return localImages.size() + existingImageUrls.size();
     }
 
     static class ImageViewHolder extends RecyclerView.ViewHolder {

@@ -37,7 +37,7 @@
                 android:id="@+id/tvNewProduct"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nuevo Producto"
+                android:text="Editar Producto"
                 android:textSize="20sp"
                 android:textColor="@color/black"
                 android:fontFamily="@font/sen_font"/>
@@ -90,10 +90,10 @@
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnCrearProducto"
+            android:id="@+id/btnEditarProducto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="CREAR PRODUCTO"
+            android:text="EDITAR PRODUCTO"
             android:textSize="16sp"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
