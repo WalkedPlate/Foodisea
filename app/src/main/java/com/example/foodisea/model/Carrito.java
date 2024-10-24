@@ -1,8 +1,13 @@
 package com.example.foodisea.model;
 
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
+
 import java.util.List;
 
+@IgnoreExtraProperties
 public class Carrito {
+    @Exclude
     private String id;
     private String clienteId;  // Referencia al cliente (ID)
     private String restauranteId;  // ID del restaurante

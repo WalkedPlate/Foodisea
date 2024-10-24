@@ -101,7 +101,6 @@ public class ProductoRepository {
                 .continueWithTask(task -> {
                     // Crear objeto Producto
                     Producto producto = new Producto();
-                    producto.setId(productoId);
                     producto.setNombre(nombre);
                     producto.setDescripcion(descripcion);
                     producto.setPrecio(precio);
@@ -114,7 +113,11 @@ public class ProductoRepository {
                     return db.collection(PRODUCTOS_COLLECTION)
                             .document(productoId)
                             .set(producto)
-                            .continueWith(firestoreTask -> producto);
+                            .continueWith(firestoreTask -> {
+                                // Establecer el ID solo en el objeto devuelto
+                                producto.setId(productoId);
+                                return producto;
+                            });
                 });
     }
 
@@ -163,6 +166,7 @@ public class ProductoRepository {
                         for (DocumentSnapshot doc : task.getResult()) {
                             Producto producto = doc.toObject(Producto.class);
                             if (producto != null) {
+                                producto.setId(doc.getId()); // Establecer ID del documento
                                 productos.add(producto);
                             }
                         }
@@ -177,16 +181,27 @@ public class ProductoRepository {
                 .get()
                 .continueWith(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
-                        return task.getResult().toObject(Producto.class);
+                        Producto producto = task.getResult().toObject(Producto.class);
+                        if (producto != null) {
+                            producto.setId(task.getResult().getId()); // Establecer ID del documento
+                            return producto;
+                        }
                     }
                     throw new Exception("Producto no encontrado");
                 });
     }
 
     public Task<Void> actualizarProducto(Producto producto) {
+        String productoId = producto.getId(); // Obtener ID
+        producto.setId(null); // Remover ID antes de guardar
+
         return db.collection(PRODUCTOS_COLLECTION)
-                .document(producto.getId())
-                .set(producto);
+                .document(productoId)
+                .set(producto)
+                .continueWithTask(task -> {
+                    producto.setId(productoId); // Restaurar ID en el objeto
+                    return task;
+                });
     }
 
     public Task<List<String>> subirImagenesProducto(String productoId, List<Uri> imagenesUri,

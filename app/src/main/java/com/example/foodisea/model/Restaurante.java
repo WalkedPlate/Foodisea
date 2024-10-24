@@ -1,9 +1,14 @@
 package com.example.foodisea.model;
 
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@IgnoreExtraProperties
 public class Restaurante {
+    @Exclude
     private String id;
     private String nombre;
     private String direccion;

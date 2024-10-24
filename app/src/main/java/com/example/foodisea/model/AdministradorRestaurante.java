@@ -1,5 +1,8 @@
 package com.example.foodisea.model;
 
+import com.google.firebase.firestore.IgnoreExtraProperties;
+
+@IgnoreExtraProperties
 public class AdministradorRestaurante extends Usuario {
     private String restauranteId;
 

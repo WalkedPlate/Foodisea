@@ -1,9 +1,14 @@
 package com.example.foodisea.model;
 
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
+
 import java.util.Date;
 import java.util.Map;
 
+@IgnoreExtraProperties
 public class Reporte {
+    @Exclude
     private String id;
     private String restauranteId;  // Referencia al Restaurante (ID)
     private Date fechaInicio;

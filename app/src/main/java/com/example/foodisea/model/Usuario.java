@@ -1,6 +1,11 @@
 package com.example.foodisea.model;
 
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
+
+@IgnoreExtraProperties
 public class Usuario {
+    @Exclude
     protected String id;
     protected String nombres;
     protected String apellidos;

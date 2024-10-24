@@ -25,7 +25,11 @@ public class RestauranteRepository {
                 .continueWith(task -> {
                     List<Restaurante> restaurantes = new ArrayList<>();
                     for (DocumentSnapshot doc : task.getResult()) {
-                        restaurantes.add(doc.toObject(Restaurante.class));
+                        Restaurante restaurante = doc.toObject(Restaurante.class);
+                        if (restaurante != null) {
+                            restaurante.setId(doc.getId());
+                            restaurantes.add(restaurante);
+                        }
                     }
                     return restaurantes;
                 });
@@ -36,7 +40,13 @@ public class RestauranteRepository {
         return db.collection("restaurantes")
                 .document(restauranteId)
                 .get()
-                .continueWith(task -> task.getResult().toObject(Restaurante.class));
+                .continueWith(task -> {
+                    Restaurante restaurante = task.getResult().toObject(Restaurante.class);
+                    if (restaurante != null) {
+                        restaurante.setId(task.getResult().getId());
+                    }
+                    return restaurante;
+                });
     }
 
     // Obtener ventas por restaurante
@@ -50,9 +60,32 @@ public class RestauranteRepository {
                 .continueWith(task -> {
                     List<Pedido> pedidos = new ArrayList<>();
                     for (DocumentSnapshot doc : task.getResult()) {
-                        pedidos.add(doc.toObject(Pedido.class));
+                        Pedido pedido = doc.toObject(Pedido.class);
+                        if (pedido != null) {
+                            pedido.setId(doc.getId());
+                            pedidos.add(pedido);
+                        }
                     }
                     return pedidos;
+                });
+    }
+
+    // Obtener restaurante por ID del administrador
+    public Task<Restaurante> getRestauranteByAdminId(String adminId) {
+        return db.collection("restaurantes")
+                .whereEqualTo("administradorId", adminId)
+                .limit(1)
+                .get()
+                .continueWith(task -> {
+                    if (task.getResult().isEmpty()) {
+                        return null;
+                    }
+                    DocumentSnapshot doc = task.getResult().getDocuments().get(0);
+                    Restaurante restaurante = doc.toObject(Restaurante.class);
+                    if (restaurante != null) {
+                        restaurante.setId(doc.getId());
+                    }
+                    return restaurante;
                 });
     }
 }

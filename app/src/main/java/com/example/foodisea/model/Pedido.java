@@ -1,11 +1,15 @@
 package com.example.foodisea.model;
 
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+@IgnoreExtraProperties
 public class Pedido {
-
+    @Exclude
     private String id;
     private String clienteId;  // Referencia al cliente que hizo el pedido (ID)
     private String restauranteId;  // ID del restaurante donde se hizo el pedido

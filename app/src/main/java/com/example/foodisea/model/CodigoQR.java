@@ -1,8 +1,13 @@
 package com.example.foodisea.model;
 
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
+
 import java.util.Date;
 
+@IgnoreExtraProperties
 public class CodigoQR {
+    @Exclude
     private String id;
     private String pedidoId;  // ID del pedido asociado
     private String codigo;
