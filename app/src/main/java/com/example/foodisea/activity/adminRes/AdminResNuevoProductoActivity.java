@@ -167,80 +167,42 @@ public class AdminResNuevoProductoActivity extends AppCompatActivity {
         String descripcion = binding.etDescripcion.getText().toString().trim();
         double precio = Double.parseDouble(binding.etPrecio.getText().toString());
         String categoria = binding.spinnerCategoria.getText().toString();
-        String restauranteId = "ID_DEL_RESTAURANTE"; // Obtener de preferencias o intent
+        String restauranteId = "REST001"; // Restaurante de prueba
 
-        // Crear lista de tareas de subida
-        List<UploadTask> uploadTasks = new ArrayList<>();
-        List<String> imageUrls = new ArrayList<>();
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference()
-                .child("productos")
-                .child(UUID.randomUUID().toString());
-
-        // Preparar todas las subidas
-        for (int i = 0; i < imagenUris.size(); i++) {
-            Uri imageUri = imagenUris.get(i);
-            String fileName = "imagen_" + i + ".jpg";
-            StorageReference imageRef = storageRef.child(fileName);
-            uploadTasks.add(imageRef.putFile(imageUri));
-        }
-
-        // Contador para el progreso total
-        AtomicInteger completedUploads = new AtomicInteger(0);
-        int totalUploads = uploadTasks.size();
-
-        // Iniciar subidas y monitorear progreso
-        for (int i = 0; i < uploadTasks.size(); i++) {
-            UploadTask uploadTask = uploadTasks.get(i);
-            final int imageIndex = i;
-
-            uploadTask.addOnProgressListener(snapshot -> {
-                double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
-                int totalProgress = (int) ((completedUploads.get() * 100 + progress) / totalUploads);
+        ProductoRepository.UploadProgressListener progressListener = new ProductoRepository.UploadProgressListener() {
+            @Override
+            public void onProgress(int imageIndex, int totalImages, double progress) {
+                int totalProgress = (int) ((imageIndex - 1) * 100 + progress) / totalImages;
                 actualizarProgreso(
-                        "Subiendo imagen " + (imageIndex + 1) + " de " + totalUploads,
+                        "Subiendo imagen " + imageIndex + " de " + totalImages,
                         totalProgress
                 );
-            }).addOnSuccessListener(taskSnapshot -> {
-                completedUploads.incrementAndGet();
-                taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
-                    imageUrls.add(uri.toString());
+            }
 
-                    // Si todas las imágenes se subieron, crear el producto
-                    if (imageUrls.size() == totalUploads) {
-                        actualizarProgreso("Guardando información del producto...", 95);
+            @Override
+            public void onImageUploaded(int completedUploads, int totalUploads, String imageUrl) {
+                if (completedUploads == totalUploads) {
+                    actualizarProgreso("Guardando información del producto...", 95);
+                }
+            }
 
-                        // Crear objeto Producto
-                        Producto producto = new Producto();
-                        producto.setId(UUID.randomUUID().toString());
-                        producto.setNombre(nombre);
-                        producto.setDescripcion(descripcion);
-                        producto.setPrecio(precio);
-                        producto.setCategoria(categoria);
-                        producto.setRestauranteId(restauranteId);
-                        producto.setImagenes(imageUrls);
-                        producto.setOutOfStock(false);
-
-                        // Guardar en Firestore
-                        FirebaseFirestore.getInstance()
-                                .collection("productos")
-                                .document(producto.getId())
-                                .set(producto)
-                                .addOnSuccessListener(aVoid -> {
-                                    actualizarProgreso("¡Producto creado exitosamente!", 100);
-                                    Toast.makeText(this, "Producto creado exitosamente", Toast.LENGTH_SHORT).show();
-                                    new Handler().postDelayed(this::finish, 1000);
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(this, "Error al guardar: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                                    mostrarProgress(false);
-                                });
-                    }
-                });
-            }).addOnFailureListener(e -> {
-                Toast.makeText(this, "Error al subir imagen: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            @Override
+            public void onError(String message) {
+                Toast.makeText(AdminResNuevoProductoActivity.this, message, Toast.LENGTH_LONG).show();
                 mostrarProgress(false);
-            });
-        }
+            }
+        };
+
+        productoRepository.crearProductoConImagenes(
+                nombre, descripcion, precio, categoria, restauranteId, imagenUris, progressListener
+        ).addOnSuccessListener(producto -> {
+            actualizarProgreso("¡Producto creado exitosamente!", 100);
+            Toast.makeText(this, "Producto creado exitosamente", Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(this::finish, 1000);
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Error al crear producto: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            mostrarProgress(false);
+        });
     }
 
 

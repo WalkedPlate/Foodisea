@@ -54,17 +54,6 @@
             app:iconifiedByDefault="false"
             app:queryHint="Buscar platos..." />
 
-<!--        <TextView-->
-<!--            android:id="@+id/tvCategory"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:padding="16dp"-->
-<!--            android:text="@string/categorias"-->
-<!--            android:textColor="@android:color/black"-->
-<!--            android:textSize="20sp"-->
-<!--            android:textStyle="bold"-->
-<!--            android:fontFamily="@font/sen_font"/>-->
-
         <!-- Lista de categorías horizontal -->
         <HorizontalScrollView
             android:id="@+id/hsvCategories"
@@ -83,26 +72,29 @@
 
                 <!-- Botones con las categorías -->
                 <Button
-                    style="?attr/materialIconButtonFilledStyle"
+                    android:id="@+id/btnTodos"
+                    style="?attr/materialIconButtonFilledTonalStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="20dp"
                     android:text="@string/todas"
                     android:fontFamily="@font/sen_font"
                     android:textStyle="bold"
-                    android:backgroundTint="@color/btn_dark"/>
+                    android:backgroundTint="@color/btn_light"/>
 
                 <Button
+                    android:id="@+id/btnPlatos"
                     style="?attr/materialIconButtonFilledTonalStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="20dp"
                     android:fontFamily="@font/sen_font"
                     android:text="@string/catPlatos"
+                    android:textStyle="bold"
                     android:backgroundTint="@color/btn_light"/>
 
-
                 <Button
+                    android:id="@+id/btnBebidas"
                     style="?attr/materialIconButtonFilledTonalStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -111,18 +103,45 @@
                     android:fontFamily="@font/sen_font"
                     android:backgroundTint="@color/btn_light"/>
             </LinearLayout>
-
         </HorizontalScrollView>
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvProductos"
+        <!-- FrameLayout para manejar las vistas superpuestas -->
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"/>
+            android:layout_height="match_parent">
+
+            <!-- RecyclerView para los productos -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvProductos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="12dp"
+                android:clipToPadding="false"/>
+
+            <!-- ProgressBar centrado -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
+            <!-- Mensaje cuando no hay productos -->
+            <TextView
+                android:id="@+id/tvNoProducts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="No hay productos disponibles"
+                android:textSize="16sp"
+                android:fontFamily="@font/sen_font"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+
     </LinearLayout>
 
-    <!-- FloatingActionButton en la parte inferior izquierda -->
+    <!-- FloatingActionButton -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnAddProduct"
         android:layout_width="wrap_content"

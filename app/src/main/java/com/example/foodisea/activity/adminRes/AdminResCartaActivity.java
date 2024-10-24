@@ -1,7 +1,11 @@
 package com.example.foodisea.activity.adminRes;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,15 +18,23 @@ import com.example.foodisea.R;
 import com.example.foodisea.adapter.adminRes.CartaAdapter;
 import com.example.foodisea.databinding.ActivityAdminResCartaBinding;
 import com.example.foodisea.model.Producto;
+import com.example.foodisea.repository.ProductoRepository;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class AdminResCartaActivity extends AppCompatActivity {
 
     ActivityAdminResCartaBinding binding;
+    private ProductoRepository productoRepository;
+    private CartaAdapter adapter;
+    private List<Producto> listaCompletaProductos = new ArrayList<>();
+    private String categoriaSeleccionada = "TODOS"; // Por defecto
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,97 +49,119 @@ public class AdminResCartaActivity extends AppCompatActivity {
             return insets;
         });
 
+        setupRecyclerView();
+        setupCategoriaListeners();
 
-        CartaAdapter adapter = new CartaAdapter();
-        adapter.setContext(AdminResCartaActivity.this);
-        adapter.setListaPlatos(getPlatosList());
+        // Inicializar repository
+        productoRepository = new ProductoRepository();
 
-        // Configura el GridLayoutManager con 2 columnas
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2); // 2 columnas
+        // Resaltar el botón TODOS inicialmente
+        binding.btnTodos.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.btn_dark)));
+        binding.btnTodos.setTextColor(ColorStateList.valueOf(getColor(R.color.white)));
+        cargarProductos();
 
-        binding.rvProductos.setAdapter(adapter);
-        binding.rvProductos.setLayoutManager(gridLayoutManager);
 
-        // funcion de los botones
-        binding.btnBack.setOnClickListener(v -> {
-            finish(); // Cierra la actividad actual y regresa
-        });
+        binding.btnBack.setOnClickListener(v -> finish());
 
-        binding.btnAddProduct.setOnClickListener(v ->{
+        binding.btnAddProduct.setOnClickListener(v -> {
             Intent intent = new Intent(this, AdminResNuevoProductoActivity.class);
             startActivity(intent);
         });
-
     }
 
+    private void setupRecyclerView() {
+        adapter = new CartaAdapter();
+        adapter.setContext(AdminResCartaActivity.this);
+        adapter.setListaPlatos(new ArrayList<>()); // Inicializar con lista vacía
 
-    private List<Producto> getPlatosList() {
-        List<Producto> productoList = new ArrayList<>();
-
-    // Agregar platos a la lista
-        productoList.add(new Producto(
-                UUID.randomUUID().toString(), // Generar un ID único para el Plato
-                "Burger Ferguson",             // Nombre del Plato
-                "Deliciosa hamburguesa con queso y bacon", // Descripción
-                40.00,                         // Precio
-                Arrays.asList("burger_image"), // Lista de URLs de imágenes
-                "Plato",                       // Categoría
-                false                          // Disponibilidad (outOfStock)
-        ));
-
-        productoList.add(new Producto(
-                UUID.randomUUID().toString(),
-                "Rockin' Burgers",
-                "Hamburguesa clásica con ingredientes frescos",
-                45.00,
-                Arrays.asList("burger_image"),
-                "Plato",
-                true
-        ));
-
-        productoList.add(new Producto(
-                UUID.randomUUID().toString(),
-                "Soda",
-                "Refresco de cola",
-                10.00,
-                Arrays.asList("burger_image"),
-                "Bebida",
-                false
-        ));
-
-        productoList.add(new Producto(
-                UUID.randomUUID().toString(),
-                "Soda",
-                "Refresco de cola",
-                10.00,
-                Arrays.asList("burger_image"),
-                "Bebida",
-                false
-        ));
-
-
-        productoList.add(new Producto(
-                UUID.randomUUID().toString(),
-                "Rockin' Burgers",
-                "Hamburguesa clásica con ingredientes frescos",
-                45.00,
-                Arrays.asList("burger_image"),
-                "Plato",
-                true
-        ));
-
-        productoList.add(new Producto(
-                UUID.randomUUID().toString(),
-                "Rockin' Burgers",
-                "Hamburguesa clásica con ingredientes frescos",
-                45.00,
-                Arrays.asList("burger_image"),
-                "Plato",
-                true
-        ));
-
-
-        return productoList;
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        binding.rvProductos.setAdapter(adapter);
+        binding.rvProductos.setLayoutManager(gridLayoutManager);
     }
 
+    private void cargarProductos() {
+        String restauranteId = "REST001";
+
+        productoRepository.obtenerProductosPorRestaurante(restauranteId)
+                .addOnSuccessListener(productos -> {
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.rvProductos.setVisibility(View.VISIBLE);
+
+                    // Guardar la lista completa
+                    listaCompletaProductos = productos;
+                    // Aplicar el filtro actual
+                    filtrarProductos();
+                })
+                .addOnFailureListener(e -> {
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.rvProductos.setVisibility(View.VISIBLE);
+                    binding.tvNoProducts.setVisibility(View.VISIBLE);
+                    Toast.makeText(this, "Error al cargar productos: " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void setupCategoriaListeners() {
+        binding.btnTodos.setOnClickListener(v -> {
+            cambiarCategoria("TODOS", binding.btnTodos);
+        });
+
+        binding.btnPlatos.setOnClickListener(v -> {
+            cambiarCategoria("Plato", binding.btnPlatos);
+        });
+
+        binding.btnBebidas.setOnClickListener(v -> {
+            cambiarCategoria("Bebida", binding.btnBebidas);
+        });
+    }
+
+    private void cambiarCategoria(String categoria, Button botonSeleccionado) {
+        // Resetear todos los botones a estilo normal
+        binding.btnTodos.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.btn_light)));
+        binding.btnTodos.setTextColor(ColorStateList.valueOf(getColor(R.color.black)));
+        binding.btnPlatos.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.btn_light)));
+        binding.btnPlatos.setTextColor(ColorStateList.valueOf(getColor(R.color.black)));
+        binding.btnBebidas.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.btn_light)));
+        binding.btnBebidas.setTextColor(ColorStateList.valueOf(getColor(R.color.black)));
+
+        // Resaltar el botón seleccionado
+        botonSeleccionado.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.btn_dark)));
+        botonSeleccionado.setTextColor(ColorStateList.valueOf(getColor(R.color.white)));
+
+        categoriaSeleccionada = categoria;
+
+        // Limpiar la lista actual
+        adapter.setListaPlatos(new ArrayList<>());
+
+        // Mostrar el loading
+        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.rvProductos.setVisibility(View.GONE);
+
+        // Volver a cargar los productos con el nuevo filtro
+        cargarProductos();
+    }
+
+    private void filtrarProductos() {
+        List<Producto> productosFiltrados;
+        if (categoriaSeleccionada.equals("TODOS")) {
+            productosFiltrados = new ArrayList<>(listaCompletaProductos);
+        } else {
+            productosFiltrados = listaCompletaProductos.stream()
+                    .filter(producto -> producto.getCategoria().equals(categoriaSeleccionada))
+                    .collect(Collectors.toList());
+        }
+
+        adapter.setListaPlatos(productosFiltrados);
+
+        // Mostrar mensaje si no hay productos
+        binding.tvNoProducts.setVisibility(
+                productosFiltrados.isEmpty() ? View.VISIBLE : View.GONE
+        );
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cargarProductos(); // Recargar productos cuando vuelvas a la actividad
+    }
 }

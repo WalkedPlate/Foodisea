@@ -15,6 +15,7 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ProductoRepository {
     private final FirebaseFirestore db;
@@ -27,9 +28,16 @@ public class ProductoRepository {
         this.storage = FirebaseStorage.getInstance();
     }
 
+    public interface UploadProgressListener {
+        void onProgress(int imageIndex, int totalImages, double progress);
+        void onImageUploaded(int completedUploads, int totalUploads, String imageUrl);
+        void onError(String message);
+    }
+
     public Task<Producto> crearProductoConImagenes(String nombre, String descripcion,
                                                    double precio, String categoria,
-                                                   String restauranteId, List<Uri> imagenesUri) {
+                                                   String restauranteId, List<Uri> imagenesUri,
+                                                   UploadProgressListener progressListener) {
         // Validar número mínimo de imágenes
         if (imagenesUri.size() < 2) {
             return Tasks.forException(
@@ -39,62 +47,74 @@ public class ProductoRepository {
 
         // Generar ID único para el producto
         String productoId = UUID.randomUUID().toString();
-
-        // Crear lista de tareas de subida de imágenes
-        List<UploadTask> uploadTasks = new ArrayList<>();
         List<String> imageUrls = new ArrayList<>();
+        AtomicInteger completedUploads = new AtomicInteger(0);
+        int totalUploads = imagenesUri.size();
 
         // Referencia a la carpeta del producto en Storage
         StorageReference productoRef = storage.getReference()
                 .child(PRODUCTOS_STORAGE)
                 .child(productoId);
 
-        // Preparar todas las subidas de imágenes
+        List<Task<Uri>> uploadTasks = new ArrayList<>();
+
+        // Iniciar subidas de imágenes
         for (int i = 0; i < imagenesUri.size(); i++) {
             Uri imageUri = imagenesUri.get(i);
-            String extension = getFileExtension(imageUri);
-            String fileName = "imagen_" + i + "." + extension;
+            String fileName = "imagen_" + i + ".jpg";
             StorageReference imageRef = productoRef.child(fileName);
 
-            uploadTasks.add(imageRef.putFile(imageUri));
+            UploadTask uploadTask = imageRef.putFile(imageUri);
+            final int imageIndex = i;
+
+            // Monitorear progreso de subida
+            uploadTask.addOnProgressListener(snapshot -> {
+                double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+                if (progressListener != null) {
+                    progressListener.onProgress(imageIndex + 1, totalUploads, progress);
+                }
+            });
+
+            // Convertir UploadTask a Task<Uri>
+            Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+                return imageRef.getDownloadUrl();
+            }).addOnSuccessListener(uri -> {
+                imageUrls.add(uri.toString());
+                int completed = completedUploads.incrementAndGet();
+                if (progressListener != null) {
+                    progressListener.onImageUploaded(completed, totalUploads, uri.toString());
+                }
+            }).addOnFailureListener(e -> {
+                if (progressListener != null) {
+                    progressListener.onError("Error al subir imagen: " + e.getMessage());
+                }
+            });
+
+            uploadTasks.add(urlTask);
         }
 
-        // Ejecutar todas las subidas y obtener URLs
+        // Esperar a que todas las imágenes se suban
         return Tasks.whenAllSuccess(uploadTasks)
-                .continueWithTask(uploadResults -> {
-                    List<Task<Uri>> downloadUrlTasks = new ArrayList<>();
-
-                    List<Object> results = uploadResults.getResult();
-                    for (Object result : results) {
-                        UploadTask.TaskSnapshot snapshot = (UploadTask.TaskSnapshot) result;
-                        downloadUrlTasks.add(snapshot.getStorage().getDownloadUrl());
-                    }
-
-                    return Tasks.whenAllSuccess(downloadUrlTasks);
-                })
-                .continueWithTask(urlResults -> {
-                    // Recolectar todas las URLs
-                    List<Object> results = urlResults.getResult();
-                    for (Object urlResult : results) {
-                        imageUrls.add(((Uri) urlResult).toString());
-                    }
-
+                .continueWithTask(task -> {
                     // Crear objeto Producto
-                    Producto producto = new Producto(
-                            productoId,
-                            nombre,
-                            descripcion,
-                            precio,
-                            imageUrls,
-                            categoria,
-                            false // outOfStock inicial
-                    );
+                    Producto producto = new Producto();
+                    producto.setId(productoId);
+                    producto.setNombre(nombre);
+                    producto.setDescripcion(descripcion);
+                    producto.setPrecio(precio);
+                    producto.setCategoria(categoria);
+                    producto.setRestauranteId(restauranteId);
+                    producto.setImagenes(imageUrls);
+                    producto.setOutOfStock(false);
 
                     // Guardar en Firestore
                     return db.collection(PRODUCTOS_COLLECTION)
                             .document(productoId)
                             .set(producto)
-                            .continueWith(task -> producto);
+                            .continueWith(firestoreTask -> producto);
                 });
     }
 
@@ -132,4 +152,36 @@ public class ProductoRepository {
                     return Tasks.whenAll(deleteTasks);
                 });
     }
+
+    public Task<List<Producto>> obtenerProductosPorRestaurante(String restauranteId) {
+        return db.collection(PRODUCTOS_COLLECTION)
+                .whereEqualTo("restauranteId", restauranteId)
+                .get()
+                .continueWith(task -> {
+                    List<Producto> productos = new ArrayList<>();
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            Producto producto = doc.toObject(Producto.class);
+                            if (producto != null) {
+                                productos.add(producto);
+                            }
+                        }
+                    }
+                    return productos;
+                });
+    }
+
+    public Task<Producto> getProductoById(String productoId) {
+        return db.collection(PRODUCTOS_COLLECTION)
+                .document(productoId)
+                .get()
+                .continueWith(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        return task.getResult().toObject(Producto.class);
+                    }
+                    throw new Exception("Producto no encontrado");
+                });
+    }
+
+
 }

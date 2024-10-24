@@ -11,31 +11,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
 import com.example.foodisea.activity.adminRes.AdminResDetallesProductoActivity;
 import com.example.foodisea.model.Producto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CartaAdapter extends RecyclerView.Adapter<CartaAdapter.PlatoViewHolder> {
-    private List<Producto> listaProductos; // Cambiar a Plato
+    private List<Producto> listaProductos = new ArrayList<>(); // Inicializar lista vacía
     private Context context;
-
-    public List<Producto> getListaPlatos() {
-        return listaProductos;
-    }
-
-    public void setListaPlatos(List<Producto> listaProductos) {
-        this.listaProductos = listaProductos;
-    }
-
-    public Context getContext() {
-        return context;
-    }
-
-    public void setContext(Context context) {
-        this.context = context;
-    }
 
     @NonNull
     @Override
@@ -46,49 +32,66 @@ public class CartaAdapter extends RecyclerView.Adapter<CartaAdapter.PlatoViewHol
 
     @Override
     public void onBindViewHolder(@NonNull PlatoViewHolder holder, int position) {
-        Producto producto = listaProductos.get(position); // Usar Plato en lugar de Producto
-        holder.producto = producto;
-
-        TextView textViewNombreProducto = holder.itemView.findViewById(R.id.nameProducto);
-        textViewNombreProducto.setText(producto.getNombre()); // Usar getNombre()
-
-        TextView textViewPrecio = holder.itemView.findViewById(R.id.precioProducto);
-        textViewPrecio.setText("$" + producto.getPrecio()); // Usar getPrecio()
-
-        ImageView imageViewProducto = holder.itemView.findViewById(R.id.platoImage);
-        // Aquí debes cargar la imagen de una URL o recurso, dependiendo de tu implementación
-        // Por ejemplo, usando Glide o Picasso si las imágenes están en URLs
-        // Glide.with(context).load(plato.getImagenes().get(0)).into(imageViewProducto);
-        // Para un recurso local, puedes usar:
-        imageViewProducto.setImageResource(context.getResources().getIdentifier(producto.getImagenes().get(0), "drawable", context.getPackageName())); // Asumiendo que la imagen está en una lista de recursos
-
-
-
-        // Mostrar "Agotado" si el plato no está disponible
-        TextView textViewStatus = holder.itemView.findViewById(R.id.productStatus);
-        if (producto.isOutOfStock()) {
-            textViewStatus.setText("Agotado");
-            textViewStatus.setVisibility(View.VISIBLE);
-        } else {
-            textViewStatus.setVisibility(View.GONE);
-        }
-
-        holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, AdminResDetallesProductoActivity.class);
-            context.startActivity(intent);
-        });
+        Producto producto = listaProductos.get(position);
+        holder.bind(producto);
     }
 
     @Override
     public int getItemCount() {
-        return listaProductos.size(); // Cambiar a listaPlatos
+        return listaProductos != null ? listaProductos.size() : 0;
+    }
+
+    public void setListaPlatos(List<Producto> nuevaLista) {
+        this.listaProductos = nuevaLista != null ? nuevaLista : new ArrayList<>();
+        notifyDataSetChanged();
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     public class PlatoViewHolder extends RecyclerView.ViewHolder {
-        Producto producto; // Cambiar Producto a Plato
+        private final TextView textViewNombreProducto;
+        private final TextView textViewPrecio;
+        private final ImageView imageViewProducto;
+        private final TextView textViewStatus;
 
         public PlatoViewHolder(@NonNull View itemView) {
             super(itemView);
+            textViewNombreProducto = itemView.findViewById(R.id.nameProducto);
+            textViewPrecio = itemView.findViewById(R.id.precioProducto);
+            imageViewProducto = itemView.findViewById(R.id.platoImage);
+            textViewStatus = itemView.findViewById(R.id.productStatus);
+        }
+
+        public void bind(Producto producto) {
+            textViewNombreProducto.setText(producto.getNombre());
+            textViewPrecio.setText(String.format("$%.2f", producto.getPrecio()));
+
+            // Cargar imagen con Glide
+            if (producto.getImagenes() != null && !producto.getImagenes().isEmpty()) {
+                Glide.with(context)
+                        .load(producto.getImagenes().get(0))
+                        .placeholder(R.drawable.placeholder_image) // Reemplaza con tu placeholder
+                        .error(R.drawable.error_image) // Reemplaza con tu imagen de error
+                        .centerCrop()
+                        .into(imageViewProducto);
+            } else {
+                // Si no hay imágenes, mostrar placeholder
+                imageViewProducto.setImageResource(R.drawable.placeholder_image);
+            }
+
+            // Mostrar estado de disponibilidad
+            textViewStatus.setVisibility(producto.isOutOfStock() ? View.VISIBLE : View.GONE);
+            textViewStatus.setText(producto.isOutOfStock() ? "Agotado" : "");
+
+            // Click listener para ver detalles
+            itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(context, AdminResDetallesProductoActivity.class);
+                // Pasar el ID del producto
+                intent.putExtra("PRODUCTO_ID", producto.getId());
+                context.startActivity(intent);
+            });
         }
     }
 }
