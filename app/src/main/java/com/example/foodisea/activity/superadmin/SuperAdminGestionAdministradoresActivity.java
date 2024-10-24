@@ -46,6 +46,11 @@ public class SuperAdminGestionAdministradoresActivity extends AppCompatActivity 
             startActivity(home);
         });
 
+        binding.btnDashboard.setOnClickListener(v -> {
+            Intent intent = new Intent(SuperAdminGestionAdministradoresActivity.this, SuperAdminAgregarAdministradorActivity.class);
+            startActivity(intent);
+        });
+
         // Configurar el adaptador
         UsuarioAdapter adapter = new UsuarioAdapter(this, getUsuariosList());
         binding.rvUsers.setLayoutManager(new LinearLayoutManager(this));

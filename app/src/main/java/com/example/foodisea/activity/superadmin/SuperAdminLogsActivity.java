@@ -10,17 +10,18 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
-import com.example.foodisea.databinding.ActivitySuperadminMainBinding;
+import com.example.foodisea.databinding.ActivitySuperAdminGestionUsuariosBinding;
+import com.example.foodisea.databinding.ActivitySuperAdminLogsBinding;
 
-public class SuperadminMainActivity extends AppCompatActivity {
+public class SuperAdminLogsActivity extends AppCompatActivity {
 
-    ActivitySuperadminMainBinding binding;
+    ActivitySuperAdminLogsBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivitySuperadminMainBinding.inflate(getLayoutInflater());
+        binding = ActivitySuperAdminLogsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         EdgeToEdge.enable(this);
@@ -30,16 +31,14 @@ public class SuperadminMainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // funcion botones
-        binding.btnDashboard.setOnClickListener(v->{
-            Intent dashboard = new Intent(this, SuperAdminSelectionActivity.class);
-            startActivity(dashboard);
+        //funcion de botones:
+        binding.btnBack.setOnClickListener(v -> {
+            finish(); // Cierra la actividad actual y regresa
         });
 
-        // boton logs
-        binding.btnLogs.setOnClickListener(v->{
-            Intent dashboard = new Intent(this, SuperAdminLogsActivity.class);
-            startActivity(dashboard);
+        binding.btnHome.setOnClickListener(v -> {
+            Intent home = new Intent(this, SuperadminMainActivity.class);
+            startActivity(home);
         });
     }
 }

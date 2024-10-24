@@ -41,6 +41,11 @@ public class SuperAdminGestionRestauranteActivity extends AppCompatActivity {
             finish(); // Cierra la actividad actual y regresa
         });
 
+        binding.btnDashboard.setOnClickListener(v -> {
+            Intent intent = new Intent(SuperAdminGestionRestauranteActivity.this, SuperAdminAgregarRestauranteActivity.class);
+            startActivity(intent);
+        });
+
         binding.btnHome.setOnClickListener(v -> {
             Intent home = new Intent(this, SuperadminMainActivity.class);
             startActivity(home);

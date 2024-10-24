@@ -25,7 +25,7 @@
             android:name=".activity.cliente.ClienteCompraDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.adminRes.AdminResEditarProductoActivity"
+            android:name=".activity.superadmin.SuperAdminLogsActivity"
             android:exported="false" />
 
         <meta-data
@@ -35,6 +35,12 @@
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
 
+        <activity
+            android:name=".activity.superadmin.SuperAdminAgregarAdministradorActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.superadmin.SuperAdminAgregarRestauranteActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.superadmin.SuperAdminRestaurantesReportesActivity"
             android:exported="false" />
@@ -64,8 +70,7 @@
             android:exported="false" />
         <activity
             android:name=".activity.adminRes.AdminResNuevoProductoActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:exported="false" />
         <activity
             android:name=".activity.repartidor.RepartidorChatActivity"
             android:exported="false" />
