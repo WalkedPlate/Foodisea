@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.cliente.ClienteComprobanteQrActivity"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header con botón de regresar y título -->
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="12dp">
+
+            <!-- Botón de regresar (flecha) -->
+            <Button
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/baseline_arrow_back_ios_new_24"
+                android:contentDescription="@string/btnBack"
+                android:backgroundTint="@color/bg_color"/>
+
+            <!-- Texto "Resumen de pedido" -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Confirmar entrega del pedido"
+                android:textSize="20sp"
+                android:fontFamily="@font/sen_font">
+            </TextView>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="320dp"
+            android:layout_marginTop="60dp"
+            android:src="@drawable/img_qr" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sen_font"
+            android:text="Mostrar el código QR al repartidor para confirmar la entrega del pedido."
+            android:textAlignment="center"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            android:padding="16dp"
+            android:layout_marginBottom="20dp"/>
+
+        <Button
+            android:id="@+id/btnQrPago"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ESCANEAR QR DE PAGO"
+            android:textSize="18sp"
+            android:backgroundTint="@color/btn_medium"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="12dp"
+            android:layout_margin="16dp"
+            android:padding="16dp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+</LinearLayout>

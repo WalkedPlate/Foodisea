@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.cliente.ClienteCheckoutActivity"
-    android:background="@color/bg_color">
+    android:orientation="vertical"
+    tools:context=".activity.cliente.ClienteCompraDetailsActivity"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,7 +37,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Resumen del pedido"
+                android:text="Detalles de compra"
                 android:textSize="20sp"
                 android:fontFamily="@font/sen_font">
             </TextView>
@@ -79,14 +80,6 @@
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
-                        <!-- Botón Editar dirección -->
-                        <TextView
-                            android:id="@+id/btnEditAddress"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="EDITAR"
-                            android:textColor="@android:color/holo_blue_light"
-                            android:textStyle="bold" />
 
                     </LinearLayout>
 
@@ -110,7 +103,7 @@
             <!-- Detalles del pedido -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
+                android:layout_height="250dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/rounded_box">
 
@@ -138,14 +131,6 @@
                             android:textColor="@android:color/darker_gray"
                             android:layout_weight="1" />
 
-                        <!-- Botón Editar pedido -->
-                        <TextView
-                            android:id="@+id/btnEditOrder"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="EDITAR"
-                            android:textColor="@android:color/holo_blue_light"
-                            android:textStyle="bold" />
                     </LinearLayout>
 
 
@@ -197,6 +182,7 @@
                         android:text="S/. 281.20"
                         android:textSize="16sp"
                         android:textColor="@android:color/black" />
+
                 </LinearLayout>
 
                 <!-- Delivery -->
@@ -223,67 +209,46 @@
                         android:textColor="@android:color/black" />
                 </LinearLayout>
 
+                <!-- Total pago -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total pago:"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/sen_font"
+                        android:textColor="@android:color/darker_gray"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="S/. 296.20"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
 
-
-
-    <!-- Contenedor del precio y "Realizar pedido", ubicado en la parte inferior -->
-    <LinearLayout
-        android:id="@+id/containerBottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@drawable/rounded_top">
-
-        <!-- Total consumo -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            android:elevation="4dp"
-            android:gravity="center_vertical">
-
-            <!-- Precio -->
-            <TextView
-                android:id="@+id/tvTotalLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PAGO TOTAL:"
-                android:textSize="18sp"
-                android:fontFamily="@font/sen_font"
-                android:textColor="@android:color/black"
-                android:layout_weight="1"/>
-
-            <!-- Precio Total -->
-            <TextView
-                android:id="@+id/tvTotalPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="S/. 296.20"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black" />
-        </LinearLayout>
-
-        <!-- Botón "Aceptar" -->
         <Button
-            android:id="@+id/btnAccept"
+            android:id="@+id/btnConfirmEntrega"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ACEPTAR"
+            android:text="CONFIRMAR ENTREGA"
             android:textSize="18sp"
-            android:backgroundTint="@android:color/holo_red_light"
+            android:backgroundTint="@color/btn_medium"
             android:textColor="@android:color/white"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="12dp"
+            android:layout_margin="16dp"
             android:padding="16dp"
             android:textStyle="bold"/>
+
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

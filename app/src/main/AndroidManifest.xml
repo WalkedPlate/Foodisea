@@ -19,6 +19,12 @@
         android:theme="@style/Theme.Foodisea"
         tools:targetApi="31">
         <activity
+            android:name=".activity.cliente.ClienteComprobanteQrActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.cliente.ClienteCompraDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.adminRes.AdminResEditarProductoActivity"
             android:exported="false" />
 

@@ -1,5 +1,6 @@
 package com.example.foodisea.activity.cliente;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -59,21 +60,14 @@ public class ClienteTrackingActivity extends AppCompatActivity {
         });
 
         // Configurar el botón de detalles de compra
-        btnOrderDetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Acciones cuando se presiona el botón de "Detalles de compra"
-                // Por ejemplo, navegar a otra actividad o mostrar más información
-            }
+        btnOrderDetails.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ClienteCompraDetailsActivity.class);
+            startActivity(intent);
         });
 
         // Inicialmente configurar el Bottom Sheet como colapsado
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
-
-
-
-
 
 
     }
