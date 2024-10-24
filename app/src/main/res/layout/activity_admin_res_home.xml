@@ -37,6 +37,16 @@
             android:layout_marginEnd="36dp"
             android:contentDescription="@string/app_name"
             app:srcCompat="@drawable/foodisea" />
+
+        <!-- Icono de notificaciones -->
+        <Button
+            android:id="@+id/btnNotifications"
+            style="?attr/materialIconButtonFilledStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/btn_medium"
+            android:contentDescription="Notificaciones"
+            app:icon="@drawable/ic_notifications" />
     </LinearLayout>
 
     <TextView

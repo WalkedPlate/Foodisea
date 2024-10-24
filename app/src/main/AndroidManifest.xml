@@ -19,6 +19,18 @@
         android:theme="@style/Theme.Foodisea"
         tools:targetApi="31">
         <activity
+            android:name=".activity.cliente.ClienteNotificacionesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.cliente.ClienteInfoPerfilActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.cliente.ClienteRestauranteActivity$ClienteInfoPerfilActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.cliente.ClientePerfilActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.cliente.ClienteComprobanteQrActivity"
             android:exported="false" />
         <activity

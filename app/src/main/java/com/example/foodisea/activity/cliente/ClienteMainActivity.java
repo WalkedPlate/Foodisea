@@ -1,5 +1,6 @@
 package com.example.foodisea.activity.cliente;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -34,6 +35,17 @@ public class ClienteMainActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        // funcion de los botones
+        binding.btnProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ClientePerfilActivity.class);
+            startActivity(intent);
+        });
+
+        binding.btnNotifications.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ClienteNotificacionesActivity.class);
+            startActivity(intent);
         });
 
         // Configurar el adaptador
