@@ -8,21 +8,25 @@
     android:background="@color/bg_color"
     tools:context=".activity.superadmin.SuperAdminLogsActivity">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp"
-        tools:context=".activity.superadmin.SuperAdminLogsActivity">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
+        <!-- Logo Section -->
         <LinearLayout
+            android:id="@+id/logoLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="12dp"
             android:gravity="center_vertical">
-            <!-- Logo Foodisea -->
+
             <ImageView
                 android:id="@+id/ivLogoFoodisea"
                 android:layout_width="0dp"
@@ -32,14 +36,15 @@
                 app:srcCompat="@drawable/foodisea" />
         </LinearLayout>
 
+        <!-- Header Section -->
         <LinearLayout
+            android:id="@+id/headerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="12dp"
             android:gravity="center_vertical">
 
-            <!-- Botón de regresar (flecha) -->
             <Button
                 android:id="@+id/btnBack"
                 style="?attr/materialIconButtonFilledTonalStyle"
@@ -51,7 +56,7 @@
                 android:backgroundTint="@color/bg_color"/>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Reportes de Logs"
@@ -60,7 +65,6 @@
                 android:fontFamily="@font/sen_font"
                 android:padding="8dp"/>
 
-            <!-- Icono de home -->
             <Button
                 android:id="@+id/btnHome"
                 style="?attr/materialIconButtonFilledStyle"
@@ -71,6 +75,7 @@
                 android:backgroundTint="@color/btn_medium"/>
         </LinearLayout>
 
+        <!-- RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvLogs"
             android:layout_width="match_parent"
@@ -79,7 +84,7 @@
             android:clipToPadding="false"
             android:paddingBottom="8dp"
             tools:listitem="@layout/item_log_notification" />
-    </LinearLayout>
 
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
