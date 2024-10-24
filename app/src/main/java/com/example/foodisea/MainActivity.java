@@ -2,6 +2,8 @@ package com.example.foodisea;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -19,6 +21,14 @@ import com.example.foodisea.activity.repartidor.RepartidorMainActivity;
 import com.example.foodisea.activity.superadmin.SuperadminMainActivity;
 import com.example.foodisea.databinding.ActivityMainBinding;
 import com.example.foodisea.firestore.FirestoreInitializer;
+import com.example.foodisea.notificaciones.NotificationHelper;
+import com.example.foodisea.notificaciones.TokenManager;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,25 +46,12 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        /*
-        // Inicializar Firestore
-        firestoreInitializer = new FirestoreInitializer();
+        NotificationHelper notificationHelper = new NotificationHelper(this);
+        notificationHelper.createNotificationChannel();
+        notificationHelper.askNotificationPermission();
 
-        // Botón para inicializar la base de datos
-        binding.btnInitDb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!isInitializing) {
-                    initializeDatabase();
-                } else {
-                    Toast.makeText(MainActivity.this,
-                            "La inicialización ya está en proceso",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-         */
+        TokenManager tokenManager = new TokenManager(this);
+        tokenManager.obtenerYGuardarToken();
 
         // Botón para Superadmin
         binding.btnRole1.setOnClickListener(new View.OnClickListener() {
@@ -93,47 +90,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /*
-    private void initializeDatabase() {
-        isInitializing = true;
-        binding.btnInitDb.setEnabled(false);
-        binding.progressBar.setVisibility(View.VISIBLE);
+    private void guardarTokenEnFirestore(String token) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // Por ahora lo guardamos con un ID de dispositivo único
+        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    firestoreInitializer.initializeDatabase();
+        Map<String, Object> tokenData = new HashMap<>();
+        tokenData.put("token", token);
+        tokenData.put("timestamp", FieldValue.serverTimestamp());
+        tokenData.put("platform", "android");
 
-                    // Volver al hilo principal para actualizar la UI
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(MainActivity.this,
-                                    "Base de datos inicializada correctamente",
-                                    Toast.LENGTH_LONG).show();
-                            binding.btnInitDb.setEnabled(true);
-                            binding.progressBar.setVisibility(View.GONE);
-                            isInitializing = false;
-                        }
-                    });
-                } catch (Exception e) {
-                    // Manejar cualquier error durante la inicialización
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(MainActivity.this,
-                                    "Error al inicializar la base de datos: " + e.getMessage(),
-                                    Toast.LENGTH_LONG).show();
-                            binding.btnInitDb.setEnabled(true);
-                            binding.progressBar.setVisibility(View.GONE);
-                            isInitializing = false;
-                        }
-                    });
-                }
-            }
-        }).start();
+        db.collection("fcm_tokens")
+                .document(deviceId)
+                .set(tokenData)
+                .addOnSuccessListener(aVoid -> Log.d("FCM", "Token guardado exitosamente"))
+                .addOnFailureListener(e -> Log.e("FCM", "Error guardando token", e));
     }
-
-     */
 }

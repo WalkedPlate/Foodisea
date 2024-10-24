@@ -54,6 +54,8 @@ dependencies {
     //Firebase
     implementation platform('com.google.firebase:firebase-bom:33.5.0')
     implementation 'com.google.firebase:firebase-firestore'
+    //Firebase Messaging
+    implementation 'com.google.firebase:firebase-messaging:24.0.3'
 
     // Dependency for Firebase Storage
     implementation 'com.google.firebase:firebase-storage'
