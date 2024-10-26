@@ -88,6 +88,25 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Obtener y mostrar token
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        String token = task.getResult();
+                        // Mostrar en el logcat
+                        Log.d("FCM_TOKEN", "----------------------------------------");
+                        Log.d("FCM_TOKEN", "Token: " + token);
+                        Log.d("FCM_TOKEN", "----------------------------------------");
+
+                        // Mostrar en un Toast para copiarlo fácilmente
+                        Toast.makeText(this,
+                                "Token: " + token,
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
     }
 
     private void guardarTokenEnFirestore(String token) {

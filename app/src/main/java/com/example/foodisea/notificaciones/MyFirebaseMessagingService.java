@@ -39,50 +39,62 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-        // Extraer datos del mensaje
-        Map<String, String> data = remoteMessage.getData();
-        String title = data.get("title");
-        String body = data.get("body");
-        String type = data.get("type");
-        String pedidoId = data.get("pedidoId");
+        String title, body, type, pedidoId;
+
+        // Si viene de Firebase Console
+        if (remoteMessage.getNotification() != null) {
+            title = remoteMessage.getNotification().getTitle();
+            body = remoteMessage.getNotification().getBody();
+            Map<String, String> data = remoteMessage.getData();
+            type = data.get("type");
+            pedidoId = data.get("pedidoId");
+        } else {
+            // Si viene de data
+            Map<String, String> data = remoteMessage.getData();
+            title = data.get("title");
+            body = data.get("body");
+            type = data.get("type");
+            pedidoId = data.get("pedidoId");
+        }
+
+        // Verificar el tipo
+        if (type == null) {
+            type = "DEFAULT";
+        }
 
         // Crear el intent según el tipo
         Intent intent;
-        switch (type) {
-            case NotificationType.NUEVO_PEDIDO:
-                intent = new Intent(this, AdminResPedidosActivity.class);
-                break;
-            case NotificationType.PEDIDO_EN_CAMINO:
-            case NotificationType.PEDIDO_PREPARACION:
-                intent = new Intent(this, ClienteTrackingActivity.class);
-                break;
-            case NotificationType.PEDIDO_ASIGNADO:
-                intent = new Intent(this, RepartidorVerOrdenActivity.class);
-                break;
-            default:
-                intent = new Intent(this, MainActivity.class);
+        if (type.equals(NotificationType.NUEVO_PEDIDO)) {
+            // Para Administrador de Restaurante
+            intent = new Intent(this, AdminResPedidosActivity.class);
+        } else if (type.equals(NotificationType.PEDIDO_EN_CAMINO) ||
+                type.equals(NotificationType.PEDIDO_PREPARACION)) {
+            // Para Cliente
+            intent = new Intent(this, ClienteTrackingActivity.class);
+        } else if (type.equals(NotificationType.PEDIDO_ASIGNADO)) {
+            // Para Repartidor
+            intent = new Intent(this, RepartidorVerOrdenActivity.class);
+        } else {
+            // Por defecto a la pantalla principal
+            intent = new Intent(this, MainActivity.class);
         }
 
-        // Añadir pedidoId al intent si existe
+        // Añadir flags necesarios para abrir la app desde background
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        // Añadir extras
         if (pedidoId != null) {
             intent.putExtra("pedidoId", pedidoId);
         }
 
-        // Crear y mostrar la notificación
+        // Guardar el tipo de notificación
+        if (type != null) {
+            intent.putExtra("notificationType", type);
+        }
+
+        // Crear canal y mostrar notificación
         createNotificationChannel();
         mostrarNotificacion(title, body, intent);
-    }
-
-    @Override
-    public void onNewToken(@NonNull String token) {
-        super.onNewToken(token);
-        Log.d("FCM_TOKEN", "----------------------------------------");
-        Log.d("FCM_TOKEN", "Nuevo token: " + token);
-        Log.d("FCM_TOKEN", "----------------------------------------");
-
-        // Guardar el token usando TokenManager
-        TokenManager tokenManager = new TokenManager(getApplicationContext());
-        tokenManager.guardarToken(token);
     }
 
     private void createNotificationChannel() {
@@ -90,9 +102,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationChannel channel = new NotificationChannel(
                     channelId,
                     "Canal notificaciones default",
-                    NotificationManager.IMPORTANCE_DEFAULT
+                    NotificationManager.IMPORTANCE_HIGH  // Cambiado a HIGH
             );
             channel.setDescription("Canal para notificaciones con prioridad default");
+            channel.enableLights(true);
+            channel.enableVibration(true);
 
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
@@ -100,20 +114,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void mostrarNotificacion(String title, String body, Intent intent) {
+        // Valores por defecto si son null
+        if (title == null) title = "Nueva notificación";
+        if (body == null) body = "Tienes un nuevo mensaje";
+
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this,
-                0,
+                (int) System.currentTimeMillis(),
                 intent,
-                PendingIntent.FLAG_IMMUTABLE
+                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
         );
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.drawable.ic_notifications)
                 .setContentTitle(title)
                 .setContentText(body)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+                .setAutoCancel(true)
+                .setDefaults(NotificationCompat.DEFAULT_ALL); // Añade sonido y vibración
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
@@ -124,5 +143,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     builder.build()
             );
         }
+    }
+
+    @Override
+    public void onNewToken(@NonNull String token) {
+        super.onNewToken(token);
+        Log.d("FCM_TOKEN", "----------------------------------------");
+        Log.d("FCM_TOKEN", "Nuevo token: " + token);
+        Log.d("FCM_TOKEN", "----------------------------------------");
+
+        // Guardar el token
+        TokenManager tokenManager = new TokenManager(getApplicationContext());
+        tokenManager.guardarToken(token);
     }
 }
