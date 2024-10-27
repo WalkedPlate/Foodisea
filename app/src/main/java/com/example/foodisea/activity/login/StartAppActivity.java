@@ -30,7 +30,7 @@ public class StartAppActivity extends AppCompatActivity {
         });
 
         binding.btnRegistrate.setOnClickListener(view -> {
-            Intent intent = new Intent(this, RegisterActivity.class);
+            Intent intent = new Intent(this, SelectRolActivity.class);
             startActivity(intent);
         });
     }

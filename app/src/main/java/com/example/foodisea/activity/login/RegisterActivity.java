@@ -1,6 +1,7 @@
 package com.example.foodisea.activity.login;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -213,6 +214,8 @@ public class RegisterActivity extends AppCompatActivity {
                     loadingDialog.dismiss();
                     handleRegistrationError(e);
                 });
+
+        startActivity(new Intent(this, ConfirmRegisterActivity.class));
     }
 
     /**

@@ -114,6 +114,8 @@
     <color name="gray_300">#E0E0E0</color>
     <color name="gray_500">#6B7280</color>
 
+    <color name="border_light">#FF8A80</color>
+
 
 
 </resources>

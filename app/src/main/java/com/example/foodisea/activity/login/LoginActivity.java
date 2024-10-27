@@ -131,7 +131,9 @@ public class LoginActivity extends AppCompatActivity {
     private void setupClickListeners() {
         binding.btnEntrarApp.setOnClickListener(v -> attemptLogin());
         binding.btnBack.setOnClickListener(v -> finish());
-        binding.tvForgotPassword.setOnClickListener(v -> handleForgotPassword());
+        binding.tvForgotPassword.setOnClickListener(v -> {
+            startActivity(new Intent(this, ForgotPasswordActivity.class));
+        });
         binding.tvRegistrate.setOnClickListener(v -> navigateToRegister());
     }
 
@@ -420,27 +422,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Maneja el proceso de recuperación de contraseña
-     */
-    private void handleForgotPassword() {
-        String email = binding.etCorreo.getText().toString().trim();
-        if (!validateEmail(email)) {
-            showError(getString(R.string.error_email_recuperacion));
-            return;
-        }
-
-        loadingDialog.show();
-        usuarioRepository.sendPasswordResetEmail(email)
-                .addOnCompleteListener(task -> {
-                    loadingDialog.dismiss();
-                    if (task.isSuccessful()) {
-                        showSuccess(getString(R.string.mensaje_recuperacion_enviado));
-                    } else {
-                        showError(getString(R.string.error_recuperacion_password));
-                    }
-                });
-    }
 
     /**
      * Navega a la pantalla de registro

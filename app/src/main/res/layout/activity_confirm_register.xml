@@ -5,9 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.cliente.ConfirmacionPedido"
-    android:background="@color/white">
-
+    android:background="@color/bg_color"
+    tools:context=".activity.login.ConfirmRegisterActivity">
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="410dp"
@@ -37,9 +36,10 @@
         android:id="@+id/tvFelicidades"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="¡FELICIDADES!"
-        android:textSize="24sp"
+        android:text="¡Registro completado!"
         android:fontFamily="@font/sen_font"
+        android:textAllCaps="true"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,9 +53,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingHorizontal="65dp"
-        android:text="Se realizó la compra exitósamente, gracias por usar nuestro servicio"
+        android:text="Gracias por registrarte. Tu solicitud ha sido recibida con éxito y ya estás listo para ordenar tus comidas favoritas."
         android:textAlignment="center"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:fontFamily="@font/sen_font"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,11 +65,11 @@
         app:layout_constraintVertical_bias="0.074" />
 
     <Button
-        android:id="@+id/btnTracking"
+        android:id="@+id/btnOk"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:text="SIGUE TU ORDEN"
+        android:text="ENTENDIDO"
         android:textSize="18sp"
         android:textStyle="bold"
         android:backgroundTint="@android:color/holo_red_light"
@@ -79,4 +79,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvConfirmacion"
         app:layout_constraintVertical_bias="0.457" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
