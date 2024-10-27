@@ -1,4 +1,4 @@
-package com.example.foodisea.activity.dialog;
+package com.example.foodisea.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

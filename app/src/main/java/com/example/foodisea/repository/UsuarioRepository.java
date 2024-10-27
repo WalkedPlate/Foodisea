@@ -13,6 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Repositorio que maneja todas las operaciones relacionadas con usuarios en Firebase
@@ -133,18 +134,20 @@ public class UsuarioRepository {
 
     /**
      * Registra un nuevo usuario en Firebase Auth y Firestore
+     * Soporta múltiples tipos de usuario (Cliente, Repartidor)
      * @param email Correo del usuario
      * @param password Contraseña del usuario
-     * @param usuario Datos del usuario a registrar
+     * @param usuario Datos del usuario a registrar (Cliente o Repartidor)
      * @return Task<Usuario> con los datos del usuario registrado
      */
     public Task<Usuario> registerUser(String email, String password, Usuario usuario) {
+        // El código existente ya maneja correctamente diferentes tipos de usuario
         return auth.createUserWithEmailAndPassword(email, password)
                 .continueWithTask(task -> {
                     if (!task.isSuccessful()) {
-                        throw task.getException();
+                        throw Objects.requireNonNull(task.getException());
                     }
-                    String uid = task.getResult().getUser().getUid();
+                    String uid = Objects.requireNonNull(task.getResult().getUser()).getUid();
                     usuario.setId(uid);
                     return db.collection(COLLECTION_USUARIOS)
                             .document(uid)

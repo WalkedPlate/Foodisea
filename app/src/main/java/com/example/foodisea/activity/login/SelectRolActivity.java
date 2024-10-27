@@ -10,10 +10,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
-import com.example.foodisea.activity.dialog.LoadingDialog;
-import com.example.foodisea.databinding.ActivityLoginBinding;
 import com.example.foodisea.databinding.ActivitySelectRolBinding;
-import com.example.foodisea.repository.UsuarioRepository;
 
 public class SelectRolActivity extends AppCompatActivity {
     /**
@@ -21,23 +18,24 @@ public class SelectRolActivity extends AppCompatActivity {
      */
     ActivitySelectRolBinding binding;
 
+    // Constantes para identificar roles
+    public static final String EXTRA_TIPO_USUARIO = "tipo_usuario";
+    public static final String TIPO_CLIENTE = "Cliente";
+    public static final String TIPO_REPARTIDOR = "Repartidor";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeComponents();
         setupViews();
-
     }
 
     /**
      * Inicializa los componentes principales de la actividad
      */
     private void initializeComponents() {
-        // Inicializar ViewBinding
         binding = ActivitySelectRolBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        // Configurar diseño edge-to-edge
         EdgeToEdge.enable(this);
         setupWindowInsets();
     }
@@ -65,11 +63,17 @@ public class SelectRolActivity extends AppCompatActivity {
      */
     private void setupClickListeners() {
         binding.btnBack.setOnClickListener(v -> finish());
+
         binding.btnRepartidores.setOnClickListener(v -> {
-            startActivity(new Intent(this, RegisterActivity.class));
+            Intent intent = new Intent(this, RegisterActivity.class);
+            intent.putExtra(EXTRA_TIPO_USUARIO, TIPO_REPARTIDOR);
+            startActivity(intent);
         });
+
         binding.btnClientes.setOnClickListener(v -> {
-            startActivity(new Intent(this, RegisterActivity.class));
+            Intent intent = new Intent(this, RegisterActivity.class);
+            intent.putExtra(EXTRA_TIPO_USUARIO, TIPO_CLIENTE);
+            startActivity(intent);
         });
     }
 }

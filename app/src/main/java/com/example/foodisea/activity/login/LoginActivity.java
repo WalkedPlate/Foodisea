@@ -7,8 +7,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,11 +14,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.foodisea.MainActivity;
 import com.example.foodisea.R;
 import com.example.foodisea.activity.adminRes.AdminResHomeActivity;
 import com.example.foodisea.activity.cliente.ClienteMainActivity;
-import com.example.foodisea.activity.dialog.LoadingDialog;
+import com.example.foodisea.dialog.LoadingDialog;
 import com.example.foodisea.activity.repartidor.RepartidorMainActivity;
 import com.example.foodisea.activity.superadmin.SuperadminMainActivity;
 import com.example.foodisea.databinding.ActivityLoginBinding;
@@ -29,11 +26,11 @@ import com.example.foodisea.model.Repartidor;
 import com.example.foodisea.model.Usuario;
 import com.example.foodisea.repository.UsuarioRepository;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 
 /**
@@ -44,8 +41,6 @@ import com.google.firebase.auth.FirebaseUser;
  * - Repartidor
  * - Superadmin
  *
- * @author WalkedPlate
- * @version 1.0
  * @see Usuario
  * @see UsuarioRepository
  */
@@ -131,14 +126,12 @@ public class LoginActivity extends AppCompatActivity {
     private void setupClickListeners() {
         binding.btnEntrarApp.setOnClickListener(v -> attemptLogin());
         binding.btnBack.setOnClickListener(v -> finish());
-        binding.tvForgotPassword.setOnClickListener(v -> {
-            startActivity(new Intent(this, ForgotPasswordActivity.class));
-        });
-        binding.tvRegistrate.setOnClickListener(v -> navigateToRegister());
+        binding.tvForgotPassword.setOnClickListener(v -> navigateToForgotPassword());
+        binding.tvRegistrate.setOnClickListener(v -> navigateToSelectRol());
     }
 
     /**
-     * Configura la funcionalidad de recordar email
+     * Configura la funcionalidad de recordar credenciales
      */
     private void setupRememberEmail() {
         boolean rememberEmailEnabled = prefs.getBoolean(KEY_REMEMBER_EMAIL, false);
@@ -147,15 +140,30 @@ public class LoginActivity extends AppCompatActivity {
         binding.cbRememberMe.setChecked(rememberEmailEnabled);
         if (rememberEmailEnabled && !savedEmail.isEmpty()) {
             binding.etCorreo.setText(savedEmail);
+            // Pre-validar el email guardado
+            validateEmail(savedEmail);
         }
 
         binding.cbRememberMe.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (!isChecked) {
                 clearSavedEmail();
+                // Mostrar confirmación al usuario
+                Snackbar.make(binding.getRoot(),
+                        "Se ha borrado el correo guardado",
+                        Snackbar.LENGTH_SHORT).show();
             } else {
                 String currentEmail = binding.etCorreo.getText().toString().trim();
                 if (!currentEmail.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(currentEmail).matches()) {
                     saveEmail(currentEmail);
+                    Snackbar.make(binding.getRoot(),
+                            "Se guardará el correo para futuros inicios de sesión",
+                            Snackbar.LENGTH_SHORT).show();
+                } else {
+                    // Desmarcar checkbox si el email no es válido
+                    binding.cbRememberMe.setChecked(false);
+                    Snackbar.make(binding.getRoot(),
+                            "Ingrese un correo válido antes de activar esta opción",
+                            Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
@@ -424,12 +432,26 @@ public class LoginActivity extends AppCompatActivity {
 
 
     /**
-     * Navega a la pantalla de registro
+     * Navega a la pantalla de selección de rol para registro
      */
-    private void navigateToRegister() {
-        Intent intent = new Intent(this, RegisterActivity.class);
+    private void navigateToSelectRol() {  // Método renombrado y actualizado
+        Intent intent = new Intent(this, SelectRolActivity.class);
         startActivity(intent);
     }
+
+    /**
+     * Navega a la pantalla de recuperación de contraseña
+     */
+    private void navigateToForgotPassword() {
+        Intent intent = new Intent(this, ForgotPasswordActivity.class);
+        // Pasar el email si está disponible
+        String currentEmail = binding.etCorreo.getText().toString().trim();
+        if (!currentEmail.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(currentEmail).matches()) {
+            intent.putExtra(ForgotPasswordActivity.EXTRA_EMAIL, currentEmail);
+        }
+        startActivity(intent);
+    }
+
 
     /**
      * Valida todos los campos del formulario

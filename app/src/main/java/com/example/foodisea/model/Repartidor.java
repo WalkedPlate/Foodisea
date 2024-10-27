@@ -5,6 +5,9 @@ public class Repartidor extends Usuario {
     private double longitud;
     private String estado;  // "Disponible", "Ocupado"
 
+    public Repartidor() {
+    }
+
     // Constructor que llama a la clase Usuario
     public Repartidor(String id, String nombres, String apellidos, String correo, String telefono, String direccion,
                       String documentoId, String fechaNacimiento, String foto, String estadoUsuario, String tipoUsuario,

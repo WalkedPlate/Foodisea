@@ -10,10 +10,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
-import com.example.foodisea.activity.dialog.LoadingDialog;
 import com.example.foodisea.databinding.ActivityConfirmRegisterBinding;
-import com.example.foodisea.databinding.ActivityRegisterBinding;
-import com.example.foodisea.repository.UsuarioRepository;
 
 public class ConfirmRegisterActivity extends AppCompatActivity {
 

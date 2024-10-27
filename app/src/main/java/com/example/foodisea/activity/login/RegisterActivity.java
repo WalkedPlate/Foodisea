@@ -14,9 +14,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
-import com.example.foodisea.activity.dialog.LoadingDialog;
+import com.example.foodisea.dialog.LoadingDialog;
 import com.example.foodisea.databinding.ActivityRegisterBinding;
 import com.example.foodisea.model.Cliente;
+import com.example.foodisea.model.Repartidor;
 import com.example.foodisea.model.Usuario;
 import com.example.foodisea.repository.UsuarioRepository;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -40,10 +41,17 @@ public class RegisterActivity extends AppCompatActivity {
     private UsuarioRepository usuarioRepository;
     private LoadingDialog loadingDialog;
     private String fechaNacimiento = "";
+    private String tipoUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Obtener el tipo de usuario del intent
+        tipoUsuario = getIntent().getStringExtra(SelectRolActivity.EXTRA_TIPO_USUARIO);
+        if (tipoUsuario == null) {
+            finish();
+            return;
+        }
         initializeComponents();
         setupViews();
     }
@@ -84,6 +92,7 @@ public class RegisterActivity extends AppCompatActivity {
         setupInputValidation();
         setupDatePicker();
     }
+
 
     /**
      * Configura los listeners para los botones y campos clickeables
@@ -188,34 +197,44 @@ public class RegisterActivity extends AppCompatActivity {
 
         loadingDialog.show(getString(R.string.mensaje_registrando));
 
-        // Crear nuevo cliente con los datos del formulario
-        Cliente nuevoCliente = new Cliente();
-        nuevoCliente.setNombres(binding.etNombres.getText().toString().trim());
-        nuevoCliente.setApellidos(binding.etApellidos.getText().toString().trim());
-        nuevoCliente.setCorreo(binding.etCorreo.getText().toString().trim());
-        nuevoCliente.setTelefono(binding.etTelefono.getText().toString().trim());
-        nuevoCliente.setDireccion(binding.etDireccion.getText().toString().trim());
-        nuevoCliente.setDocumentoId(binding.etDni.getText().toString().trim());
-        nuevoCliente.setFechaNacimiento(fechaNacimiento);
-        nuevoCliente.setFoto(""); // Se puede actualizar después
-        nuevoCliente.setEstado("Activo");
-        nuevoCliente.setTipoUsuario("Cliente");
+        // Crear nuevo usuario según el tipo
+        Usuario nuevoUsuario;
+        if (tipoUsuario.equals(SelectRolActivity.TIPO_REPARTIDOR)) {
+            Repartidor repartidor = new Repartidor();
+            repartidor.setEstado("Disponible");
+            repartidor.setLatitud(0.0);
+            repartidor.setLongitud(0.0);
+            nuevoUsuario = repartidor;
+        } else {
+            nuevoUsuario = new Cliente();
+        }
+
+        // Configurar datos comunes
+        nuevoUsuario.setNombres(binding.etNombres.getText().toString().trim());
+        nuevoUsuario.setApellidos(binding.etApellidos.getText().toString().trim());
+        nuevoUsuario.setCorreo(binding.etCorreo.getText().toString().trim());
+        nuevoUsuario.setTelefono(binding.etTelefono.getText().toString().trim());
+        nuevoUsuario.setDireccion(binding.etDireccion.getText().toString().trim());
+        nuevoUsuario.setDocumentoId(binding.etDni.getText().toString().trim());
+        nuevoUsuario.setFechaNacimiento(fechaNacimiento);
+        nuevoUsuario.setFoto("");
+        nuevoUsuario.setEstado("Activo");
+        nuevoUsuario.setTipoUsuario(tipoUsuario);
 
         String password = binding.etPassword.getText().toString();
 
         // Intentar registro en Firebase
-        usuarioRepository.registerUser(nuevoCliente.getCorreo(), password, nuevoCliente)
+        usuarioRepository.registerUser(nuevoUsuario.getCorreo(), password, nuevoUsuario)
                 .addOnSuccessListener(usuario -> {
                     loadingDialog.dismiss();
                     showSuccess(getString(R.string.mensaje_registro_exitoso));
                     finish();
+                    startActivity(new Intent(this, ConfirmRegisterActivity.class));
                 })
                 .addOnFailureListener(e -> {
                     loadingDialog.dismiss();
                     handleRegistrationError(e);
                 });
-
-        startActivity(new Intent(this, ConfirmRegisterActivity.class));
     }
 
     /**

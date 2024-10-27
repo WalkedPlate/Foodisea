@@ -85,6 +85,10 @@
     <string name="error_email_existente">Ya existe una cuenta con este correo</string>
     <string name="error_password_debil">La contraseña es muy débil</string>
     <string name="error_generico_registro">Error al registrar. Intenta nuevamente.</string>
+    <string name="error_demasiados_intentos">Demasiados intentos. Intente nuevamente en %d minutos</string>
+    <string name="mensaje_enviando_correo">Enviando correo de recuperación…</string>
+    <string name="mensaje_email_guardado">Se ha guardado el correo para futuros inicios de sesión</string>
+    <string name="mensaje_email_borrado">Se ha borrado el correo guardado</string>
 
 
     <!-- Loading Dialog -->

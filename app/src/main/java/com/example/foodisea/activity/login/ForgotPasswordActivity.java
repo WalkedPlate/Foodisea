@@ -1,9 +1,11 @@
 package com.example.foodisea.activity.login;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 
 import androidx.activity.EdgeToEdge;
@@ -13,18 +15,35 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
-import com.example.foodisea.activity.dialog.LoadingDialog;
+import com.example.foodisea.dialog.LoadingDialog;
 import com.example.foodisea.databinding.ActivityForgotPasswordBinding;
-import com.example.foodisea.databinding.ActivityRegisterBinding;
 import com.example.foodisea.repository.UsuarioRepository;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.auth.FirebaseAuthEmailException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 
+import java.util.concurrent.TimeUnit;
+
+/**
+ * Activity que maneja la recuperación de contraseña mediante correo electrónico
+ * Incluye sistema de límite de intentos y validaciones de seguridad
+ */
 public class ForgotPasswordActivity extends AppCompatActivity {
+
+    /**
+     * Constantes para manejo de datos y configuración
+     */
+    public static final String EXTRA_EMAIL = "extra_email";
+    private static final int MAX_ATTEMPTS = 3;
+    private static final long COOLDOWN_TIME = 300000;  // 5 minutos en milisegundos
 
     /**
      * ViewBinding para acceder a las vistas
      */
-    ActivityForgotPasswordBinding binding;
+    private ActivityForgotPasswordBinding binding;
 
     /**
      * Repositorio para operaciones con usuarios
@@ -36,27 +55,30 @@ public class ForgotPasswordActivity extends AppCompatActivity {
      */
     private LoadingDialog loadingDialog;
 
+    /**
+     * Variables para control de intentos de recuperación
+     */
+    private int attemptCount = 0;
+    private long lastAttemptTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeComponents();
         setupViews();
+        handleIncomingEmail();
     }
 
     /**
      * Inicializa los componentes principales de la actividad
      */
     private void initializeComponents() {
-        // Inicializar ViewBinding
         binding = ActivityForgotPasswordBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Inicializar repositorios y utilidades
         usuarioRepository = new UsuarioRepository();
         loadingDialog = new LoadingDialog(this);
 
-        // Configurar diseño edge-to-edge
         EdgeToEdge.enable(this);
         setupWindowInsets();
     }
@@ -78,6 +100,16 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private void setupViews() {
         setupClickListeners();
         setupInputValidation();
+        setupHelperTexts();
+    }
+
+    /**
+     * Configura los textos de ayuda en los campos
+     */
+    private void setupHelperTexts() {
+        binding.etCorreoLayout.setHelperText("Recibirás un correo con instrucciones");
+        binding.etCorreoLayout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
+        binding.etCorreoLayout.setEndIconDrawable(R.drawable.ic_email);
     }
 
     /**
@@ -92,7 +124,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
      * Configura la validación en tiempo real de los campos
      */
     private void setupInputValidation() {
-        // Validación del email
         binding.etCorreo.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -100,15 +131,35 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 validateEmail(s.toString());
+                updateSendButtonState();
             }
 
             @Override
             public void afterTextChanged(Editable s) {}
         });
-
     }
 
+    /**
+     * Maneja el email recibido desde la actividad de login si existe
+     */
+    private void handleIncomingEmail() {
+        String email = getIntent().getStringExtra(EXTRA_EMAIL);
+        if (email != null && !email.isEmpty()) {
+            binding.etCorreo.setText(email);
+            validateEmail(email);
+            updateSendButtonState();
+        }
+    }
 
+    /**
+     * Actualiza el estado del botón de envío según la validación
+     */
+    private void updateSendButtonState() {
+        binding.btnSentEmail.setEnabled(
+                !binding.etCorreo.getText().toString().trim().isEmpty() &&
+                        binding.etCorreoLayout.getError() == null
+        );
+    }
 
     /**
      * Valida el formato del email
@@ -122,10 +173,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             binding.etCorreoLayout.setError(getString(R.string.error_email_invalido));
             return false;
-        } else {
-            binding.etCorreoLayout.setError(null);
-            return true;
         }
+        binding.etCorreoLayout.setError(null);
+        return true;
     }
 
     /**
@@ -138,42 +188,120 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             return;
         }
 
-        loadingDialog.show();
+        // Verificar límite de intentos
+        if (isAttemptLimitExceeded()) {
+            showCooldownError();
+            return;
+        }
+
+        loadingDialog.show(getString(R.string.mensaje_enviando_correo));
+
         usuarioRepository.sendPasswordResetEmail(email)
                 .addOnCompleteListener(task -> {
                     loadingDialog.dismiss();
                     if (task.isSuccessful()) {
-                        showSuccess(getString(R.string.mensaje_recuperacion_enviado));
+                        showSuccessAndFinish(getString(R.string.mensaje_recuperacion_enviado));
                     } else {
-                        showError(getString(R.string.error_recuperacion_password));
+                        handleResetError(task.getException());
                     }
+                    updateAttemptCount();
                 });
     }
 
     /**
-     * Muestra un diálogo de error
-     * @param message Mensaje de error a mostrar
+     * Verifica si se ha excedido el límite de intentos
      */
-    private void showError(String message) {
-        if (!isFinishing()) {
-            new MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.error_titulo)
-                    .setMessage(message)
-                    .setPositiveButton(R.string.aceptar, null)
-                    .show();
+    private boolean isAttemptLimitExceeded() {
+        long currentTime = System.currentTimeMillis();
+        return currentTime - lastAttemptTime < COOLDOWN_TIME && attemptCount >= MAX_ATTEMPTS;
+    }
+
+    /**
+     * Muestra el error de tiempo de espera
+     */
+    private void showCooldownError() {
+        long currentTime = System.currentTimeMillis();
+        long remainingMinutes = TimeUnit.MILLISECONDS.toMinutes(
+                COOLDOWN_TIME - (currentTime - lastAttemptTime)
+        );
+        String errorMessage = getString(R.string.error_demasiados_intentos, remainingMinutes);
+        showError(errorMessage);
+    }
+
+    /**
+     * Maneja los diferentes tipos de errores en el proceso de reset
+     */
+    private void handleResetError(Exception e) {
+        String errorMessage;
+        if (e instanceof FirebaseAuthInvalidUserException) {
+            errorMessage = getString(R.string.error_usuario_no_existe);
+        } else if (e instanceof FirebaseNetworkException) {
+            errorMessage = getString(R.string.error_conexion);
+        } else {
+            errorMessage = getString(R.string.error_recuperacion_password);
+            Log.e("ForgotPassword", "Error en recuperación de contraseña", e);
+        }
+        showError(errorMessage);
+    }
+
+    /**
+     * Actualiza el contador de intentos y aplica el cooldown si es necesario
+     */
+    private void updateAttemptCount() {
+        attemptCount++;
+        lastAttemptTime = System.currentTimeMillis();
+
+        if (attemptCount >= MAX_ATTEMPTS) {
+            disableInputs();
+            scheduleCooldownReset();
         }
     }
 
     /**
-     * Muestra un diálogo de éxito
-     * @param message Mensaje de éxito a mostrar
+     * Deshabilita los inputs durante el cooldown
      */
-    private void showSuccess(String message) {
+    private void disableInputs() {
+        binding.btnSentEmail.setEnabled(false);
+        binding.etCorreo.setEnabled(false);
+        binding.etCorreoLayout.setEndIconMode(TextInputLayout.END_ICON_NONE);
+    }
+
+    /**
+     * Programa el reset del cooldown
+     */
+    private void scheduleCooldownReset() {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (!isFinishing()) {
+                binding.btnSentEmail.setEnabled(true);
+                binding.etCorreo.setEnabled(true);
+                binding.etCorreoLayout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
+                binding.etCorreoLayout.setEndIconDrawable(R.drawable.ic_email);
+                attemptCount = 0;
+            }
+        }, COOLDOWN_TIME);
+    }
+
+    /**
+     * Muestra un mensaje de éxito y finaliza la actividad
+     */
+    private void showSuccessAndFinish(String message) {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(getString(R.string.exito_titulo))
+                .setMessage(message)
+                .setPositiveButton(getString(R.string.aceptar), (dialog, which) -> finish())
+                .setCancelable(false)
+                .show();
+    }
+
+    /**
+     * Muestra un diálogo de error
+     */
+    private void showError(String message) {
         if (!isFinishing()) {
             new MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.exito_titulo)
+                    .setTitle(getString(R.string.error_titulo))
                     .setMessage(message)
-                    .setPositiveButton(R.string.aceptar, null)
+                    .setPositiveButton(getString(R.string.aceptar), null)
                     .show();
         }
     }
