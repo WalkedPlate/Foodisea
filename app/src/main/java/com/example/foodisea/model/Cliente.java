@@ -1,6 +1,8 @@
 package com.example.foodisea.model;
 
 public class Cliente extends Usuario {
+    public Cliente() {
+    }
 
     // Constructor de la clase Cliente
     public Cliente(String id, String nombres, String apellidos, String correo, String telefono, String direccion,

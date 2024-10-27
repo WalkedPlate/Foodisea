@@ -18,6 +18,9 @@ public class Usuario {
     protected String estado;  // "Activo", "Inactivo"
     protected String tipoUsuario;  // "Cliente", "AdministradorRestaurante", "Repartidor", "Superadmin"
 
+    public Usuario() {
+    }
+
     // Constructor con todos los parámetros
     public Usuario(String id, String nombre, String apellido, String email, String telefono, String direccion, String documentoId, String fechaNacimiento, String foto, String estado, String tipoUsuario) {
         this.id = id;

@@ -44,4 +44,60 @@
 
     <!-- Repartidor main -->
     <string name="btnDelivery">Reportes de ventas</string>
+
+
+    <!-- Login y Registro (strings compartidos) -->
+    <string name="error_titulo">Error</string>
+    <string name="exito_titulo">Éxito</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="error_campo_requerido">Campo requerido</string>
+    <string name="error_email_invalido">Correo electrónico inválido</string>
+    <string name="error_password_corto">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="error_conexion">Error de conexión. Verifica tu internet.</string>
+    <string name="mensaje_registro_exitoso">¡Registro exitoso! Ahora puedes iniciar sesión con tu correo y contraseña.</string>
+
+    <!-- Login específicos -->
+    <string name="error_usuario_inactivo">La cuenta está inactiva. Contacta al administrador.</string>
+    <string name="error_usuario_no_existe">No existe una cuenta con este correo</string>
+    <string name="error_credenciales_invalidas">Contraseña incorrecta</string>
+    <string name="error_generico_login">Error al iniciar sesión. Intenta nuevamente.</string>
+    <string name="error_email_recuperacion">Ingresa un correo válido para recuperar tu contraseña</string>
+    <string name="mensaje_recuperacion_enviado">Se ha enviado un correo para recuperar tu contraseña</string>
+    <string name="error_recuperacion_password">Error al enviar el correo de recuperación</string>
+
+    <!-- Registro específicos -->
+    <string name="error_nombre_corto">El nombre debe tener al menos 2 caracteres</string>
+    <string name="error_apellido_corto">Los apellidos deben tener al menos 2 caracteres</string>
+    <string name="error_solo_letras">Este campo solo debe contener letras</string>
+    <string name="error_ingresa_nombres">Ingresa tus nombres</string>
+    <string name="error_ingresa_apellidos">Ingresa tus apellidos</string>
+    <string name="error_ingresa_email">Ingresa tu correo electrónico</string>
+    <string name="error_ingresa_telefono">Ingresa tu número de teléfono</string>
+    <string name="error_ingresa_dni">Ingresa tu DNI</string>
+    <string name="error_ingresa_direccion">Ingresa tu dirección</string>
+    <string name="error_telefono_formato">El teléfono debe comenzar con 9 y tener 9 dígitos</string>
+    <string name="error_dni_formato">El DNI debe tener 8 dígitos</string>
+    <string name="error_dni_solo_numeros">El DNI solo debe contener números</string>
+    <string name="error_ingresa_password">Ingresa una contraseña</string>
+    <string name="error_confirma_password">Confirma tu contraseña</string>
+    <string name="error_passwords_no_coinciden">Las contraseñas no coinciden</string>
+    <string name="error_seleccionar_fecha">Selecciona tu fecha de nacimiento</string>
+    <string name="error_email_existente">Ya existe una cuenta con este correo</string>
+    <string name="error_password_debil">La contraseña es muy débil</string>
+    <string name="error_generico_registro">Error al registrar. Intenta nuevamente.</string>
+
+
+    <!-- Loading Dialog -->
+    <string name="mensaje_cargando">Cargando...</string>
+    <string name="mensaje_iniciando_sesion">Iniciando sesión...</string>
+    <string name="mensaje_registrando">Registrando usuario...</string>
+
+    <!-- Perfil Cliente -->
+    <string name="titulo_cerrar_sesion">Cerrar sesión</string>
+    <string name="mensaje_confirmar_cierre_sesion">¿Estás seguro que deseas cerrar sesión?</string>
+    <string name="btn_si">Sí</string>
+    <string name="btn_no">No</string>
+
 </resources>
+
+

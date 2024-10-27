@@ -32,55 +32,117 @@
             android:layout_height="wrap_content"
             android:text="Inicio sesión"
             android:textSize="20sp"
-            android:fontFamily="@font/sen_font">
-        </TextView>
+            android:fontFamily="@font/sen_font"/>
 
     </LinearLayout>
 
-    <!-- Correo -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/etCorreoLayout"
+    <!-- Contenedor principal con scroll -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Correo electrónico"
-        android:padding="16dp"
-        app:endIconMode="custom"
-        app:endIconDrawable="@drawable/ic_email">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etCorreo"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:maxLength="20" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    <!-- Contraseña -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/etPasswordLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Contraseña"
-        android:padding="16dp"
-        app:endIconMode="password_toggle">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            <!-- Correo -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etCorreoLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Correo electrónico"
+                android:padding="16dp"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_email">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCorreo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:maxLength="50" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/btnEntrarApp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Iniciar sesión"
-        android:textAllCaps="true"
-        android:textSize="18sp"
-        android:backgroundTint="@android:color/holo_red_light"
-        android:textColor="@android:color/white"
-        android:layout_marginTop="14dp"
-        android:layout_marginBottom="10dp"
-        android:padding="16dp"
-        android:layout_marginHorizontal="16dp"
-        android:textStyle="bold"/>
+            <!-- Contraseña -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etPasswordLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Contraseña"
+                android:padding="16dp"
+                app:endIconMode="password_toggle">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Recordar credenciales y Olvidé contraseña -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp">
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cbRememberMe"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Recordar credenciales"/>
+
+                <TextView
+                    android:id="@+id/tvForgotPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="¿Olvidaste tu contraseña?"
+                    android:textColor="@android:color/holo_red_light"
+                    android:padding="8dp"/>
+            </LinearLayout>
+
+            <!-- Botón de ingreso -->
+            <Button
+                android:id="@+id/btnEntrarApp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Iniciar sesión"
+                android:textAllCaps="true"
+                android:textSize="18sp"
+                android:backgroundTint="@android:color/holo_red_light"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:padding="16dp"
+                android:layout_marginHorizontal="16dp"
+                android:textStyle="bold"/>
+
+            <!-- Enlace a registro -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="¿No tienes una cuenta?"/>
+
+                <TextView
+                    android:id="@+id/tvRegistrate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Regístrate"
+                    android:textColor="@android:color/holo_red_light"
+                    android:textStyle="bold"
+                    android:padding="8dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
