@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_color"
+    android:gravity="center_horizontal"
+    android:padding="20dp"
+    tools:context=".activity.login.StartAppActivity">
+
+
+    <!-- Logo Foodisea -->
+    <ImageView
+        android:id="@+id/ivLogoFoodisea"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="40dp"
+        android:contentDescription="@string/app_name"
+        app:srcCompat="@drawable/foodisea" />
+
+    <!-- Slider de imágenes -->
+    <ViewFlipper
+        android:id="@+id/viewFlipper"
+        android:layout_width="300dp"
+        android:layout_height="280dp"
+        android:flipInterval="2000"
+        android:autoStart="true"
+        android:layout_marginVertical="16dp"
+        android:layout_marginHorizontal="18dp"
+        android:background="@drawable/rounded_corners"
+        android:clipToOutline="true">
+
+        <!-- Primera Imagen -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/img_description"
+            android:src="@drawable/img_food_1"
+            android:scaleType="centerInside" />
+
+        <!-- Segunda Imagen -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/img_description"
+            android:src="@drawable/img_food_2"
+            android:scaleType="centerInside" />
+
+        <!-- Tercera Imagen -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/img_description"
+            android:src="@drawable/img_food_3"
+            android:scaleType="centerInside" />
+    </ViewFlipper>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¡Bienvenido!"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/sen_font"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Consigue todos tus alimentos favoritos en un solo lugar. Tú solo haces el pedido y nosotros hacemos el resto."
+        android:textSize="14sp"
+        android:textAlignment="center"
+        android:layout_margin="16dp"
+        android:paddingHorizontal="18dp"
+        android:fontFamily="@font/sen_font"/>
+    <Button
+        android:id="@+id/btnInicioSesion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Iniciar sesión"
+        android:textAllCaps="true"
+        android:textSize="18sp"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="10dp"
+        android:padding="16dp"
+        android:textStyle="bold"/>
+
+    <Button
+        android:id="@+id/btnRegistrate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Registrate"
+        android:textAllCaps="true"
+        android:textSize="18sp"
+        app:strokeColor="@android:color/holo_red_light"
+        android:backgroundTint="@android:color/white"
+        app:strokeWidth="1dp"
+        android:textColor="@android:color/holo_red_light"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="12dp"
+        android:padding="16dp"
+        android:textStyle="bold"/>
+
+</LinearLayout>
