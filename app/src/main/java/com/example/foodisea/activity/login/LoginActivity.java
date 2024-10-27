@@ -2,6 +2,7 @@ package com.example.foodisea.activity.login;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,6 +11,7 @@ import android.util.Patterns;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -66,36 +68,33 @@ public class LoginActivity extends AppCompatActivity {
      */
     private SharedPreferences prefs;
 
-    // Constantes para SharedPreferences
+    /**
+     * Constantes para SharedPreferences
+     */
     private static final String PREF_NAME = "LoginPrefs";
-    private static final String KEY_REMEMBER_EMAIL = "remember_email";
-    private static final String KEY_EMAIL = "email";
     private static final String KEY_USER_ID = "user_id";
     private static final String KEY_USER_TYPE = "user_type";
     private static final String KEY_IS_LOGGED_IN = "is_logged_in";
+    private static final String KEY_LAST_ACCESS = "last_access";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeComponents();
         setupViews();
-        checkPreviousSession();
     }
 
     /**
      * Inicializa los componentes principales de la actividad
      */
     private void initializeComponents() {
-        // Inicializar ViewBinding
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Inicializar repositorios y utilidades
         usuarioRepository = new UsuarioRepository();
         loadingDialog = new LoadingDialog(this);
         prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
 
-        // Configurar diseño edge-to-edge
         EdgeToEdge.enable(this);
         setupWindowInsets();
     }
@@ -116,9 +115,9 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void setupViews() {
         setupClickListeners();
-        setupRememberEmail();
         setupInputValidation();
     }
+
 
     /**
      * Configura los listeners para todos los elementos interactivos
@@ -131,49 +130,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Configura la funcionalidad de recordar credenciales
-     */
-    private void setupRememberEmail() {
-        boolean rememberEmailEnabled = prefs.getBoolean(KEY_REMEMBER_EMAIL, false);
-        String savedEmail = prefs.getString(KEY_EMAIL, "");
-
-        binding.cbRememberMe.setChecked(rememberEmailEnabled);
-        if (rememberEmailEnabled && !savedEmail.isEmpty()) {
-            binding.etCorreo.setText(savedEmail);
-            // Pre-validar el email guardado
-            validateEmail(savedEmail);
-        }
-
-        binding.cbRememberMe.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (!isChecked) {
-                clearSavedEmail();
-                // Mostrar confirmación al usuario
-                Snackbar.make(binding.getRoot(),
-                        "Se ha borrado el correo guardado",
-                        Snackbar.LENGTH_SHORT).show();
-            } else {
-                String currentEmail = binding.etCorreo.getText().toString().trim();
-                if (!currentEmail.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(currentEmail).matches()) {
-                    saveEmail(currentEmail);
-                    Snackbar.make(binding.getRoot(),
-                            "Se guardará el correo para futuros inicios de sesión",
-                            Snackbar.LENGTH_SHORT).show();
-                } else {
-                    // Desmarcar checkbox si el email no es válido
-                    binding.cbRememberMe.setChecked(false);
-                    Snackbar.make(binding.getRoot(),
-                            "Ingrese un correo válido antes de activar esta opción",
-                            Snackbar.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
-    /**
      * Configura la validación en tiempo real de los campos
      */
     private void setupInputValidation() {
-        // Validación del email
         binding.etCorreo.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -181,14 +140,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 validateEmail(s.toString());
-                updateRememberEmail(s.toString());
+                updateLoginButtonState();
             }
 
             @Override
             public void afterTextChanged(Editable s) {}
         });
 
-        // Validación de la contraseña
         binding.etPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -196,6 +154,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 validatePassword(s.toString());
+                updateLoginButtonState();
             }
 
             @Override
@@ -204,41 +163,40 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Actualiza el email guardado si la opción está habilitada
-     * @param email Email actual
+     * Actualiza el estado del botón de login según la validación de campos
      */
-    private void updateRememberEmail(String email) {
-        if (binding.cbRememberMe.isChecked()) {
-            if (!email.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                saveEmail(email);
-            }
-        }
+    private void updateLoginButtonState() {
+        boolean isValid = validateEmail(binding.etCorreo.getText().toString()) &&
+                validatePassword(binding.etPassword.getText().toString());
+        binding.btnEntrarApp.setEnabled(isValid);
+        binding.btnEntrarApp.setAlpha(isValid ? 1.0f : 0.6f);
     }
 
     /**
-     * Verifica si existe una sesión previa válida
+     * Carga los datos del usuario desde Firestore
      */
-    private void checkPreviousSession() {
-        boolean isLoggedIn = prefs.getBoolean(KEY_IS_LOGGED_IN, false);
-        if (isLoggedIn) {
-            String userId = prefs.getString(KEY_USER_ID, "");
-            if (!userId.isEmpty()) {
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (currentUser != null && currentUser.getUid().equals(userId)) {
-                    usuarioRepository.getUserById(userId)
-                            .addOnSuccessListener(usuario -> {
-                                if (validateUserByType(usuario)) {
-                                    redirectBasedOnUserType(usuario);
-                                } else {
-                                    clearUserSession();
-                                }
-                            })
-                            .addOnFailureListener(e -> clearUserSession());
-                } else {
-                    clearUserSession();
-                }
-            }
-        }
+    private void loadUserData(String userId) {
+        usuarioRepository.getUserById(userId)
+                .addOnSuccessListener(usuario -> {
+                    loadingDialog.dismiss();
+                    if (validateUserByType(usuario)) {
+                        redirectBasedOnUserType(usuario);
+                    } else {
+                        handleSessionError();
+                    }
+                })
+                .addOnFailureListener(e -> handleSessionError());
+    }
+
+    /**
+     * Maneja errores en la restauración de sesión
+     */
+    private void handleSessionError() {
+        loadingDialog.dismiss();
+        clearUserSession();
+        Snackbar.make(binding.getRoot(),
+                "Se cerró tu sesión anterior por seguridad",
+                Snackbar.LENGTH_SHORT).show();
     }
 
     /**
@@ -261,8 +219,6 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Valida el usuario según su tipo específico
-     * @param usuario Usuario a validar
-     * @return true si el usuario es válido según su tipo
      */
     private boolean validateUserByType(Usuario usuario) {
         if (usuario == null || usuario.getTipoUsuario() == null) {
@@ -297,7 +253,6 @@ public class LoginActivity extends AppCompatActivity {
                     break;
                 case "Cliente":
                 case "Superadmin":
-                    // No requieren validaciones adicionales
                     break;
                 default:
                     showError("Tipo de usuario no válido");
@@ -313,7 +268,6 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Maneja el caso de login exitoso
-     * @param usuario Usuario autenticado
      */
     private void handleLoginSuccess(Usuario usuario) {
         loadingDialog.dismiss();
@@ -329,7 +283,6 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Maneja los errores durante el proceso de login
-     * @param e Excepción producida
      */
     private void handleLoginError(Exception e) {
         loadingDialog.dismiss();
@@ -339,8 +292,6 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Obtiene el mensaje de error específico según la excepción
-     * @param e Excepción de autenticación
-     * @return Mensaje de error formateado
      */
     private String getAuthErrorMessage(Exception e) {
         if (e instanceof FirebaseAuthInvalidUserException) {
@@ -354,14 +305,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Guarda los datos de sesión específicos según el tipo de usuario
-     * @param usuario Usuario a guardar en sesión
+     * Guarda los datos de sesión del usuario
      */
     private void saveUserSession(Usuario usuario) {
         SharedPreferences.Editor editor = prefs.edit();
+
         editor.putString(KEY_USER_ID, usuario.getId());
         editor.putString(KEY_USER_TYPE, usuario.getTipoUsuario());
         editor.putBoolean(KEY_IS_LOGGED_IN, true);
+        editor.putLong(KEY_LAST_ACCESS, System.currentTimeMillis());
 
         try {
             switch (usuario.getTipoUsuario()) {
@@ -385,7 +337,6 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Redirige al usuario a su actividad correspondiente según su tipo
-     * @param usuario Usuario a redireccionar
      */
     private void redirectBasedOnUserType(Usuario usuario) {
         Intent intent;
@@ -414,7 +365,6 @@ public class LoginActivity extends AppCompatActivity {
                     return;
             }
 
-            // Datos comunes para todos los tipos
             intent.putExtra("userId", usuario.getId());
             intent.putExtra("userType", usuario.getTipoUsuario());
             intent.putExtra("nombres", usuario.getNombres());
@@ -430,11 +380,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
     /**
      * Navega a la pantalla de selección de rol para registro
      */
-    private void navigateToSelectRol() {  // Método renombrado y actualizado
+    private void navigateToSelectRol() {
         Intent intent = new Intent(this, SelectRolActivity.class);
         startActivity(intent);
     }
@@ -444,7 +393,6 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void navigateToForgotPassword() {
         Intent intent = new Intent(this, ForgotPasswordActivity.class);
-        // Pasar el email si está disponible
         String currentEmail = binding.etCorreo.getText().toString().trim();
         if (!currentEmail.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(currentEmail).matches()) {
             intent.putExtra(ForgotPasswordActivity.EXTRA_EMAIL, currentEmail);
@@ -452,10 +400,8 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
     /**
      * Valida todos los campos del formulario
-     * @return true si todos los campos son válidos
      */
     private boolean validateFields() {
         String email = binding.etCorreo.getText().toString().trim();
@@ -466,8 +412,6 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Valida el formato del email
-     * @param email Email a validar
-     * @return true si el email es válido
      */
     private boolean validateEmail(String email) {
         if (email.isEmpty()) {
@@ -484,8 +428,6 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Valida el formato y longitud de la contraseña
-     * @param password Contraseña a validar
-     * @return true si la contraseña es válida
      */
     private boolean validatePassword(String password) {
         if (password.isEmpty()) {
@@ -498,29 +440,6 @@ public class LoginActivity extends AppCompatActivity {
             binding.etPasswordLayout.setError(null);
             return true;
         }
-    }
-
-    /**
-     * Guarda el email en las preferencias si la opción está habilitada
-     * @param email Email a guardar
-     */
-    private void saveEmail(String email) {
-        if (email != null && !email.isEmpty()) {
-            prefs.edit()
-                    .putString(KEY_EMAIL, email)
-                    .putBoolean(KEY_REMEMBER_EMAIL, true)
-                    .apply();
-        }
-    }
-
-    /**
-     * Limpia el email guardado en las preferencias
-     */
-    private void clearSavedEmail() {
-        prefs.edit()
-                .remove(KEY_EMAIL)
-                .putBoolean(KEY_REMEMBER_EMAIL, false)
-                .apply();
     }
 
     /**
@@ -542,26 +461,11 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Muestra un diálogo de error
-     * @param message Mensaje de error a mostrar
      */
     private void showError(String message) {
         if (!isFinishing()) {
             new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.error_titulo)
-                    .setMessage(message)
-                    .setPositiveButton(R.string.aceptar, null)
-                    .show();
-        }
-    }
-
-    /**
-     * Muestra un diálogo de éxito
-     * @param message Mensaje de éxito a mostrar
-     */
-    private void showSuccess(String message) {
-        if (!isFinishing()) {
-            new MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.exito_titulo)
                     .setMessage(message)
                     .setPositiveButton(R.string.aceptar, null)
                     .show();

@@ -92,32 +92,16 @@
                     android:inputType="textPassword"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Recordar credenciales y Olvidé contraseña -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <!-- Olvidé contraseña -->
+            <TextView
+                android:id="@+id/tvForgotPassword"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp"
-                android:gravity="center_vertical">
-
-                <com.google.android.material.checkbox.MaterialCheckBox
-                    android:id="@+id/cbRememberMe"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Recordar credenciales"
-                    android:fontFamily="@font/sen_font"
-                    app:buttonTint="@color/gray"/>
-
-                <TextView
-                    android:id="@+id/tvForgotPassword"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="¿Olvidaste tu contraseña?"
-                    android:fontFamily="@font/sen_font"
-                    android:textColor="@android:color/holo_red_light"
-                    android:padding="8dp"/>
-            </LinearLayout>
+                android:text="¿Olvidaste tu contraseña?"
+                android:fontFamily="@font/sen_font"
+                android:textColor="@android:color/holo_red_light"
+                android:padding="16dp"
+                android:layout_gravity="center"/>
 
             <!-- Botón de ingreso -->
             <Button
