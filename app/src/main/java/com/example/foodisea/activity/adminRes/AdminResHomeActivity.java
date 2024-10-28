@@ -24,8 +24,13 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
+import com.example.foodisea.activity.login.LoginActivity;
+import com.example.foodisea.data.SessionManager;
 import com.example.foodisea.databinding.ActivityAdminResHomeBinding;
+import com.example.foodisea.model.AdministradorRestaurante;
+import com.example.foodisea.model.Cliente;
 import com.example.foodisea.model.Restaurante;
+import com.example.foodisea.model.Usuario;
 import com.example.foodisea.repository.RestauranteRepository;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -34,9 +39,10 @@ public class AdminResHomeActivity extends AppCompatActivity {
 
     private ActivityAdminResHomeBinding binding;
     private RestauranteRepository restauranteRepository;
-    //private FirebaseAuth auth;
     private FirebaseStorage storage;
     private static final String TAG = "AdminResHomeActivity";
+    private SessionManager sessionManager;
+    private AdministradorRestaurante administradorRestauranteActual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +50,10 @@ public class AdminResHomeActivity extends AppCompatActivity {
         binding = ActivityAdminResHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Inicializar Firebase
+        // Inicializar Firebase y SessionManager
         restauranteRepository = new RestauranteRepository();
-        //auth = FirebaseAuth.getInstance();
         storage = FirebaseStorage.getInstance();
+        sessionManager = SessionManager.getInstance(this); // Inicializar correctamente
 
         EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -59,8 +65,8 @@ public class AdminResHomeActivity extends AppCompatActivity {
         // Configurar botones
         setupButtons();
 
-        // Cargar datos del restaurante
-        loadRestaurantData();
+        // Validar sesión y cargar datos
+        validateAndLoadData();
 
         createNotificationChannel();
 
@@ -85,15 +91,62 @@ public class AdminResHomeActivity extends AppCompatActivity {
         });
     }
 
-    private void loadRestaurantData() {
-        //String userId = auth.getCurrentUser().getUid();
-        String userId = "AR001";
+    private void validateAndLoadData() {
+        sessionManager.checkExistingSession(this, new SessionManager.SessionCallback() {
+            @Override
+            public void onSessionValid(Usuario usuario) {
+                if (usuario instanceof AdministradorRestaurante) {
+                    administradorRestauranteActual = (AdministradorRestaurante) usuario;
+                    loadRestaurantData(); // Cargar datos solo después de validar sesión
+                } else {
+                    // Usuario no es administrador de restaurante
+                    Toast.makeText(AdminResHomeActivity.this,
+                            "Acceso no autorizado", Toast.LENGTH_SHORT).show();
+                    goToLogin();
+                }
+            }
 
-        restauranteRepository.getRestauranteByAdminId(userId)
+            @Override
+            public void onSessionError() {
+                Log.e(TAG, "Error validando sesión en AdminResHomeActivity");
+                goToLogin();
+            }
+        });
+    }
+
+    /**
+     * Verifica la existencia de una sesión válida
+     */
+    private void validateSession() {
+        //loadingDialog.show("Verificando sesión...");
+
+        sessionManager.checkExistingSession(this, new SessionManager.SessionCallback() {
+            @Override
+            public void onSessionValid(Usuario usuario) {
+                administradorRestauranteActual = sessionManager.getAdminRestauranteActual();
+            }
+            @Override
+            public void onSessionError() {
+                Log.e("Error validando sesión","No hay sesión en AdminResHomeActivity");
+            }
+        });
+    }
+
+    private void loadRestaurantData() {
+        if (administradorRestauranteActual == null || administradorRestauranteActual.getId() == null) {
+            Log.e(TAG, "Administrador no inicializado correctamente");
+            goToLogin();
+            return;
+        }
+
+        restauranteRepository.getRestauranteByAdminId(administradorRestauranteActual.getId())
                 .addOnSuccessListener(restaurante -> {
                     if (restaurante != null) {
                         updateUI(restaurante);
                         loadRestaurantImage(restaurante.getId());
+                    } else {
+                        Toast.makeText(this, "No se encontró el restaurante",
+                                Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -101,6 +154,13 @@ public class AdminResHomeActivity extends AppCompatActivity {
                     Toast.makeText(this, "Error al cargar los datos del restaurante",
                             Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void goToLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void loadRestaurantImage(String restaurantId) {

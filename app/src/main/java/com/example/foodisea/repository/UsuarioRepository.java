@@ -1,5 +1,7 @@
 package com.example.foodisea.repository;
 
+import android.util.Log;
+
 import com.example.foodisea.model.AdministradorRestaurante;
 import com.example.foodisea.model.Cliente;
 import com.example.foodisea.model.Repartidor;
@@ -10,9 +12,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -23,6 +27,7 @@ public class UsuarioRepository {
     private final FirebaseFirestore db;
     private final FirebaseAuth auth;
     private static final String COLLECTION_USUARIOS = "usuarios";
+    private static final String TAG = "UsuarioRepository";
 
     public UsuarioRepository() {
         this.db = FirebaseFirestore.getInstance();
@@ -41,47 +46,70 @@ public class UsuarioRepository {
                     if (!task.isSuccessful()) {
                         throw task.getException();
                     }
-                    // Obtener el UID del usuario autenticado
-                    String uid = task.getResult().getUser().getUid();
-                    // Buscar los datos completos en Firestore
-                    return getUserData(uid);
+
+                    return getUserDataByCorreo(email);
                 });
     }
 
+
     /**
-     * Obtiene los datos del usuario desde Firestore
-     * @param uid ID del usuario
+     * Obtiene los datos del usuario desde Firestore usando el campo correo
+     * @param email Email del usuario
      * @return Task<Usuario> con los datos del usuario
      */
-    private Task<Usuario> getUserData(String uid) {
+    private Task<Usuario> getUserDataByCorreo(String email) {
         return db.collection(COLLECTION_USUARIOS)
-                .document(uid)
+                .whereEqualTo("correo", email)
+                .limit(1)
                 .get()
                 .continueWith(task -> {
-                    if (!task.isSuccessful() || task.getResult() == null || !task.getResult().exists()) {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (querySnapshot.isEmpty()) {
                         throw new Exception("Usuario no encontrado en la base de datos");
                     }
 
-                    DocumentSnapshot document = task.getResult();
+                    DocumentSnapshot document = querySnapshot.getDocuments().get(0);
                     String tipoUsuario = document.getString("tipoUsuario");
+
                     if (tipoUsuario == null) {
                         throw new Exception("Tipo de usuario no definido");
                     }
 
-                    // Convertir a la clase específica según el tipo
                     Usuario usuario = null;
+                    String documentId = document.getId(); // Obtener ID del documento de Firestore
+
                     switch (tipoUsuario) {
                         case "AdministradorRestaurante":
-                            usuario = document.toObject(AdministradorRestaurante.class);
+                            AdministradorRestaurante admin = document.toObject(AdministradorRestaurante.class);
+                            if (admin != null) {
+                                admin.setId(documentId);
+                            }
+                            usuario = admin;
                             break;
                         case "Repartidor":
-                            usuario = document.toObject(Repartidor.class);
+                            Repartidor repartidor = document.toObject(Repartidor.class);
+                            if (repartidor != null) {
+                                repartidor.setId(documentId);
+                            }
+                            usuario = repartidor;
                             break;
                         case "Cliente":
-                            usuario = document.toObject(Cliente.class);
+                            Cliente cliente = document.toObject(Cliente.class);
+                            if (cliente != null) {
+                                cliente.setId(documentId);
+                            }
+                            usuario = cliente;
                             break;
                         case "Superadmin":
-                            usuario = document.toObject(Superadmin.class);
+                            Superadmin superadmin = document.toObject(Superadmin.class);
+                            if (superadmin != null) {
+                                superadmin.setId(documentId);
+                            }
+                            usuario = superadmin;
                             break;
                         default:
                             throw new Exception("Tipo de usuario no válido");
@@ -91,7 +119,6 @@ public class UsuarioRepository {
                         throw new Exception("Error al convertir datos del usuario");
                     }
 
-                    usuario.setId(uid);
                     return usuario;
                 });
     }
@@ -157,18 +184,51 @@ public class UsuarioRepository {
 
     /**
      * Obtiene el usuario por su ID
-     * @param userId ID del usuario
      * @return Task<Usuario>
      */
-    public Task<Usuario> getUserById(String userId) {
+    public Task<Usuario> getUserById(String documentId) {
         return db.collection(COLLECTION_USUARIOS)
-                .document(userId)
+                .document(documentId)
                 .get()
                 .continueWith(task -> {
-                    if (!task.isSuccessful() || task.getResult() == null || !task.getResult().exists()) {
-                        throw new Exception("Usuario no encontrado");
+                    if (!task.isSuccessful() || !task.getResult().exists()) {
+                        throw new Exception("Usuario no encontrado en la base de datos");
                     }
-                    return task.getResult().toObject(Usuario.class);
+
+                    DocumentSnapshot document = task.getResult();
+                    String tipoUsuario = document.getString("tipoUsuario");
+
+                    if (tipoUsuario == null) {
+                        throw new Exception("Tipo de usuario no definido");
+                    }
+
+                    Usuario usuario = null;
+                    switch (tipoUsuario) {
+                        case "AdministradorRestaurante":
+                            usuario = document.toObject(AdministradorRestaurante.class);
+                            break;
+                        case "Repartidor":
+                            usuario = document.toObject(Repartidor.class);
+                            break;
+                        case "Cliente":
+                            usuario = document.toObject(Cliente.class);
+                            break;
+                        case "Superadmin":
+                            usuario = document.toObject(Superadmin.class);
+                            break;
+                        default:
+                            throw new Exception("Tipo de usuario no válido");
+                    }
+
+                    if (usuario == null) {
+                        throw new Exception("Error al convertir datos del usuario");
+                    }
+
+                    // Asegurar que el tipo de usuario esté establecido
+                    usuario.setTipoUsuario(tipoUsuario);
+                    usuario.setId(documentId);
+
+                    return usuario;
                 });
     }
 }

@@ -137,8 +137,17 @@ public class SessionManager {
             );
         } else if (usuario instanceof Repartidor) {
             Repartidor repartidor = (Repartidor) usuario;
-            repartidor.setLatitud(preferences.getFloat(KEY_LATITUD, 0));
-            repartidor.setLongitud(preferences.getFloat(KEY_LONGITUD, 0));
+            // Convertir de String a double
+            try {
+                String latStr = preferences.getString(KEY_LATITUD, "0.0");
+                String lonStr = preferences.getString(KEY_LONGITUD, "0.0");
+                repartidor.setLatitud(Double.parseDouble(latStr));
+                repartidor.setLongitud(Double.parseDouble(lonStr));
+            } catch (NumberFormatException e) {
+                Log.e("SessionManager", "Error al convertir coordenadas", e);
+                repartidor.setLatitud(0.0);
+                repartidor.setLongitud(0.0);
+            }
         }
     }
 
@@ -158,11 +167,13 @@ public class SessionManager {
             return;
         }
 
+        // Verificar que el usuario esté autenticado en Firebase
         FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser != null && currentUser.getUid().equals(userId)) {
+        if (currentUser != null) {
             currentUser.reload()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
+                            // Cargar datos usando el ID de Firestore guardado
                             loadUserData(userId, callback);
                         } else {
                             callback.onSessionError();
@@ -183,11 +194,9 @@ public class SessionManager {
         if (usuario != null) {
             SharedPreferences.Editor editor = preferences.edit();
 
-            // Guardar ID de Firebase Auth si está disponible
-            FirebaseUser firebaseUser = auth.getCurrentUser();
-            String userId = firebaseUser != null ? firebaseUser.getUid() : usuario.getId();
-
-            Log.d("SessionManager", "Guardando userId: " + userId);
+            // Guardar el ID del documento de Firestore
+            String userId = usuario.getId(); // Usamos directamente el ID del documento
+            Log.d("SessionManager", "Guardando userId de Firestore: " + userId);
 
             // Datos comunes
             editor.putString(KEY_USER_ID, userId);
@@ -203,24 +212,38 @@ public class SessionManager {
             editor.putString(KEY_ESTADO, usuario.getEstado());
             editor.putBoolean(KEY_IS_LOGGED_IN, true);
 
-            // Datos específicos según tipo...
+            // Datos específicos según tipo
+            if (usuario instanceof AdministradorRestaurante) {
+                AdministradorRestaurante admin = (AdministradorRestaurante) usuario;
+                editor.putString(KEY_RESTAURANTE_ID, admin.getRestauranteId());
+            } else if (usuario instanceof Repartidor) {
+                Repartidor repartidor = (Repartidor) usuario;
+                editor.putString(KEY_LATITUD, String.valueOf(repartidor.getLatitud()));
+                editor.putString(KEY_LONGITUD, String.valueOf(repartidor.getLongitud()));
+            }
 
             boolean success = editor.commit();
             Log.d("SessionManager", "Guardado completado: " + success);
         }
     }
 
+
     /**
      * Carga los datos del usuario desde Firestore
      */
     private void loadUserData(String userId, SessionCallback callback) {
-        Log.d("SessionManager", "Cargando datos de usuario: " + userId);
-
         usuarioRepository.getUserById(userId)
                 .addOnSuccessListener(usuario -> {
-                    Log.d("SessionManager", "Usuario cargado exitosamente");
+                    if (usuario == null) {
+                        Log.e("SessionManager", "Usuario null desde repository");
+                        callback.onSessionError();
+                        return;
+                    }
+
+                    Log.d("SessionManager", "Tipo de usuario cargado: " + usuario.getTipoUsuario());
+                    Log.d("SessionManager", "Clase del usuario: " + usuario.getClass().getSimpleName());
+
                     if (validateUserByType(usuario)) {
-                        usuario.setId(userId); // Asegurar que el ID está establecido
                         setUsuarioActual(usuario);
                         callback.onSessionValid(usuario);
                     } else {
@@ -239,29 +262,45 @@ public class SessionManager {
      */
     public boolean validateUserByType(Usuario usuario) {
         if (usuario == null || usuario.getTipoUsuario() == null) {
+            Log.e("SessionManager", "Usuario o tipo de usuario null");
             return false;
         }
 
         if (!"Activo".equals(usuario.getEstado())) {
+            Log.e("SessionManager", "Usuario no activo");
             return false;
         }
 
         try {
             switch (usuario.getTipoUsuario()) {
                 case "AdministradorRestaurante":
+                    if (!(usuario instanceof AdministradorRestaurante)) {
+                        Log.e("SessionManager", "Usuario no es instancia de AdministradorRestaurante");
+                        return false;
+                    }
                     AdministradorRestaurante admin = (AdministradorRestaurante) usuario;
                     return admin.getRestauranteId() != null && !admin.getRestauranteId().isEmpty();
+
                 case "Repartidor":
+                    if (!(usuario instanceof Repartidor)) {
+                        Log.e("SessionManager", "Usuario no es instancia de Repartidor");
+                        return false;
+                    }
                     Repartidor repartidor = (Repartidor) usuario;
                     return !"Ocupado".equals(repartidor.getEstado());
+
                 case "Cliente":
+                    return usuario instanceof Cliente;
+
                 case "Superadmin":
-                    return true;
+                    return usuario instanceof Superadmin;
+
                 default:
+                    Log.e("SessionManager", "Tipo de usuario no válido: " + usuario.getTipoUsuario());
                     return false;
             }
         } catch (ClassCastException e) {
-            Log.e("SessionManager", "Error al validar usuario", e);
+            Log.e("SessionManager", "Error al validar tipo de usuario", e);
             return false;
         }
     }
@@ -352,20 +391,11 @@ public class SessionManager {
         FirebaseUser currentUser = auth.getCurrentUser();
 
         Log.d("SessionManager", "isLoggedIn check - SharedPrefs: " + isLoggedIn);
-        Log.d("SessionManager", "isLoggedIn check - userId: " + userId);
+        Log.d("SessionManager", "isLoggedIn check - userId (Firestore): " + userId);
         Log.d("SessionManager", "isLoggedIn check - FirebaseUser: " +
-                (currentUser != null ? currentUser.getUid() : "null"));
+                (currentUser != null ? "autenticado" : "no autenticado"));
 
-        // Si hay usuario de Firebase pero no ID guardado, actualizar
-        if (currentUser != null && userId.isEmpty()) {
-            Log.d("SessionManager", "Actualizando userId con FirebaseUser");
-            preferences.edit()
-                    .putString(KEY_USER_ID, currentUser.getUid())
-                    .commit();
-            return true;
-        }
-
-        return isLoggedIn && currentUser != null;
+        return isLoggedIn && currentUser != null && !userId.isEmpty();
     }
 
     public String getUserId() {

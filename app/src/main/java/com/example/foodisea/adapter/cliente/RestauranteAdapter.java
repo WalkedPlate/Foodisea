@@ -4,10 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.foodisea.R;
 import com.example.foodisea.activity.cliente.ClienteMainActivity;
 import com.example.foodisea.activity.cliente.ClienteRestauranteActivity;
@@ -15,6 +20,8 @@ import com.example.foodisea.activity.superadmin.SuperAdminGestionRestauranteActi
 import com.example.foodisea.activity.superadmin.SuperAdminRestaurantesReportesActivity;
 import com.example.foodisea.databinding.ItemRestaurantBinding;
 import com.example.foodisea.model.Restaurante;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
@@ -22,10 +29,12 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
 
     private List<Restaurante> restaurantes;
     private Context context;
+    private FirebaseStorage storage;
 
     public RestauranteAdapter(Context context, List<Restaurante> restaurantes) {
         this.context = context;
         this.restaurantes = restaurantes;
+        this.storage = FirebaseStorage.getInstance();
     }
 
     @NonNull
@@ -38,7 +47,6 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position) {
-
         Restaurante restaurante = restaurantes.get(position);
 
         holder.binding.restaurantName.setText(restaurante.getNombre());
@@ -50,44 +58,60 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
         // Mostrar la calificación del restaurante
         holder.binding.restaurantRating.setText(String.valueOf(restaurante.getRating()));
 
-        // Cargar la primera imagen del restaurante desde recursos locales
-        holder.binding.restaurantImage.setImageResource(R.drawable.restaurant_image); // Imagen por defecto
+        // Cargar la imagen desde Firebase Storage
         if (!restaurante.getImagenes().isEmpty()) {
-            // Asumiendo que tienes un recurso con nombre que coincide con la primera imagen de la lista
-            int imageResId = context.getResources().getIdentifier(restaurante.getImagenes().get(0), "drawable", context.getPackageName());
-            if (imageResId != 0) {
-                holder.binding.restaurantImage.setImageResource(imageResId);
+            String imageUrl = restaurante.getImagenes().get(0);
+
+            // Si la URL ya es una URL completa de descarga
+            if (imageUrl.startsWith("https://")) {
+                loadImageWithGlide(imageUrl, holder.binding.restaurantImage);
             } else {
-                holder.binding.restaurantImage.setImageResource(R.drawable.restaurant_image); // Imagen por defecto si no se encuentra
+                // Si es una ruta de Storage, obtener la URL de descarga
+                StorageReference imageRef = storage.getReference().child(imageUrl);
+                imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    loadImageWithGlide(uri.toString(), holder.binding.restaurantImage);
+                }).addOnFailureListener(e -> {
+                    // En caso de error, cargar imagen por defecto
+                    holder.binding.restaurantImage.setImageResource(R.drawable.restaurant_image);
+                });
             }
+        } else {
+            holder.binding.restaurantImage.setImageResource(R.drawable.restaurant_image);
         }
 
         // Añadir el onClickListener para abrir la actividad de detalles
         holder.itemView.setOnClickListener(v -> {
-
-            if (context instanceof ClienteMainActivity){
-                Intent intent = new Intent(context, ClienteRestauranteActivity.class);
-                intent.putExtra("restauranteId", restaurante.getId());  // Pasar el ID del restaurante
-                intent.putExtra("name", restaurante.getNombre());
-                intent.putExtra("rating", restaurante.getRating());
-                intent.putExtra("descripcion", restaurante.getDescripcion());
-                if (!restaurante.getImagenes().isEmpty()) {
-                    intent.putExtra("image", restaurante.getImagenes().get(0));  // Pasar la primera imagen
-                }
-                context.startActivity(intent);
-            }else if (context instanceof SuperAdminGestionRestauranteActivity){
-                Intent intent = new Intent(context, SuperAdminRestaurantesReportesActivity.class);
-                intent.putExtra("restauranteId", restaurante.getId());  // Pasar el ID del restaurante
-                intent.putExtra("name", restaurante.getNombre());
-                intent.putExtra("rating", restaurante.getRating());
-                intent.putExtra("descripcion", restaurante.getDescripcion());
-                if (!restaurante.getImagenes().isEmpty()) {
-                    intent.putExtra("image", restaurante.getImagenes().get(0));  // Pasar la primera imagen
-                }
-                context.startActivity(intent);
+            Intent intent;
+            if (context instanceof ClienteMainActivity) {
+                intent = new Intent(context, ClienteRestauranteActivity.class);
+            } else if (context instanceof SuperAdminGestionRestauranteActivity) {
+                intent = new Intent(context, SuperAdminRestaurantesReportesActivity.class);
+            } else {
+                return;
             }
 
+            intent.putExtra("restauranteId", restaurante.getId());
+            intent.putExtra("name", restaurante.getNombre());
+            intent.putExtra("rating", restaurante.getRating());
+            intent.putExtra("descripcion", restaurante.getDescripcion());
+            if (!restaurante.getImagenes().isEmpty()) {
+                intent.putExtra("image", restaurante.getImagenes().get(0));
+            }
+            context.startActivity(intent);
         });
+    }
+
+    private void loadImageWithGlide(String imageUrl, ImageView imageView) {
+        RequestOptions requestOptions = new RequestOptions()
+                .placeholder(R.drawable.restaurant_image)
+                .error(R.drawable.restaurant_image)
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
+
+        Glide.with(context)
+                .load(imageUrl)
+                .apply(requestOptions)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imageView);
     }
 
     @Override

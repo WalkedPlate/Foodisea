@@ -1,7 +1,12 @@
 package com.example.foodisea.activity.cliente;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,26 +16,43 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.cliente.PlatoAdapter;
 import com.example.foodisea.databinding.ActivityClienteRestauranteBinding;
 import com.example.foodisea.model.Producto;
+import com.example.foodisea.repository.ProductoRepository;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class ClienteRestauranteActivity extends AppCompatActivity {
 
     ActivityClienteRestauranteBinding binding;
+    private FirebaseStorage storage;
+    private String restauranteId;
+    private ProductoRepository productoRepository;
+    private PlatoAdapter adapter;
+    private List<Producto> listaCompletaProductos = new ArrayList<>();
+    private String categoriaSeleccionada = "TODOS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityClienteRestauranteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Inicializar Firebase Storage y repository
+        storage = FirebaseStorage.getInstance();
+        productoRepository = new ProductoRepository();
 
         EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -39,114 +61,131 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
             return insets;
         });
 
-
-        // Configura el GridLayoutManager con 2 columnas
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2); // 2 columnas
-        binding.rvProducts.setLayoutManager(gridLayoutManager);
-
-
-        // Configura el adaptador (el adaptador que has creado para mostrar los productos)
-        PlatoAdapter adapter = new PlatoAdapter(this, getPlatosList());
-        binding.rvProducts.setAdapter(adapter);
-
-
-        // Obtén los datos pasados desde el intent
+        // Obtener datos del intent
         Intent intent = getIntent();
+        restauranteId = intent.getStringExtra("restauranteId");
         String restaurantName = intent.getStringExtra("name");
         double restaurantRating = intent.getDoubleExtra("rating", 0);
-        String restaurantImage = intent.getStringExtra("image");
+        String imageRef = intent.getStringExtra("image");
         String restaurantDesc = intent.getStringExtra("descripcion");
 
-        // Configura la vista con los datos recibidos
-        binding.ivRestaurantImage.setImageResource(getResources().getIdentifier(restaurantImage, "drawable", getPackageName()));
+        // Configurar la vista con los datos recibidos
+        loadRestaurantImage(imageRef);
         binding.tvRestaurantName.setText(restaurantName);
         binding.tvRestaurantRating.setText(String.valueOf(restaurantRating));
         binding.tvDescripcionRest.setText(restaurantDesc);
 
-        // funcion de los botones
-        binding.btnBack.setOnClickListener(v -> {
-            finish(); // Cierra la actividad actual y regresa
-        });
+        setupRecyclerView();
+        setupCategoriaListeners();
+        cargarProductos();
 
+        // Configurar botones
+        binding.btnBack.setOnClickListener(v -> finish());
         binding.btnCart.setOnClickListener(v -> {
-            // Acción para ir al carrito de compras
             Intent carrito = new Intent(this, ClienteCarritoActivity.class);
+            carrito.putExtra("restauranteId", restauranteId);
             startActivity(carrito);
         });
-
-
-
     }
 
-    // Obtener desde bd
-    private List<Producto> getPlatosList() {
-        List<Producto> productoList = new ArrayList<>();
-
-        // Agregar platos a la lista
-        productoList.add(new Producto(
-                UUID.randomUUID().toString(), // Generar un ID único para el Plato
-                "Burger Ferguson",             // Nombre del Plato
-                "Deliciosa hamburguesa con queso y bacon, preparada con los mejores ingredientes para satisfacer tu antojo.", // Descripción
-                10.00,                         // Precio
-                Arrays.asList("burger"), // Lista de URLs de imágenes
-                "Plato",                       // Categoría
-                false                          // Disponibilidad (outOfStock)
-        ));
-
-        productoList.add(new Producto(
-                UUID.randomUUID().toString(),
-                "Rockin' Burgers",
-                "La hamburguesa clásica combina carne de res a la parrilla, queso cheddar, pan brioche, lechuga fresca, tomate, cebolla morada, pepinillos y una salsa especial para un sabor único y equilibrado.",
-                15.30,
-                Arrays.asList("burger2"),
-                "Plato",
-                true
-        ));
-
-        productoList.add(new Producto(
-                UUID.randomUUID().toString(),
-                "Coca Cola",
-                "El refresco de cola es una bebida burbujeante y refrescante, con un sabor distintivo que combina notas dulces y ligeramente ácidas. Su efervescencia intensa lo convierte en el acompañante perfecto para cualquier comida, ofreciendo un toque revitalizante en cada sorbo. Ideal para disfrutar bien frío y acompañado de hielo.",
-                5.00,
-                Arrays.asList("soda"),
-                "Bebida",
-                false
-        ));
-
-        productoList.add(new Producto(
-                UUID.randomUUID().toString(),
-                "Pepsi",
-                "Pepsi es una gaseosa refrescante con un sabor único, que combina dulzura y un toque ácido. Con su efervescencia burbujeante, es perfecta para disfrutar bien fría en cualquier momento.",
-                4.50,
-                Arrays.asList("soda2"),
-                "Bebida",
-                false
-        ));
-
-
-        productoList.add(new Producto(
-                UUID.randomUUID().toString(),
-                "Chirox' Burgers",
-                "\n" +
-                        "Nuestra hamburguesa está hecha con una jugosa carne de res a la parrilla, acompañada de queso cheddar fundido, crujiente lechuga, tomate fresco, cebolla morada y pepinillos.",
-                12.80,
-                Arrays.asList("burger3"),
-                "Plato",
-                true
-        ));
-
-        productoList.add(new Producto(
-                UUID.randomUUID().toString(),
-                "Crack' Burgers",
-                "Hamburguesa clásica con ingredientes frescos",
-                25.00,
-                Arrays.asList("burger4"),
-                "Plato",
-                true
-        ));
-
-
-        return productoList;
+    private void setupRecyclerView() {
+        adapter = new PlatoAdapter(this, new ArrayList<>());
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        binding.rvProducts.setLayoutManager(gridLayoutManager);
+        binding.rvProducts.setAdapter(adapter);
     }
 
+    private void cargarProductos() {
+        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.rvProducts.setVisibility(View.GONE);
+
+        productoRepository.obtenerProductosPorRestaurante(restauranteId)
+                .addOnSuccessListener(productos -> {
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.rvProducts.setVisibility(View.VISIBLE);
+                    listaCompletaProductos = productos;
+                    filtrarProductos();
+                })
+                .addOnFailureListener(e -> {
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.rvProducts.setVisibility(View.VISIBLE);
+                    binding.tvNoProducts.setVisibility(View.VISIBLE);
+                    Toast.makeText(this, "Error al cargar productos: " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void setupCategoriaListeners() {
+        binding.btnTodos.setOnClickListener(v -> cambiarCategoria("TODOS", binding.btnTodos));
+        binding.btnPlatos.setOnClickListener(v -> cambiarCategoria("Plato", binding.btnPlatos));
+        binding.btnBebidas.setOnClickListener(v -> cambiarCategoria("Bebida", binding.btnBebidas));
+
+        // Resaltar TODOS por defecto
+        binding.btnTodos.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.btn_dark)));
+        binding.btnTodos.setTextColor(ColorStateList.valueOf(getColor(R.color.white)));
+    }
+
+    private void cambiarCategoria(String categoria, Button botonSeleccionado) {
+        // Resetear botones
+        binding.btnTodos.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.btn_light)));
+        binding.btnTodos.setTextColor(ColorStateList.valueOf(getColor(R.color.black)));
+        binding.btnPlatos.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.btn_light)));
+        binding.btnPlatos.setTextColor(ColorStateList.valueOf(getColor(R.color.black)));
+        binding.btnBebidas.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.btn_light)));
+        binding.btnBebidas.setTextColor(ColorStateList.valueOf(getColor(R.color.black)));
+
+        // Resaltar seleccionado
+        botonSeleccionado.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.btn_dark)));
+        botonSeleccionado.setTextColor(ColorStateList.valueOf(getColor(R.color.white)));
+
+        categoriaSeleccionada = categoria;
+        filtrarProductos();
+    }
+
+    private void filtrarProductos() {
+        List<Producto> productosFiltrados;
+        if (categoriaSeleccionada.equals("TODOS")) {
+            productosFiltrados = new ArrayList<>(listaCompletaProductos);
+        } else {
+            productosFiltrados = listaCompletaProductos.stream()
+                    .filter(producto -> producto.getCategoria().equals(categoriaSeleccionada))
+                    .collect(Collectors.toList());
+        }
+
+        adapter.actualizarProductos(productosFiltrados);
+        binding.tvNoProducts.setVisibility(productosFiltrados.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
+    private void loadRestaurantImage(String imageRef) {
+        if (imageRef != null && !imageRef.isEmpty()) {
+            if (imageRef.startsWith("https://")) {
+                // Si ya es una URL completa, cargar directamente
+                loadImageWithGlide(imageRef);
+            } else {
+                // Si es una referencia de Storage, obtener la URL de descarga
+                StorageReference storageRef = storage.getReference().child(imageRef);
+                storageRef.getDownloadUrl()
+                        .addOnSuccessListener(uri -> loadImageWithGlide(uri.toString()))
+                        .addOnFailureListener(e -> {
+                            binding.ivRestaurantImage.setImageResource(R.drawable.restaurant_image);
+                            Log.e("ClienteRestauranteActivity", "Error loading image", e);
+                        });
+            }
+        } else {
+            binding.ivRestaurantImage.setImageResource(R.drawable.restaurant_image);
+        }
+    }
+
+    private void loadImageWithGlide(String imageUrl) {
+        RequestOptions requestOptions = new RequestOptions()
+                .placeholder(R.drawable.restaurant_image)
+                .error(R.drawable.restaurant_image)
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
+
+        Glide.with(this)
+                .load(imageUrl)
+                .apply(requestOptions)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(binding.ivRestaurantImage);
+    }
 }

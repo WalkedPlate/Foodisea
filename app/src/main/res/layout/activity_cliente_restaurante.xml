@@ -23,7 +23,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <!-- Imagen del restaurante -->
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/ivRestaurantImage"
                     android:layout_width="match_parent"
@@ -34,8 +33,6 @@
                     app:shapeAppearanceOverlay="@style/RoundedBottomCornersShape"
                     android:alpha="0.95"/>
 
-
-                <!-- Botón de regresar (flecha) -->
                 <Button
                     android:id="@+id/btnBack"
                     style="?attr/materialIconButtonFilledTonalStyle"
@@ -48,7 +45,6 @@
                     app:iconTint="@color/black"
                     android:backgroundTint="@color/bg_color"/>
 
-                <!-- Botón de carrito de compras -->
                 <Button
                     android:id="@+id/btnCart"
                     style="?attr/materialIconButtonFilledStyle"
@@ -60,7 +56,6 @@
                     app:icon="@drawable/outline_shopping"
                     android:backgroundTint="@color/black"/>
 
-                <!-- Indicador de cantidad en el carrito -->
                 <TextView
                     android:id="@+id/tvCartItemCount"
                     android:layout_width="wrap_content"
@@ -87,7 +82,6 @@
                 android:paddingHorizontal="16dp"
                 android:layout_marginTop="8dp">
 
-                <!-- Nombre del restaurante -->
                 <TextView
                     android:id="@+id/tvRestaurantName"
                     android:layout_width="0dp"
@@ -99,7 +93,6 @@
                     android:textStyle="bold"
                     android:textColor="@color/black" />
 
-                <!-- Calificación del restaurante -->
                 <TextView
                     android:id="@+id/tvRestaurantRating"
                     android:layout_width="wrap_content"
@@ -112,7 +105,6 @@
                     app:drawableStartCompat="@drawable/ic_star"
                     android:textColor="@color/gray" />
 
-                <!-- Botón de favorito -->
                 <Button
                     android:id="@+id/btnFavorite"
                     style="?attr/materialIconButtonStyle"
@@ -125,8 +117,6 @@
 
             </LinearLayout>
 
-
-            <!-- Descipción del restaurante -->
             <TextView
                 android:id="@+id/tvDescripcionRest"
                 android:layout_width="match_parent"
@@ -145,7 +135,6 @@
                 android:scrollbars="none"
                 android:fillViewport="true">
 
-                <!-- Botones con las categorías -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -155,7 +144,8 @@
                     android:gravity="center_horizontal">
 
                     <Button
-                        style="?attr/materialIconButtonFilledStyle"
+                        android:id="@+id/btnTodos"
+                        style="?attr/materialIconButtonFilledTonalStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="20dp"
@@ -163,9 +153,10 @@
                         android:text="@string/todas"
                         android:fontFamily="@font/sen_font"
                         android:textStyle="bold"
-                        android:backgroundTint="@color/btn_dark"/>
+                        android:backgroundTint="@color/btn_light"/>
 
                     <Button
+                        android:id="@+id/btnPlatos"
                         style="?attr/materialIconButtonFilledTonalStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -176,6 +167,7 @@
                         android:backgroundTint="@color/btn_light"/>
 
                     <Button
+                        android:id="@+id/btnBebidas"
                         style="?attr/materialIconButtonFilledTonalStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -187,18 +179,39 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-
-
-            <!-- Lista de productos (RecyclerView) -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvProducts"
+            <!-- Contenedor para RecyclerView, ProgressBar y mensaje de no productos -->
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                android:padding="16dp"/>
+                android:minHeight="200dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvProducts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:padding="16dp"/>
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/tvNoProducts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="No hay productos disponibles"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/sen_font"
+                    android:visibility="gone"/>
+
+            </FrameLayout>
+
         </LinearLayout>
-
-
 
     </androidx.core.widget.NestedScrollView>
 

@@ -65,13 +65,13 @@ public class ClienteMainActivity extends AppCompatActivity {
      * Verifica la existencia de una sesión válida
      */
     private void validateSession() {
-        loadingDialog.show("Verificando sesión...");
+        //loadingDialog.show("Verificando sesión...");
 
         sessionManager.checkExistingSession(this, new SessionManager.SessionCallback() {
             @Override
             public void onSessionValid(Usuario usuario) {
                 clienteActual = sessionManager.getClienteActual();
-                loadingDialog.dismiss();
+                //loadingDialog.dismiss();
 
                 initializeUI();
             }
