@@ -148,7 +148,6 @@ public class UsuarioRepository {
                         throw Objects.requireNonNull(task.getException());
                     }
                     String uid = Objects.requireNonNull(task.getResult().getUser()).getUid();
-                    usuario.setId(uid);
                     return db.collection(COLLECTION_USUARIOS)
                             .document(uid)
                             .set(usuario)

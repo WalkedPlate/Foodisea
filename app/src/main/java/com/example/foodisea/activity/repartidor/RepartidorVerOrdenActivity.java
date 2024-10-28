@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.repartidor.OrderItemAdapter;
 import com.example.foodisea.databinding.ActivityRepartidorVerOrdenBinding;
-import com.example.foodisea.entity.OrderItem;
+import com.example.foodisea.item.OrderItem;
 
 
 import java.util.ArrayList;

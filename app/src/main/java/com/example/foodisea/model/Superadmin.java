@@ -7,6 +7,8 @@ public class Superadmin extends Usuario {
         super(id, nombres, apellidos, correo, telefono, direccion, documentoId, fechaNacimiento, foto, estado, tipoUsuario);
     }
 
+    public Superadmin() {
+    }
 
     public void habilitarUsuario(Usuario usuario) {
         // Lógica para habilitar un usuario

@@ -6,6 +6,8 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 public class AdministradorRestaurante extends Usuario {
     private String restauranteId;
 
+    public AdministradorRestaurante() {
+    }
 
     // Constructor que llama a la clase Usuario
     public AdministradorRestaurante(String id, String nombres, String apellidos, String correo, String telefono,

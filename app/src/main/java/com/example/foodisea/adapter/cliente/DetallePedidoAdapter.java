@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.foodisea.R;
-import com.example.foodisea.entity.OrderItem;
+import com.example.foodisea.item.OrderItem;
 
 
 import java.util.List;

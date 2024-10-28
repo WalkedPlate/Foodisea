@@ -13,9 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.superAdmin.LogsAdapter;
-import com.example.foodisea.databinding.ActivitySuperAdminGestionUsuariosBinding;
 import com.example.foodisea.databinding.ActivitySuperAdminLogsBinding;
-import com.example.foodisea.entity.LogItem;
+import com.example.foodisea.item.LogItem;
 
 import java.util.ArrayList;
 import java.util.List;

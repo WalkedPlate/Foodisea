@@ -19,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.foodisea.R;
 import com.example.foodisea.activity.adminRes.AdminResHomeActivity;
 import com.example.foodisea.activity.cliente.ClienteMainActivity;
+import com.example.foodisea.data.SessionManager;
 import com.example.foodisea.dialog.LoadingDialog;
 import com.example.foodisea.activity.repartidor.RepartidorMainActivity;
 import com.example.foodisea.activity.superadmin.SuperadminMainActivity;
@@ -45,6 +46,7 @@ import com.google.firebase.auth.FirebaseUser;
  *
  * @see Usuario
  * @see UsuarioRepository
+ * @see SessionManager
  */
 public class LoginActivity extends AppCompatActivity {
 
@@ -64,18 +66,10 @@ public class LoginActivity extends AppCompatActivity {
     private LoadingDialog loadingDialog;
 
     /**
-     * SharedPreferences para almacenamiento local
+     * SessionManager para la administración de sesiones
      */
-    private SharedPreferences prefs;
+    private SessionManager sessionManager;
 
-    /**
-     * Constantes para SharedPreferences
-     */
-    private static final String PREF_NAME = "LoginPrefs";
-    private static final String KEY_USER_ID = "user_id";
-    private static final String KEY_USER_TYPE = "user_type";
-    private static final String KEY_IS_LOGGED_IN = "is_logged_in";
-    private static final String KEY_LAST_ACCESS = "last_access";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
 
         usuarioRepository = new UsuarioRepository();
         loadingDialog = new LoadingDialog(this);
-        prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        sessionManager = SessionManager.getInstance(this);
 
         EdgeToEdge.enable(this);
         setupWindowInsets();
@@ -173,27 +167,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Carga los datos del usuario desde Firestore
-     */
-    private void loadUserData(String userId) {
-        usuarioRepository.getUserById(userId)
-                .addOnSuccessListener(usuario -> {
-                    loadingDialog.dismiss();
-                    if (validateUserByType(usuario)) {
-                        redirectBasedOnUserType(usuario);
-                    } else {
-                        handleSessionError();
-                    }
-                })
-                .addOnFailureListener(e -> handleSessionError());
-    }
-
-    /**
-     * Maneja errores en la restauración de sesión
+     * Maneja los errores en la restauración de sesión
      */
     private void handleSessionError() {
         loadingDialog.dismiss();
-        clearUserSession();
+        sessionManager.logout();
         Snackbar.make(binding.getRoot(),
                 "Se cerró tu sesión anterior por seguridad",
                 Snackbar.LENGTH_SHORT).show();
@@ -217,68 +195,24 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnFailureListener(this::handleLoginError);
     }
 
-    /**
-     * Valida el usuario según su tipo específico
-     */
-    private boolean validateUserByType(Usuario usuario) {
-        if (usuario == null || usuario.getTipoUsuario() == null) {
-            showError("Error: Usuario o tipo de usuario no definido");
-            return false;
-        }
-
-        if (!"Activo".equals(usuario.getEstado())) {
-            if ("Repartidor".equals(usuario.getTipoUsuario())) {
-                showError("Tu cuenta de repartidor está pendiente de aprobación");
-            } else {
-                showError("Tu cuenta no está activa. Contacta al administrador.");
-            }
-            return false;
-        }
-
-        try {
-            switch (usuario.getTipoUsuario()) {
-                case "AdministradorRestaurante":
-                    AdministradorRestaurante admin = (AdministradorRestaurante) usuario;
-                    if (admin.getRestauranteId() == null || admin.getRestauranteId().isEmpty()) {
-                        showError("Error: Administrador sin restaurante asignado");
-                        return false;
-                    }
-                    break;
-                case "Repartidor":
-                    Repartidor repartidor = (Repartidor) usuario;
-                    if ("Ocupado".equals(repartidor.getEstado())) {
-                        showError("No puedes iniciar sesión mientras estás en un pedido");
-                        return false;
-                    }
-                    break;
-                case "Cliente":
-                case "Superadmin":
-                    break;
-                default:
-                    showError("Tipo de usuario no válido");
-                    return false;
-            }
-        } catch (ClassCastException e) {
-            showError("Error en los datos del usuario");
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Maneja el caso de login exitoso
-     */
     private void handleLoginSuccess(Usuario usuario) {
         loadingDialog.dismiss();
 
-        if (!validateUserByType(usuario)) {
+        // Validar y guardar el usuario
+        if (sessionManager.validateUserByType(usuario)) {
+            sessionManager.setUsuarioActual(usuario);
+            Intent intent = sessionManager.getRedirectIntent(this);
+            if (intent != null) {
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            } else {
+                showError("Error al procesar los datos del usuario");
+            }
+        } else {
             FirebaseAuth.getInstance().signOut();
-            return;
+            showError("Error en el tipo de usuario");
         }
-
-        saveUserSession(usuario);
-        redirectBasedOnUserType(usuario);
     }
 
     /**
@@ -304,88 +238,12 @@ public class LoginActivity extends AppCompatActivity {
         return getString(R.string.error_generico_login);
     }
 
-    /**
-     * Guarda los datos de sesión del usuario
-     */
-    private void saveUserSession(Usuario usuario) {
-        SharedPreferences.Editor editor = prefs.edit();
-
-        editor.putString(KEY_USER_ID, usuario.getId());
-        editor.putString(KEY_USER_TYPE, usuario.getTipoUsuario());
-        editor.putBoolean(KEY_IS_LOGGED_IN, true);
-        editor.putLong(KEY_LAST_ACCESS, System.currentTimeMillis());
-
-        try {
-            switch (usuario.getTipoUsuario()) {
-                case "AdministradorRestaurante":
-                    AdministradorRestaurante admin = (AdministradorRestaurante) usuario;
-                    editor.putString("restauranteId", admin.getRestauranteId());
-                    break;
-                case "Repartidor":
-                    Repartidor repartidor = (Repartidor) usuario;
-                    editor.putString("estadoRepartidor", repartidor.getEstado());
-                    editor.putFloat("latitud", (float) repartidor.getLatitud());
-                    editor.putFloat("longitud", (float) repartidor.getLongitud());
-                    break;
-            }
-        } catch (ClassCastException e) {
-            Log.e("LoginActivity", "Error al guardar datos específicos del usuario", e);
-        }
-
-        editor.apply();
-    }
-
-    /**
-     * Redirige al usuario a su actividad correspondiente según su tipo
-     */
-    private void redirectBasedOnUserType(Usuario usuario) {
-        Intent intent;
-        try {
-            switch (usuario.getTipoUsuario()) {
-                case "AdministradorRestaurante":
-                    intent = new Intent(this, AdminResHomeActivity.class);
-                    AdministradorRestaurante admin = (AdministradorRestaurante) usuario;
-                    intent.putExtra("restauranteId", admin.getRestauranteId());
-                    break;
-                case "Repartidor":
-                    intent = new Intent(this, RepartidorMainActivity.class);
-                    Repartidor repartidor = (Repartidor) usuario;
-                    intent.putExtra("estadoRepartidor", repartidor.getEstado());
-                    intent.putExtra("latitud", repartidor.getLatitud());
-                    intent.putExtra("longitud", repartidor.getLongitud());
-                    break;
-                case "Cliente":
-                    intent = new Intent(this, ClienteMainActivity.class);
-                    break;
-                case "Superadmin":
-                    intent = new Intent(this, SuperadminMainActivity.class);
-                    break;
-                default:
-                    showError("Tipo de usuario no válido");
-                    return;
-            }
-
-            intent.putExtra("userId", usuario.getId());
-            intent.putExtra("userType", usuario.getTipoUsuario());
-            intent.putExtra("nombres", usuario.getNombres());
-            intent.putExtra("apellidos", usuario.getApellidos());
-
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-
-        } catch (ClassCastException e) {
-            Log.e("LoginActivity", "Error al redireccionar usuario", e);
-            showError("Error al procesar los datos del usuario");
-        }
-    }
 
     /**
      * Navega a la pantalla de selección de rol para registro
      */
     private void navigateToSelectRol() {
-        Intent intent = new Intent(this, SelectRolActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, SelectRolActivity.class));
     }
 
     /**
@@ -446,17 +304,7 @@ public class LoginActivity extends AppCompatActivity {
      * Limpia todos los datos de sesión del usuario
      */
     private void clearUserSession() {
-        prefs.edit()
-                .remove(KEY_USER_ID)
-                .remove(KEY_USER_TYPE)
-                .putBoolean(KEY_IS_LOGGED_IN, false)
-                .remove("restauranteId")
-                .remove("estadoRepartidor")
-                .remove("latitud")
-                .remove("longitud")
-                .apply();
-
-        FirebaseAuth.getInstance().signOut();
+        sessionManager.logout(); // Reemplazar la limpieza manual con el método del SessionManager
     }
 
     /**

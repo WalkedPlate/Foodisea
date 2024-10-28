@@ -1,4 +1,4 @@
-package com.example.foodisea.entity;
+package com.example.foodisea.item;
 
 public class OrderItem {
     private String name;

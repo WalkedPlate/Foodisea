@@ -2,34 +2,96 @@ package com.example.foodisea.activity.cliente;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.foodisea.R;
+import com.example.foodisea.activity.login.LoginActivity;
 import com.example.foodisea.adapter.cliente.RestauranteAdapter;
+import com.example.foodisea.data.SessionManager;
 import com.example.foodisea.databinding.ActivityClienteMainBinding;
+import com.example.foodisea.dialog.LoadingDialog;
+import com.example.foodisea.model.Cliente;
 import com.example.foodisea.model.Restaurante;
+import com.example.foodisea.model.Usuario;
+import com.example.foodisea.repository.RestauranteRepository;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * Activity principal para usuarios de tipo Cliente.
+ * Muestra la lista de restaurantes y permite acceder a las funciones principales.
+ */
 public class ClienteMainActivity extends AppCompatActivity {
-    ActivityClienteMainBinding binding;
+    private ActivityClienteMainBinding binding;
+    private SessionManager sessionManager;
+    private Cliente clienteActual;
+    private LinearLayout emptyStateLayout;
+    private LoadingDialog loadingDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // binding
+        initializeComponents();
+        validateSession();
+    }
+
+    /**
+     * Verifica la existencia de una sesión válida
+     */
+    private void validateSession() {
+        loadingDialog.show("Verificando sesión...");
+
+        sessionManager.checkExistingSession(this, new SessionManager.SessionCallback() {
+            @Override
+            public void onSessionValid(Usuario usuario) {
+                clienteActual = sessionManager.getClienteActual();
+                loadingDialog.dismiss();
+
+                initializeUI();
+            }
+
+            @Override
+            public void onSessionError() {
+                handleSessionError();
+            }
+        });
+    }
+
+
+    /**
+     * Inicializa los componentes principales
+     */
+    private void initializeComponents() {
         binding = ActivityClienteMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // limites de pantalla
+        // Configurar EdgeToEdge
         EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -37,7 +99,38 @@ public class ClienteMainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // funcion de los botones
+        sessionManager = SessionManager.getInstance(this);
+        loadingDialog = new LoadingDialog(this);
+    }
+
+    /**
+     * Inicializa la UI una vez que la sesión está validada
+     */
+    private void initializeUI() {
+        setupUI();
+        setupClickListeners();
+        loadRestaurants();
+    }
+
+    /**
+     * Configura la UI con los datos del usuario
+     */
+    private void setupUI() {
+        try {
+            String welcomeMessage = String.format("¡Hola %s, qué te gustaría comer hoy?",
+                    clienteActual.getNombres().split(" ")[0]);
+            binding.tvWelcome.setText(welcomeMessage);
+        } catch (Exception e) {
+            // En caso de algún error con el nombre, usar mensaje genérico
+            binding.tvWelcome.setText("¡Hola, qué te gustaría comer hoy?");
+            Log.e("ClienteMainActivity", "Error al configurar mensaje de bienvenida", e);
+        }
+    }
+
+    /**
+     * Configura los listeners de los botones
+     */
+    private void setupClickListeners() {
         binding.btnProfile.setOnClickListener(v -> {
             Intent intent = new Intent(this, ClientePerfilActivity.class);
             startActivity(intent);
@@ -47,44 +140,161 @@ public class ClienteMainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ClienteNotificacionesActivity.class);
             startActivity(intent);
         });
+    }
 
-        // Configurar el adaptador
-        RestauranteAdapter adapter = new RestauranteAdapter(this, getRestauranteList());
+    /**
+     * Obtiene y muestra la lista de restaurantes desde Firestore
+     */
+    private void loadRestaurants() {
+        RestauranteRepository restauranteRepository = new RestauranteRepository();
+        LoadingDialog loadingDialog = new LoadingDialog(this);
+
+        loadingDialog.show("Cargando restaurantes...");
+
+        restauranteRepository.getRestaurantesActivos()
+                .addOnSuccessListener(restaurantes -> {
+                    loadingDialog.dismiss();
+
+                    if (restaurantes.isEmpty()) {
+                        showEmptyState();
+                    } else {
+                        showRestaurants(restaurantes);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    loadingDialog.dismiss();
+                    showError("Error al cargar restaurantes: " + e.getMessage());
+                });
+    }
+
+    /**
+     * Muestra los restaurantes en el RecyclerView
+     */
+    private void showRestaurants(List<Restaurante> restaurantes) {
+        binding.rvRestaurants.setVisibility(View.VISIBLE);
+        binding.tvRestaurants.setVisibility(View.VISIBLE);
+
+        if (emptyStateLayout != null) {
+            emptyStateLayout.setVisibility(View.GONE);
+        }
+
+        RestauranteAdapter adapter = new RestauranteAdapter(this, restaurantes);
         binding.rvRestaurants.setLayoutManager(new LinearLayoutManager(this));
         binding.rvRestaurants.setAdapter(adapter);
     }
 
-    private List<Restaurante> getRestauranteList() {
-        // Obtener desde bd
-        List<Restaurante> restaurantList  = new ArrayList<>();
-        // Datos de la lista
-        List<String> categorias1 = Arrays.asList("Burger", "Chicken", "Ribs", "Wings");
-        List<String> categorias2 = Arrays.asList("Burgers", "Fries", "Shakes");
-        List<String> categorias3 = Arrays.asList("Pizza", "Pasta", "Salads");
-        List<String> categorias4 = Arrays.asList("Sushi", "Rolls", "Noodles");
-        List<String> categorias5 = Arrays.asList("Parillada", "Anticuchos");
-        List<String> categorias6 = Arrays.asList("Japonesa", "Coreana");
-        List<String> categorias7 = Arrays.asList("Pasta", "Italiana", "Salads");
-        List<String> categorias8 = Arrays.asList("Tacos", "Burritos", "Chile");
+    /**
+     * Muestra un estado vacío cuando no hay restaurantes
+     */
+    private void showEmptyState() {
+        binding.rvRestaurants.setVisibility(View.GONE);
 
+        // Crear layout para estado vacío si no existe
+        if (emptyStateLayout == null) {
+            emptyStateLayout = new LinearLayout(this);
+            emptyStateLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            ));
+            emptyStateLayout.setOrientation(LinearLayout.VERTICAL);
+            emptyStateLayout.setGravity(Gravity.CENTER);
+            emptyStateLayout.setPadding(
+                    dpToPx(32),
+                    dpToPx(32),
+                    dpToPx(32),
+                    dpToPx(32)
+            );
 
-        // Añadir restaurantes a la lista
-        restaurantList.add(new Restaurante("Rose Garden Restaurant", "2118 Thornridge Cir. Syracuse", "123-456-7890", categorias1, 4.7, Arrays.asList("restaurant_image"), null, "Restaurante especializado en hamburguesas artesanales, donde la calidad de los ingredientes" +
-                "        y el sabor único se combinan para ofrecer una experiencia culinariainigualable."));
-        restaurantList.add(new Restaurante("Burger Place", "3118 Thornridge Cir. Syracuse", "123-456-7891", categorias2, 4.5, Arrays.asList("burger_image"), null, "Disfruta de las hamburguesas más jugosas y deliciosas, preparadas con ingredientes frescos y pan artesanal. "));
-        restaurantList.add(new Restaurante("Italian Bistro", "4118 Thornridge Cir. Syracuse", "123-456-7892", categorias3, 2.8, Arrays.asList("bistro"), null, "Sumérgete en los sabores auténticos de Italia con nuestras pastas frescas, pizzas al horno de leña y salsas caseras."+
-                "Disfruta de un ambiente acogedor y de una experiencia culinaria inolvidable. "));
-        restaurantList.add(new Restaurante("Sushi House", "5118 Thornridge Cir. Syracuse", "123-456-7893", categorias4, 4.6, Arrays.asList("sushi_house"), null,"Descubre la frescura y el arte del sushi en cada bocado. Ofrecemos rollos tradicionales y creativos, preparados con los mejores ingredientes. ¡Una auténtica experiencia japonesa en un solo lugar!"));
-        restaurantList.add(new Restaurante("Parilla Grill", "6118 Thornridge Cir. Syracuse", "123-456-7894", categorias5, 3.6, Arrays.asList("grill"), null, "Carnes a la brasa, jugosas y llenas de sabor, preparadas al punto perfecto. " +
-                "Disfruta de cortes seleccionados y un ambiente cálido para los amantes de la parrillada. ¡Una experiencia a la parrilla única!"));
-        restaurantList.add(new Restaurante("Sushi Zen", "7118 Thornridge Cir. Syracuse", "123-456-7895", categorias6, 4.6, Arrays.asList("sushi_zen"), null, "Deléitate con una variedad de sushi fresco y de calidad excepcional, cuidadosamente preparado por expertos. Desde nigiris hasta rolls especiales, cada plato es una obra maestra de sabor. " +
-                "¡Vive la esencia de la cocina japonesa!"));
-        restaurantList.add(new Restaurante("Bella Pasta", "8118 Thornridge Cir. Syracuse", "123-456-7896", categorias7, 2.8, Arrays.asList("bella_pasta"), null, "El lugar donde cada plato está preparado con ingredientes de la más alta calidad y siguiendo recetas tradicionales. ¡El rincón perfecto para los amantes de la cocina italiana!"));
-        restaurantList.add(new Restaurante("Taquito Feliz", "9118 Thornridge Cir. Syracuse", "123-456-7897", categorias8, 1.6, Arrays.asList("taquitp"), null, "Auténticos tacos mexicanos con tortillas frescas y los mejores ingredientes. Sabores tradicionales y opciones irresistibles para todos los gustos. ¡Disfruta cada mordida!"));
+            // Crear ImageView para el ícono
+            ImageView emptyIcon = new ImageView(this);
+            LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(
+                    dpToPx(100),
+                    dpToPx(100)
+            );
+            iconParams.bottomMargin = dpToPx(16);
+            emptyIcon.setLayoutParams(iconParams);
+            emptyIcon.setImageResource(R.drawable.ic_restaurant);
+            emptyIcon.setColorFilter(ContextCompat.getColor(this, R.color.btn_medium));
 
+            // Crear TextView para el mensaje
+            TextView emptyText = new TextView(this);
+            LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            textParams.bottomMargin = dpToPx(24);
+            emptyText.setLayoutParams(textParams);
+            emptyText.setText("No hay restaurantes disponibles en este momento");
+            emptyText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            emptyText.setTextColor(ContextCompat.getColor(this, R.color.black));
+            emptyText.setTextSize(16);
+            emptyText.setTypeface(ResourcesCompat.getFont(this, R.font.sen_font));
 
-        return restaurantList ;
+            // Crear Button para reintentar
+            MaterialButton retryButton = new MaterialButton(this);
+            LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            retryButton.setLayoutParams(buttonParams);
+            retryButton.setText("Reintentar");
+            retryButton.setOnClickListener(v -> loadRestaurants());
+
+            // Agregar vistas al layout vacío
+            emptyStateLayout.addView(emptyIcon);
+            emptyStateLayout.addView(emptyText);
+            emptyStateLayout.addView(retryButton);
+
+            // Agregar el layout al contenedor principal
+            ViewGroup parent = (ViewGroup) binding.rvRestaurants.getParent();
+            parent.addView(emptyStateLayout);
+        }
+
+        emptyStateLayout.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Convierte dp a píxeles
+     */
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
+    }
+
+    /**
+     * Muestra un diálogo de error
+     */
+    private void showError(String message) {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Error")
+                .setMessage(message)
+                .setPositiveButton("Reintentar", (dialog, which) -> loadRestaurants())
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    /**
+     * Maneja errores de sesión
+     */
+    private void handleSessionError() {
+        if (!isFinishing()) {
+            loadingDialog.dismiss();
+            sessionManager.logout();
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (emptyStateLayout != null && emptyStateLayout.getParent() != null) {
+            ((ViewGroup) emptyStateLayout.getParent()).removeView(emptyStateLayout);
+        }
+        emptyStateLayout = null;
+        binding = null;
+    }
 }

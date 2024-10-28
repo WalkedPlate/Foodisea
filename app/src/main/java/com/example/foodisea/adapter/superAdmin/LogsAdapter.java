@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
-import com.example.foodisea.entity.LogItem;
+import com.example.foodisea.item.LogItem;
 
 import java.util.List;
 

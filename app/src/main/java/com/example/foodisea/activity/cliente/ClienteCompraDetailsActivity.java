@@ -12,10 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.cliente.DetallePedidoAdapter;
-import com.example.foodisea.adapter.cliente.PlatoAdapter;
-import com.example.foodisea.adapter.repartidor.OrderItemAdapter;
 import com.example.foodisea.databinding.ActivityClienteCompraDetailsBinding;
-import com.example.foodisea.entity.OrderItem;
+import com.example.foodisea.item.OrderItem;
 
 import java.util.ArrayList;
 import java.util.List;
