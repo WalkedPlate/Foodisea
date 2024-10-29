@@ -3,6 +3,7 @@ package com.example.foodisea.activity.cliente;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
 import com.example.foodisea.activity.login.LoginActivity;
+import com.example.foodisea.data.SessionManager;
 import com.example.foodisea.databinding.ActivityClientePerfilBinding;
 import com.example.foodisea.repository.UsuarioRepository;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -22,11 +24,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 public class ClientePerfilActivity extends AppCompatActivity {
 
     private ActivityClientePerfilBinding binding;
-    private UsuarioRepository usuarioRepository;
-    private SharedPreferences prefs;
-
-    // Constantes para SharedPreferences
-    private static final String PREF_NAME = "LoginPrefs";
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +40,8 @@ public class ClientePerfilActivity extends AppCompatActivity {
         binding = ActivityClientePerfilBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        usuarioRepository = new UsuarioRepository();
-        prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        // Inicializar SessionManager
+        sessionManager = SessionManager.getInstance(this);
 
         EdgeToEdge.enable(this);
         setupWindowInsets();
@@ -87,29 +85,43 @@ public class ClientePerfilActivity extends AppCompatActivity {
     }
 
     /**
-     * Maneja el proceso de cierre de sesión
+     * Maneja el proceso de cierre de sesión usando SessionManager
      */
     private void handleLogout() {
-        // Cerrar sesión en Firebase
-        usuarioRepository.logout();
+        // Mostrar indicador de progreso si es necesario
+        showProgress();
 
-        // Limpiar datos de sesión
-        clearUserSession();
-
-        // Redirigir al login y limpiar el stack de actividades
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
+        sessionManager.logout()
+                .addOnSuccessListener(aVoid -> {
+                    hideProgress();
+                    // Redirigir al login y limpiar el stack de actividades
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    hideProgress();
+                    // Mostrar error al usuario
+                    Toast.makeText(this,
+                            "Error al cerrar sesión. Intente nuevamente.",
+                            Toast.LENGTH_SHORT).show();
+                });
     }
 
     /**
-     * Limpia los datos de sesión almacenados
+     * Muestra un indicador de progreso durante el cierre de sesión
      */
-    private void clearUserSession() {
-        prefs.edit()
-                .clear()
-                .apply();
+    private void showProgress() {
+        // Aquí se puede implementar la lógica de mostrar progreso
+        // Por ejemplo, usando un ProgressDialog o ProgressBar
+    }
+
+    /**
+     * Oculta el indicador de progreso
+     */
+    private void hideProgress() {
+        // Aquí se ocultastu indicador del progreso
     }
 
     @Override

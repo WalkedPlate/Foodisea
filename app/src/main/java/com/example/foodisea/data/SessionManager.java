@@ -16,6 +16,7 @@ import com.example.foodisea.model.Superadmin;
 import com.example.foodisea.model.Usuario;
 import com.example.foodisea.repository.UsuarioRepository;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -306,13 +307,44 @@ public class SessionManager {
     }
 
     /**
-     * Cierra la sesión actual
+     * Cierra la sesión del usuario actual y limpia todos los datos locales
+     * @return Task<Void> para manejar el resultado de la operación
      */
-    public void logout() {
-        Log.d("SessionManager", "Cerrando sesión");
+    public Task<Void> logout() {
+        Log.d("SessionManager", "Iniciando proceso de cierre de sesión");
+
+        // Limpiar datos en memoria
         usuarioActual = null;
-        preferences.edit().clear().commit();
-        auth.signOut();
+
+        // Crear una tarea compuesta para el cierre de sesión
+        return Tasks.call(() -> {
+            // 1. Cerrar sesión en Firebase Auth
+            auth.signOut();
+
+            // 2. Limpiar SharedPreferences
+            boolean prefsCleared = preferences.edit()
+                    .clear()
+                    .commit();
+
+            if (!prefsCleared) {
+                throw new Exception("Error al limpiar SharedPreferences");
+            }
+
+            // 3. Limpiar la instancia singleton
+            instance = null;
+
+            Log.d("SessionManager", "Sesión cerrada exitosamente");
+            return null;
+        });
+    }
+
+    /**
+     * Sobrecarga del método logout para casos donde no se necesita el Task
+     */
+    public void logoutSync() {
+        logout().addOnFailureListener(e ->
+                Log.e("SessionManager", "Error en cierre de sesión", e)
+        );
     }
 
     /**
