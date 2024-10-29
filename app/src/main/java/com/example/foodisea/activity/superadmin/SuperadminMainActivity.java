@@ -10,6 +10,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
+import com.example.foodisea.activity.repartidor.RepartidorPerfilActivity;
 import com.example.foodisea.databinding.ActivitySuperadminMainBinding;
 
 public class SuperadminMainActivity extends AppCompatActivity {
@@ -40,6 +41,12 @@ public class SuperadminMainActivity extends AppCompatActivity {
         binding.btnLogs.setOnClickListener(v->{
             Intent dashboard = new Intent(this, SuperAdminLogsActivity.class);
             startActivity(dashboard);
+        });
+
+        // boton perfil
+        binding.btnProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SuperAdminPerfilActivity.class);
+            startActivity(intent);
         });
     }
 }

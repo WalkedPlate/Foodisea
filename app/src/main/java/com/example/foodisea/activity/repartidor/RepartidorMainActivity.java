@@ -1,5 +1,6 @@
 package com.example.foodisea.activity.repartidor;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -10,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.foodisea.R;
+import com.example.foodisea.activity.cliente.ClientePerfilActivity;
 import com.example.foodisea.adapter.repartidor.RestaurantRepartidorAdapter;
 import com.example.foodisea.databinding.ActivityRepartidorMainBinding;
 import com.example.foodisea.model.Restaurante;
@@ -53,7 +55,8 @@ public class RepartidorMainActivity extends AppCompatActivity {
 
         //Botón del perfil
         binding.btnProfile.setOnClickListener(v -> {
-
+            Intent intent = new Intent(this, RepartidorPerfilActivity.class);
+            startActivity(intent);
         });
 
         //Botón del delivery?

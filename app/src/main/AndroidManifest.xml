@@ -20,6 +20,15 @@
         android:theme="@style/Theme.Foodisea"
         tools:targetApi="31">
         <activity
+            android:name=".activity.adminRes.AdminResPerfilActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.superadmin.SuperAdminPerfilActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.repartidor.RepartidorPerfilActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.login.SelectRolActivity"
             android:exported="false" />
         <activity

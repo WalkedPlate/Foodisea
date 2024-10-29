@@ -24,6 +24,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
+import com.example.foodisea.activity.cliente.ClientePerfilActivity;
 import com.example.foodisea.activity.login.LoginActivity;
 import com.example.foodisea.data.SessionManager;
 import com.example.foodisea.databinding.ActivityAdminResHomeBinding;
@@ -88,6 +89,11 @@ public class AdminResHomeActivity extends AppCompatActivity {
 
         binding.btnReporte.setOnClickListener(view -> {
             // Implementar navegación a reportes
+        });
+
+        binding.btnProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminResPerfilActivity.class);
+            startActivity(intent);
         });
     }
 
