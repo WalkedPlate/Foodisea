@@ -168,7 +168,6 @@ public class UsuarioRepository {
      * @return Task<Usuario> con los datos del usuario registrado
      */
     public Task<Usuario> registerUser(String email, String password, Usuario usuario) {
-        // El código existente ya maneja correctamente diferentes tipos de usuario
         return auth.createUserWithEmailAndPassword(email, password)
                 .continueWithTask(task -> {
                     if (!task.isSuccessful()) {

@@ -201,7 +201,8 @@ public class RegisterActivity extends AppCompatActivity {
         Usuario nuevoUsuario;
         if (tipoUsuario.equals(SelectRolActivity.TIPO_REPARTIDOR)) {
             Repartidor repartidor = new Repartidor();
-            repartidor.setEstado("Disponible");
+            repartidor.setEstado("Activo");
+            repartidor.setDisposicion("Disponible");
             repartidor.setLatitud(0.0);
             repartidor.setLongitud(0.0);
             nuevoUsuario = repartidor;
