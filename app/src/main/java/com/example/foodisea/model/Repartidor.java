@@ -3,7 +3,7 @@ package com.example.foodisea.model;
 public class Repartidor extends Usuario {
     private double latitud;
     private double longitud;
-    private String estado;  // "Disponible", "Ocupado"
+    private String disposicion;  // "Disponible", "Ocupado"
 
     public Repartidor() {
     }
@@ -11,11 +11,11 @@ public class Repartidor extends Usuario {
     // Constructor que llama a la clase Usuario
     public Repartidor(String id, String nombres, String apellidos, String correo, String telefono, String direccion,
                       String documentoId, String fechaNacimiento, String foto, String estadoUsuario, String tipoUsuario,
-                      double latitud, double longitud, String estado) {
+                      double latitud, double longitud, String disposicion) {
         super(id, nombres, apellidos, correo, telefono, direccion, documentoId, fechaNacimiento, foto, estadoUsuario, tipoUsuario);
         this.latitud = latitud;
         this.longitud = longitud;
-        this.estado = estado;
+        this.disposicion = disposicion;
     }
 
     public void recogerPedido(String pedidoId) {
@@ -45,12 +45,12 @@ public class Repartidor extends Usuario {
         this.longitud = longitud;
     }
 
-    public String getEstado() {
-        return estado;
+    public String getDisposicion() {
+        return disposicion;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setDisposicion(String disposicion) {
+        this.disposicion = disposicion;
     }
 }
 

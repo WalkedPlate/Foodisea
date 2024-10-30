@@ -5,24 +5,19 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.activity.adminRes.AdminResHomeActivity;
 import com.example.foodisea.activity.cliente.ClienteMainActivity;
-import com.example.foodisea.activity.cliente.ClienteRestauranteActivity;
 import com.example.foodisea.activity.repartidor.RepartidorMainActivity;
 import com.example.foodisea.activity.superadmin.SuperadminMainActivity;
 import com.example.foodisea.databinding.ActivityMainBinding;
 import com.example.foodisea.firestore.FirestoreInitializer;
-import com.example.foodisea.notificaciones.NotificationHelper;
-import com.example.foodisea.notificaciones.TokenManager;
+import com.example.foodisea.notification.NotificationHelper;
+import com.example.foodisea.notification.TokenManager;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -47,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         NotificationHelper notificationHelper = new NotificationHelper(this);
-        notificationHelper.createNotificationChannel();
-        notificationHelper.askNotificationPermission();
 
         TokenManager tokenManager = new TokenManager(this);
         tokenManager.obtenerYGuardarToken();

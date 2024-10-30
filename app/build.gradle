@@ -31,6 +31,20 @@ android {
     buildFeatures{
         viewBinding true
     }
+
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/DEPENDENCIES']
+            // Otros archivos comunes que pueden causar conflictos
+            excludes += [
+                    'META-INF/LICENSE',
+                    'META-INF/LICENSE.txt',
+                    'META-INF/NOTICE',
+                    'META-INF/NOTICE.txt'
+            ]
+        }
+    }
+
 }
 
 dependencies {
@@ -81,5 +95,10 @@ dependencies {
 
     // Animaciones
     implementation libs.lottie
+
+    // Ok hhtp
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.19.0'
 
 }

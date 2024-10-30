@@ -1,6 +1,9 @@
 package com.example.foodisea.repository;
 
+import android.content.Context;
+
 import com.example.foodisea.model.Pedido;
+import com.example.foodisea.notification.NotificationHelper;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -12,16 +15,20 @@ import java.util.List;
 
 public class PedidoRepository {
     private final FirebaseFirestore db;
+    private final NotificationHelper notificationHelper;
 
-    public PedidoRepository() {
+    public PedidoRepository(Context context) {
         this.db = FirebaseFirestore.getInstance();
+        this.notificationHelper = new NotificationHelper(context);
     }
 
-    // Crear nuevo pedido
     public Task<Void> crearPedido(Pedido pedido) {
         return db.collection("pedidos")
                 .document()
-                .set(pedido);
+                .set(pedido)
+                .addOnSuccessListener(aVoid -> {
+                    notificationHelper.sendNewOrderNotification(pedido);
+                });
     }
 
     // Actualizar estado del pedido

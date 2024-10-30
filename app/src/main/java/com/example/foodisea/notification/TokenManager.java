@@ -1,4 +1,4 @@
-package com.example.foodisea.notificaciones;
+package com.example.foodisea.notification;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,13 +7,10 @@ import android.util.Log;
 
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 // TokenManager.java - Clase auxiliar para manejar tokens
 public class TokenManager {

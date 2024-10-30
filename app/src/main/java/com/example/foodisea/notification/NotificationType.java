@@ -1,4 +1,4 @@
-package com.example.foodisea.notificaciones;
+package com.example.foodisea.notification;
 
 public class NotificationType {
     public static final String NUEVO_PEDIDO = "NUEVO_PEDIDO";

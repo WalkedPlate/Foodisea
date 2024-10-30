@@ -11,6 +11,7 @@ import java.util.Map;
 public class Pedido {
     @Exclude
     private String id;
+
     private String clienteId;  // Referencia al cliente que hizo el pedido (ID)
     private String restauranteId;  // ID del restaurante donde se hizo el pedido
     private List<ProductoCantidad> productos;  // Lista de productos y sus cantidades solicitadas
@@ -38,6 +39,10 @@ public class Pedido {
         this.direccionEntrega = direccionEntrega;
         this.codigoQrId = codigoQrId;
         this.pagoId = pagoId;
+    }
+
+    public Pedido() {
+
     }
 
 

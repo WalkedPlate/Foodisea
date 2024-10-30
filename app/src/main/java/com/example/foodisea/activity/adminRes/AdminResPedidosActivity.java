@@ -55,6 +55,17 @@ public class AdminResPedidosActivity extends AppCompatActivity {
             Intent home = new Intent(this, AdminResHomeActivity.class);
             startActivity(home);
         });
+
+        String highlightOrderId = getIntent().getStringExtra("highlightOrderId");
+        if (highlightOrderId != null) {
+            // Resaltar o scrollear al pedido específico
+            highlightOrder(highlightOrderId);
+        }
+
+    }
+
+    private void highlightOrder(String orderId) {
+        // Implementa la lógica para resaltar o mostrar el pedido específico
     }
 
     private List<Pedido> getPedidosList() {

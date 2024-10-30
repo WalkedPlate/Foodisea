@@ -2,14 +2,17 @@ package com.example.foodisea.activity.adminRes;
 
 import static android.Manifest.permission.POST_NOTIFICATIONS;
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,9 +33,14 @@ import com.example.foodisea.data.SessionManager;
 import com.example.foodisea.databinding.ActivityAdminResHomeBinding;
 import com.example.foodisea.model.AdministradorRestaurante;
 import com.example.foodisea.model.Cliente;
+import com.example.foodisea.model.Pedido;
 import com.example.foodisea.model.Restaurante;
 import com.example.foodisea.model.Usuario;
+import com.example.foodisea.notification.NotificationHelper;
+import com.example.foodisea.repository.PedidoRepository;
 import com.example.foodisea.repository.RestauranteRepository;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -44,6 +52,9 @@ public class AdminResHomeActivity extends AppCompatActivity {
     private static final String TAG = "AdminResHomeActivity";
     private SessionManager sessionManager;
     private AdministradorRestaurante administradorRestauranteActual;
+    private PedidoRepository pedidoRepository;
+    private NotificationHelper notificationHelper;
+    private static final String CHANNEL_ID = "admin_notifications";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +62,21 @@ public class AdminResHomeActivity extends AppCompatActivity {
         binding = ActivityAdminResHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Inicializar Firebase y SessionManager
-        restauranteRepository = new RestauranteRepository();
-        storage = FirebaseStorage.getInstance();
-        sessionManager = SessionManager.getInstance(this); // Inicializar correctamente
+        initializeComponents();
+        setupUI();
+        validateAndLoadData();
+        handleNotificationIntent(getIntent());
+    }
 
+    private void initializeComponents() {
+        // Inicializar repositorios y servicios
+        restauranteRepository = new RestauranteRepository();
+        pedidoRepository = new PedidoRepository(this);
+        storage = FirebaseStorage.getInstance();
+        sessionManager = SessionManager.getInstance(this);
+        notificationHelper = new NotificationHelper(this);
+
+        // Configurar Edge to Edge
         EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -63,17 +84,14 @@ public class AdminResHomeActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Configurar botones
-        setupButtons();
-
-        // Validar sesión y cargar datos
-        validateAndLoadData();
-
+        // Configurar notificaciones
         createNotificationChannel();
+        // Movemos getFCMToken() a después de la validación de sesión
+    }
 
-        binding.btnNotifications.setOnClickListener(view -> {
-            lanzarNotificacion();
-        });
+    private void setupUI() {
+        setupButtons();
+        setupNotificationButton();
     }
 
     private void setupButtons() {
@@ -97,15 +115,107 @@ public class AdminResHomeActivity extends AppCompatActivity {
         });
     }
 
+    private void setupNotificationButton() {
+        binding.btnNotifications.setOnClickListener(view -> {
+            if (administradorRestauranteActual == null) {
+                Toast.makeText(this,
+                        "Error: Administrador no inicializado",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (administradorRestauranteActual.getRestauranteId() == null) {
+                Toast.makeText(this,
+                        "Error: ID del restaurante no disponible",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Mostrar progreso
+            ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Enviando notificación de prueba...");
+            progressDialog.show();
+
+            // Crear pedido de prueba
+            Pedido pedidoPrueba = new Pedido();
+            String pedidoId = "test-" + System.currentTimeMillis();
+            pedidoPrueba.setId(pedidoId);
+            pedidoPrueba.setRestauranteId(administradorRestauranteActual.getRestauranteId());
+
+            Log.d(TAG, "Enviando notificación de prueba para restaurante: " +
+                    administradorRestauranteActual.getRestauranteId());
+
+            // Primero verificar/actualizar el token FCM
+            getFCMToken(() -> {
+                // Callback después de actualizar el token
+                notificationHelper.sendNewOrderNotification(pedidoPrueba);
+
+                new Handler().postDelayed(() -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(this,
+                            "Notificación de prueba enviada para pedido: " + pedidoId,
+                            Toast.LENGTH_LONG).show();
+                }, 2000);
+            });
+        });
+    }
+
+    private void getFCMToken(Runnable onComplete) {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        String token = task.getResult();
+                        Log.d(TAG, "FCM Token obtenido: " + token);
+
+                        if (administradorRestauranteActual != null &&
+                                administradorRestauranteActual.getRestauranteId() != null) {
+                            updateRestaurantToken(
+                                    administradorRestauranteActual.getRestauranteId(),
+                                    token,
+                                    onComplete
+                            );
+                        } else {
+                            Log.e(TAG, "No se puede actualizar token: administrador o ID nulo");
+                            onComplete.run();
+                        }
+                    } else {
+                        Log.e(TAG, "Error obteniendo FCM token", task.getException());
+                        onComplete.run();
+                    }
+                });
+    }
+
+    private void updateRestaurantToken(String restaurantId, String token, Runnable onComplete) {
+        Log.d(TAG, "Actualizando token para restaurante: " + restaurantId);
+
+        FirebaseFirestore.getInstance()
+                .collection("restaurantes")
+                .document(restaurantId)
+                .update("adminFcmToken", token)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Token FCM actualizado exitosamente");
+                    onComplete.run();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error actualizando token FCM", e);
+                    onComplete.run();
+                });
+    }
+
     private void validateAndLoadData() {
         sessionManager.checkExistingSession(this, new SessionManager.SessionCallback() {
             @Override
             public void onSessionValid(Usuario usuario) {
                 if (usuario instanceof AdministradorRestaurante) {
                     administradorRestauranteActual = (AdministradorRestaurante) usuario;
-                    loadRestaurantData(); // Cargar datos solo después de validar sesión
+                    Log.d(TAG, "Sesión válida para administrador: " +
+                            administradorRestauranteActual.getId());
+
+                    // Actualizar token FCM después de validar sesión
+                    getFCMToken(() -> {
+                        loadRestaurantData();
+                    });
                 } else {
-                    // Usuario no es administrador de restaurante
                     Toast.makeText(AdminResHomeActivity.this,
                             "Acceso no autorizado", Toast.LENGTH_SHORT).show();
                     goToLogin();
@@ -114,26 +224,8 @@ public class AdminResHomeActivity extends AppCompatActivity {
 
             @Override
             public void onSessionError() {
-                Log.e(TAG, "Error validando sesión en AdminResHomeActivity");
+                Log.e(TAG, "Error validando sesión");
                 goToLogin();
-            }
-        });
-    }
-
-    /**
-     * Verifica la existencia de una sesión válida
-     */
-    private void validateSession() {
-        //loadingDialog.show("Verificando sesión...");
-
-        sessionManager.checkExistingSession(this, new SessionManager.SessionCallback() {
-            @Override
-            public void onSessionValid(Usuario usuario) {
-                administradorRestauranteActual = sessionManager.getAdminRestauranteActual();
-            }
-            @Override
-            public void onSessionError() {
-                Log.e("Error validando sesión","No hay sesión en AdminResHomeActivity");
             }
         });
     }
@@ -162,23 +254,14 @@ public class AdminResHomeActivity extends AppCompatActivity {
                 });
     }
 
-    private void goToLogin() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-    }
-
     private void loadRestaurantImage(String restaurantId) {
-        // Referencia a la imagen del restaurante en Storage
         StorageReference imageRef = storage.getReference()
                 .child("restaurants")
                 .child(restaurantId)
-                .child("profile.jpg"); // O el nombre que uses para la imagen principal
+                .child("profile.jpg");
 
         imageRef.getDownloadUrl()
                 .addOnSuccessListener(uri -> {
-                    // Cargar la imagen usando Glide
                     Glide.with(this)
                             .load(uri)
                             .placeholder(R.drawable.restaurant_image)
@@ -188,30 +271,25 @@ public class AdminResHomeActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error loading restaurant image", e);
-                    // Si falla la carga, dejamos la imagen por defecto
                     binding.imageView2.setImageResource(R.drawable.restaurant_image);
                 });
     }
 
     private void updateUI(Restaurante restaurante) {
-        // Actualizar nombre y descripción
         binding.nombreRestaurant.setText(restaurante.getNombre());
         binding.descripcionRestaurant.setText(restaurante.getDescripcion());
-
-        // Actualizar rating
         String ratingText = String.format("%.1f", restaurante.getRating());
         binding.tvRestaurantRating.setText(ratingText);
-
-        // Actualizar mensaje de bienvenida
-        //String welcomeMessage = getString(R.string.welcome) + " " + restaurante.getNombre();
-        //binding.tvWelcome.setText(welcomeMessage);
     }
 
-    String channelId = "channelDefaultPri";
-    public void createNotificationChannel(){
-        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
-            NotificationChannel channel = new NotificationChannel(channelId, "Canal notificaciones default",NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription("Canal para notificaciones con prioridad default");
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Notificaciones Administrador",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("Notificaciones para administradores de restaurante");
 
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
@@ -220,28 +298,58 @@ public class AdminResHomeActivity extends AppCompatActivity {
         }
     }
 
-    public void askPermission(){
-        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ActivityCompat.checkSelfPermission(this, POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED){
-            ActivityCompat.requestPermissions(AdminResHomeActivity.this,new String[]{POST_NOTIFICATIONS},101);
+    private void askPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                ActivityCompat.checkSelfPermission(this, POST_NOTIFICATIONS) ==
+                        PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{POST_NOTIFICATIONS},
+                    101
+            );
         }
     }
 
-    public void lanzarNotificacion(){
-        Intent intent = new Intent(this,AdminResPedidosActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_IMMUTABLE);
+    private void goToLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.ic_notifications)
-                .setContentTitle("Se ha creado el pedido #1234")
-                .setContentText("Tocar para ver más detalles")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleNotificationIntent(intent);
+    }
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+    private void handleNotificationIntent(Intent intent) {
+        if (intent != null && intent.getBooleanExtra("fromNotification", false)) {
+            String orderId = intent.getStringExtra("orderId");
+            if (orderId != null) {
+                showNewOrderDialog(orderId);
+            }
+        }
+    }
 
-        if(ActivityCompat.checkSelfPermission(this,POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED){
-            notificationManager.notify(1,builder.build());
+    private void showNewOrderDialog(String orderId) {
+        new AlertDialog.Builder(this)
+                .setTitle("Nuevo Pedido")
+                .setMessage("Has recibido un nuevo pedido. ¿Deseas verlo ahora?")
+                .setPositiveButton("Ver Pedido", (dialog, which) -> {
+                    Intent pedidos = new Intent(this, AdminResPedidosActivity.class);
+                    pedidos.putExtra("highlightOrderId", orderId);
+                    startActivity(pedidos);
+                })
+                .setNegativeButton("Después", null)
+                .show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (notificationHelper != null) {
+            notificationHelper.shutdown();
         }
     }
 }
