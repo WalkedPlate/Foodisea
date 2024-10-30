@@ -52,9 +52,6 @@
             android:name=".activity.login.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.login.RegisterActivity"
-            android:exported="false" />
-        <activity
             android:name=".activity.login.StartAppActivity"
             android:exported="true">
             <intent-filter>
@@ -66,13 +63,6 @@
         <activity
             android:name=".activity.login.LoginActivity"
             android:exported="false" /> <!-- SERVICIOS -->
-        <service
-            android:name=".notification.MyFirebaseMessagingService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
 
         <activity
             android:name=".activity.cliente.ClienteNotificacionesActivity"
@@ -136,6 +126,11 @@
         <activity
             android:name=".activity.adminRes.AdminResNuevoProductoActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".activity.adminRes.AdminResEditarProductoActivity"
+            android:exported="false">
+        </activity>
         <activity
             android:name=".activity.repartidor.RepartidorChatActivity"
             android:exported="false" />
