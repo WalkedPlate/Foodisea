@@ -16,12 +16,14 @@ import com.example.foodisea.activity.login.LoginActivity;
 import com.example.foodisea.data.SessionManager;
 import com.example.foodisea.databinding.ActivityAdminResPerfilBinding;
 import com.example.foodisea.databinding.ActivitySuperAdminPerfilBinding;
+import com.example.foodisea.model.AdministradorRestaurante;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class AdminResPerfilActivity extends AppCompatActivity {
 
     private ActivityAdminResPerfilBinding binding;
     private SessionManager sessionManager;
+    private AdministradorRestaurante administradorRestauranteActual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +43,35 @@ public class AdminResPerfilActivity extends AppCompatActivity {
         // Inicializar SessionManager
         sessionManager = SessionManager.getInstance(this);
 
+        // Obtener al administrador de restaurante logueado
+        administradorRestauranteActual = sessionManager.getAdminRestauranteActual();
+
+        // Actualizar la UI con los datos del administrador
+        updateUIWithUserData();
+
         EdgeToEdge.enable(this);
         setupWindowInsets();
+    }
+
+    /**
+     * Actualiza la UI con los datos del cliente actual
+     */
+    private void updateUIWithUserData() {
+        if (administradorRestauranteActual != null) {
+            // Actualizar el nombre del administrador del restaurante
+            binding.tvUserName.setText(administradorRestauranteActual.obtenerNombreCompleto());
+
+            // Si tienes una foto de perfil, también podrías actualizarla aquí
+            // Por ejemplo, si usas Glide para cargar imágenes:
+        /*
+        if (clienteActual.getPhotoUrl() != null && !clienteActual.getPhotoUrl().isEmpty()) {
+            Glide.with(this)
+                .load(clienteActual.getPhotoUrl())
+                .circleCrop()
+                .into(binding.ivUserPhoto);
+        }
+        */
+        }
     }
 
     /**

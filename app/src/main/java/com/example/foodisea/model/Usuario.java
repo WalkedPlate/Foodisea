@@ -36,6 +36,23 @@ public class Usuario {
         this.tipoUsuario = tipoUsuario;
     }
 
+    public String obtenerNombreCompleto() {
+        StringBuilder nombreCompleto = new StringBuilder();
+
+        if (nombres != null && !nombres.isEmpty()) {
+            nombreCompleto.append(nombres);
+        }
+
+        if (apellidos != null && !apellidos.isEmpty()) {
+            if (nombreCompleto.length() > 0) {
+                nombreCompleto.append(" ");
+            }
+            nombreCompleto.append(apellidos);
+        }
+
+        return nombreCompleto.length() > 0 ? nombreCompleto.toString() : "Sin nombre";
+    }
+
     //Constructor, getter y setter
 
     public String getTipoUsuario() {

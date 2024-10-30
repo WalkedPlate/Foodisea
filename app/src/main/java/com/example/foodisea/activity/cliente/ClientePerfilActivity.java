@@ -15,6 +15,7 @@ import com.example.foodisea.R;
 import com.example.foodisea.activity.login.LoginActivity;
 import com.example.foodisea.data.SessionManager;
 import com.example.foodisea.databinding.ActivityClientePerfilBinding;
+import com.example.foodisea.model.Cliente;
 import com.example.foodisea.repository.UsuarioRepository;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -25,6 +26,7 @@ public class ClientePerfilActivity extends AppCompatActivity {
 
     private ActivityClientePerfilBinding binding;
     private SessionManager sessionManager;
+    private Cliente clienteActual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,8 @@ public class ClientePerfilActivity extends AppCompatActivity {
         initializeComponents();
         setupListeners();
     }
+
+
 
     /**
      * Inicializa los componentes principales de la actividad
@@ -43,8 +47,35 @@ public class ClientePerfilActivity extends AppCompatActivity {
         // Inicializar SessionManager
         sessionManager = SessionManager.getInstance(this);
 
+        // Obtener al cliente logueado
+        clienteActual = sessionManager.getClienteActual();
+
+        // Actualizar la UI con los datos del cliente
+        updateUIWithUserData();
+
         EdgeToEdge.enable(this);
         setupWindowInsets();
+    }
+
+    /**
+     * Actualiza la UI con los datos del cliente actual
+     */
+    private void updateUIWithUserData() {
+        if (clienteActual != null) {
+            // Actualizar el nombre del cliente
+            binding.tvUserName.setText(clienteActual.obtenerNombreCompleto());
+
+            // Si tienes una foto de perfil, también podrías actualizarla aquí
+            // Por ejemplo, si usas Glide para cargar imágenes:
+        /*
+        if (clienteActual.getPhotoUrl() != null && !clienteActual.getPhotoUrl().isEmpty()) {
+            Glide.with(this)
+                .load(clienteActual.getPhotoUrl())
+                .circleCrop()
+                .into(binding.ivUserPhoto);
+        }
+        */
+        }
     }
 
     /**

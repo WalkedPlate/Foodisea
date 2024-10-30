@@ -16,12 +16,14 @@ import com.example.foodisea.activity.login.LoginActivity;
 import com.example.foodisea.data.SessionManager;
 import com.example.foodisea.databinding.ActivityRepartidorPerfilBinding;
 import com.example.foodisea.databinding.ActivitySuperAdminPerfilBinding;
+import com.example.foodisea.model.Repartidor;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class RepartidorPerfilActivity extends AppCompatActivity {
 
     private ActivityRepartidorPerfilBinding binding;
     private SessionManager sessionManager;
+    private Repartidor repartidorActual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +42,35 @@ public class RepartidorPerfilActivity extends AppCompatActivity {
         // Inicializar SessionManager
         sessionManager = SessionManager.getInstance(this);
 
+        // Obtener al administrador de restaurante logueado
+        repartidorActual = sessionManager.getRepartidorActual();
+
+        // Actualizar la UI con los datos del administrador
+        updateUIWithUserData();
+
         EdgeToEdge.enable(this);
         setupWindowInsets();
+    }
+
+    /**
+     * Actualiza la UI con los datos del cliente actual
+     */
+    private void updateUIWithUserData() {
+        if (repartidorActual != null) {
+            // Actualizar el nombre del repartidor
+            binding.tvUserName.setText(repartidorActual.obtenerNombreCompleto());
+
+            // Si tienes una foto de perfil, también podrías actualizarla aquí
+            // Por ejemplo, si usas Glide para cargar imágenes:
+        /*
+        if (clienteActual.getPhotoUrl() != null && !clienteActual.getPhotoUrl().isEmpty()) {
+            Glide.with(this)
+                .load(clienteActual.getPhotoUrl())
+                .circleCrop()
+                .into(binding.ivUserPhoto);
+        }
+        */
+        }
     }
 
     /**
