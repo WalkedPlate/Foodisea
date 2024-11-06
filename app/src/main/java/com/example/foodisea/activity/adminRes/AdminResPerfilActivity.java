@@ -10,6 +10,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
 import com.example.foodisea.activity.cliente.ClienteInfoPerfilActivity;
 import com.example.foodisea.activity.login.LoginActivity;
@@ -54,25 +55,33 @@ public class AdminResPerfilActivity extends AppCompatActivity {
     }
 
     /**
-     * Actualiza la UI con los datos del cliente actual
+     * Actualiza la UI con los datos del administrador de restaurante actual
      */
     private void updateUIWithUserData() {
         if (administradorRestauranteActual != null) {
             // Actualizar el nombre del administrador del restaurante
             binding.tvUserName.setText(administradorRestauranteActual.obtenerNombreCompleto());
 
-            // Si tienes una foto de perfil, también podrías actualizarla aquí
-            // Por ejemplo, si usas Glide para cargar imágenes:
-        /*
-        if (clienteActual.getPhotoUrl() != null && !clienteActual.getPhotoUrl().isEmpty()) {
-            Glide.with(this)
-                .load(clienteActual.getPhotoUrl())
-                .circleCrop()
-                .into(binding.ivUserPhoto);
-        }
-        */
+            // Cargar imagen de perfil
+            if (administradorRestauranteActual.getFoto() != null && !administradorRestauranteActual.getFoto().isEmpty()) {
+                Glide.with(this)
+                        .load(administradorRestauranteActual.getFoto())
+                        .placeholder(R.drawable.ic_profile)
+                        .error(R.drawable.error_image)
+                        .circleCrop()
+                        .into(binding.ivUserPhoto);
+            } else {
+                Glide.with(this)
+                        .load(R.drawable.ic_profile)
+                        .circleCrop()
+                        .into(binding.ivUserPhoto);
+            }
+
+            // Mostrar tipo de usuario
+            binding.tvTypeUser.setText("Administrador de Restaurante");
         }
     }
+
 
     /**
      * Configura los insets de la ventana

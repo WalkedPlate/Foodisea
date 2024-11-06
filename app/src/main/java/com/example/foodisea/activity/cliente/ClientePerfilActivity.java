@@ -11,6 +11,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
 import com.example.foodisea.activity.login.LoginActivity;
 import com.example.foodisea.data.SessionManager;
@@ -65,16 +66,25 @@ public class ClientePerfilActivity extends AppCompatActivity {
             // Actualizar el nombre del cliente
             binding.tvUserName.setText(clienteActual.obtenerNombreCompleto());
 
-            // Si tienes una foto de perfil, también podrías actualizarla aquí
-            // Por ejemplo, si usas Glide para cargar imágenes:
-        /*
-        if (clienteActual.getPhotoUrl() != null && !clienteActual.getPhotoUrl().isEmpty()) {
-            Glide.with(this)
-                .load(clienteActual.getPhotoUrl())
-                .circleCrop()
-                .into(binding.ivUserPhoto);
-        }
-        */
+            // Cargar imagen de perfil
+            if (clienteActual.getFoto() != null && !clienteActual.getFoto().isEmpty()) {
+                // Cargar imagen desde URL
+                Glide.with(this)
+                        .load(clienteActual.getFoto())
+                        .placeholder(R.drawable.ic_profile) // Imagen por defecto mientras carga
+                        .error(R.drawable.error_image)      // Imagen si hay error al cargar
+                        .circleCrop()
+                        .into(binding.ivUserPhoto);
+            } else {
+                // Si no hay foto, mostrar imagen por defecto
+                Glide.with(this)
+                        .load(R.drawable.ic_profile)
+                        .circleCrop()
+                        .into(binding.ivUserPhoto);
+            }
+
+            // Mostrar tipo de usuario
+            binding.tvTypeUser.setText("Cliente de Foodisea");
         }
     }
 
