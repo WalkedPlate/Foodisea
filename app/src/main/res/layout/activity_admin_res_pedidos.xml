@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_color"
     tools:context=".activity.adminRes.AdminResPedidosActivity">
 
     <LinearLayout
@@ -40,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/sen_font"
                 android:padding="8dp"
-                android:text="Pedidos del dia"
+                android:text="Pedidos del día"
                 android:textColor="@android:color/black"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -48,6 +49,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvPedidos"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:paddingHorizontal="16dp"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

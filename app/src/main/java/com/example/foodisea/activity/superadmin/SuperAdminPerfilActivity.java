@@ -91,11 +91,6 @@ public class SuperAdminPerfilActivity extends AppCompatActivity {
     private void setupListeners() {
         binding.btnBack.setOnClickListener(v -> finish());
 
-        binding.llPersonalInfo.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ClienteInfoPerfilActivity.class);
-            startActivity(intent);
-        });
-
         binding.llLogout.setOnClickListener(v -> showLogoutConfirmationDialog());
     }
 
