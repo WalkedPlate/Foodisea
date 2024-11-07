@@ -59,8 +59,13 @@ public class AdminResPerfilActivity extends AppCompatActivity {
      */
     private void updateUIWithUserData() {
         if (administradorRestauranteActual != null) {
-            // Actualizar el nombre del administrador del restaurante
+            // Actualizar datos del administrador del restaurante
             binding.tvUserName.setText(administradorRestauranteActual.obtenerNombreCompleto());
+            binding.tvUserDNI.setText(administradorRestauranteActual.getDocumentoId());
+            binding.tvUserBirthdate.setText(administradorRestauranteActual.getFechaNacimiento());
+            binding.tvUserMail.setText(administradorRestauranteActual.getCorreo());
+            binding.tvUserCell.setText(administradorRestauranteActual.getTelefono());
+            binding.tvUserAddress.setText(administradorRestauranteActual.getDireccion());
 
             // Cargar imagen de perfil
             if (administradorRestauranteActual.getFoto() != null && !administradorRestauranteActual.getFoto().isEmpty()) {

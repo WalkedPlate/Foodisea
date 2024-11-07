@@ -140,6 +140,11 @@ public class ClienteMainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ClienteNotificacionesActivity.class);
             startActivity(intent);
         });
+
+        binding.btnPedidos.setOnClickListener(view -> {
+            Intent intent = new Intent(this, ClienteTrackingActivity.class);
+            startActivity(intent);
+        });
     }
 
     /**

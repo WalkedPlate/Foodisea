@@ -121,6 +121,7 @@
                     android:fontFamily="@font/sen_font"/>
 
                 <TextView
+                    android:id="@+id/tvUserDNI"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="12345678"
@@ -164,6 +165,7 @@
                     android:fontFamily="@font/sen_font"/>
 
                 <TextView
+                    android:id="@+id/tvUserBirthdate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2001-05-03"
@@ -207,6 +209,7 @@
                     android:fontFamily="@font/sen_font"/>
 
                 <TextView
+                    android:id="@+id/tvUserMail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="cl001@gmail.com"
@@ -250,6 +253,7 @@
                     android:fontFamily="@font/sen_font"/>
 
                 <TextView
+                    android:id="@+id/tvUserCell"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="123456789"
@@ -292,6 +296,7 @@
                     android:fontFamily="@font/sen_font"/>
 
                 <TextView
+                    android:id="@+id/tvUserAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Av 25 de febrero 178"
