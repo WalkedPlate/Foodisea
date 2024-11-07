@@ -7,6 +7,7 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 public class Usuario {
     @Exclude
     protected String id;
+
     protected String nombres;
     protected String apellidos;
     protected String correo;
@@ -63,10 +64,12 @@ public class Usuario {
         this.tipoUsuario = tipoUsuario;
     }
 
+    @Exclude
     public String getId() {
         return id;
     }
 
+    @Exclude
     public void setId(String id) {
         this.id = id;
     }

@@ -9,6 +9,7 @@ import java.util.List;
 public class Producto {
     @Exclude
     private String id;
+
     private String nombre;
     private String descripcion;
     private double precio;
@@ -31,10 +32,12 @@ public class Producto {
     }
 
 
+    @Exclude
     public String getRestauranteId() {
         return restauranteId;
     }
 
+    @Exclude
     public void setRestauranteId(String restauranteId) {
         this.restauranteId = restauranteId;
     }

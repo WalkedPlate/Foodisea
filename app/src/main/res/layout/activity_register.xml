@@ -54,6 +54,41 @@
             android:paddingTop="16dp"
             android:paddingBottom="28dp">
 
+            <!-- Foto de perfil -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingBottom="16dp">
+
+                <!-- Contenedor circular con imagen de perfil e ícono de cámara -->
+                <FrameLayout
+                    android:layout_width="140dp"
+                    android:layout_height="140dp">
+
+                    <!-- Imagen de perfil circular -->
+                    <ImageView
+                        android:id="@+id/imgProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:background="@drawable/circular_background" />
+
+                    <!-- Ícono de cámara sobre la imagen de perfil -->
+                    <ImageView
+                        android:id="@+id/iconCamera"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="bottom|end"
+                        android:src="@drawable/ic_camara"
+                        android:background="@drawable/circular_icon_background"
+                        android:padding="8dp" />
+                </FrameLayout>
+
+            </LinearLayout>
+
+
             <!-- Nombres -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/etNombresLayout"

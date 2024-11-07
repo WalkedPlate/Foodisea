@@ -54,7 +54,7 @@ public class SuperAdminPerfilActivity extends AppCompatActivity {
     }
 
     /**
-     * Actualiza la UI con los datos del cliente actual
+     * Actualiza la UI con los datos del superadmin actual
      */
     private void updateUIWithUserData() {
         if (superadminActual != null) {

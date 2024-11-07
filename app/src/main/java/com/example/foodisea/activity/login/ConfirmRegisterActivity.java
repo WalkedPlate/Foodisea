@@ -33,6 +33,7 @@ public class ConfirmRegisterActivity extends AppCompatActivity {
         // Configurar diseño edge-to-edge
         EdgeToEdge.enable(this);
         setupWindowInsets();
+        setupClickListeners();
     }
 
     /**

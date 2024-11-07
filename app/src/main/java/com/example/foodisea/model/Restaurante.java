@@ -10,6 +10,7 @@ import java.util.List;
 public class Restaurante {
     @Exclude
     private String id;
+
     private String nombre;
     private String direccion;
     private String telefono;
@@ -45,10 +46,12 @@ public class Restaurante {
 
 
 
+    @Exclude
     public String getId() {
         return id;
     }
 
+    @Exclude
     public void setId(String id) {
         this.id = id;
     }

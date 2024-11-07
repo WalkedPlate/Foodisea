@@ -1,18 +1,24 @@
 package com.example.foodisea.activity.login;
 
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
 import com.example.foodisea.dialog.LoadingDialog;
 import com.example.foodisea.databinding.ActivityRegisterBinding;
@@ -30,10 +36,12 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.function.Function;
 
 /**
  * Activity que maneja el registro de nuevos usuarios tipo Cliente.
+ * Permite el registro con datos personales y foto de perfil opcional.
  */
 public class RegisterActivity extends AppCompatActivity {
 
@@ -43,10 +51,35 @@ public class RegisterActivity extends AppCompatActivity {
     private String fechaNacimiento = "";
     private String tipoUsuario;
 
+    // Variables para manejo de fotos
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 2;
+    private Uri imageUri;
+    private boolean hasSelectedImage = false;
+
+    // Launchers para resultados de cámara y galería
+    private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    handleImageSelection(imageUri);
+                }
+            }
+    );
+
+    private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Uri selectedImageUri = result.getData().getData();
+                    handleImageSelection(selectedImageUri);
+                }
+            }
+    );
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Obtener el tipo de usuario del intent
         tipoUsuario = getIntent().getStringExtra(SelectRolActivity.EXTRA_TIPO_USUARIO);
         if (tipoUsuario == null) {
             finish();
@@ -60,15 +93,10 @@ public class RegisterActivity extends AppCompatActivity {
      * Inicializa los componentes principales de la actividad
      */
     private void initializeComponents() {
-        // Inicializar ViewBinding
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        // Inicializar repositorio y diálogo de carga
         usuarioRepository = new UsuarioRepository();
         loadingDialog = new LoadingDialog(this);
-
-        // Configurar diseño edge-to-edge
         EdgeToEdge.enable(this);
         setupWindowInsets();
     }
@@ -91,8 +119,8 @@ public class RegisterActivity extends AppCompatActivity {
         setupClickListeners();
         setupInputValidation();
         setupDatePicker();
+        setupPhotoSelection();
     }
-
 
     /**
      * Configura los listeners para los botones y campos clickeables
@@ -107,23 +135,28 @@ public class RegisterActivity extends AppCompatActivity {
      * Configura el campo de fecha de nacimiento
      */
     private void setupDatePicker() {
-        // Deshabilitar entrada manual de fecha
         binding.etFechaNacimiento.setFocusable(false);
         binding.etFechaNacimiento.setClickable(true);
+    }
+
+    /**
+     * Configura los listeners para la selección de foto de perfil
+     */
+    private void setupPhotoSelection() {
+        binding.imgProfile.setOnClickListener(v -> showImageSelectionDialog());
+        binding.iconCamera.setOnClickListener(v -> showImageSelectionDialog());
     }
 
     /**
      * Configura la validación en tiempo real de todos los campos
      */
     private void setupInputValidation() {
-        // Configurar watchers para validación en tiempo real
         setupTextWatcher(binding.etNombres, this::validateNombres);
         setupTextWatcher(binding.etApellidos, this::validateApellidos);
         setupTextWatcher(binding.etCorreo, this::validateEmail);
         setupTextWatcher(binding.etTelefono, this::validateTelefono);
         setupTextWatcher(binding.etDni, this::validateDni);
 
-        // Watcher especial para las contraseñas que valida ambos campos
         TextWatcher passwordWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -141,7 +174,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     * Método utilitario para configurar TextWatcher
+     * Configura un TextWatcher para un campo de texto
      */
     private void setupTextWatcher(TextInputEditText editText, Function<String, Boolean> validator) {
         editText.addTextChangedListener(new TextWatcher() {
@@ -159,11 +192,74 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
+     * Muestra el diálogo para seleccionar la fuente de la imagen
+     */
+    private void showImageSelectionDialog() {
+        String[] options = {"Tomar foto", "Elegir de galería", "Cancelar"};
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Seleccionar foto de perfil")
+                .setItems(options, (dialog, which) -> {
+                    switch (which) {
+                        case 0:
+                            dispatchTakePictureIntent();
+                            break;
+                        case 1:
+                            openGallery();
+                            break;
+                        case 2:
+                            dialog.dismiss();
+                            break;
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * Inicia la captura de foto con la cámara
+     */
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.TITLE, "New Picture");
+            values.put(MediaStore.Images.Media.DESCRIPTION, "From Camera");
+            imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            cameraLauncher.launch(takePictureIntent);
+        } catch (Exception e) {
+            showError("Error al abrir la cámara: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Abre la galería para seleccionar una imagen
+     */
+    private void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        galleryLauncher.launch(Intent.createChooser(intent, "Seleccionar imagen"));
+    }
+
+    /**
+     * Procesa y muestra la imagen seleccionada
+     */
+    private void handleImageSelection(Uri uri) {
+        if (uri != null) {
+            imageUri = uri;
+            hasSelectedImage = true;
+            Glide.with(this)
+                    .load(uri)
+                    .circleCrop()
+                    .into(binding.imgProfile);
+        }
+    }
+
+    /**
      * Muestra el selector de fecha configurado para usuarios mayores de 18 años
      */
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
-        // Establecer fecha por defecto 18 años atrás
         int year = calendar.get(Calendar.YEAR) - 18;
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -171,7 +267,6 @@ public class RegisterActivity extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 this,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
-                    // Formatear y guardar la fecha seleccionada
                     calendar.set(selectedYear, selectedMonth, selectedDay);
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                     fechaNacimiento = sdf.format(calendar.getTime());
@@ -180,10 +275,8 @@ public class RegisterActivity extends AppCompatActivity {
                 },
                 year, month, day);
 
-        // Establecer fecha máxima (18 años atrás)
         calendar.add(Calendar.YEAR, -18);
         datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
-
         datePickerDialog.show();
     }
 
@@ -197,7 +290,53 @@ public class RegisterActivity extends AppCompatActivity {
 
         loadingDialog.show(getString(R.string.mensaje_registrando));
 
-        // Crear nuevo usuario según el tipo
+        // Preguntar si desea continuar sin foto solo si no ha seleccionado una
+        if (!hasSelectedImage) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle("Foto de perfil")
+                    .setMessage("¿Deseas continuar el registro sin foto de perfil? Podrás agregarla más tarde.")
+                    .setPositiveButton("Continuar sin foto", (dialog, which) -> {
+                        proceedWithRegistration(null);
+                    })
+                    .setNegativeButton("Seleccionar foto", (dialog, which) -> {
+                        loadingDialog.dismiss();
+                        showImageSelectionDialog();
+                    })
+                    .show();
+        } else {
+            proceedWithRegistration(imageUri);
+        }
+    }
+
+    /**
+     * Procede con el registro del usuario
+     * @param photoUri Uri de la foto seleccionada, null si no hay foto
+     */
+    private void proceedWithRegistration(Uri photoUri) {
+        Usuario nuevoUsuario = createUserObject();
+        String password = binding.etPassword.getText().toString();
+
+        // Registrar usuario con o sin foto
+        usuarioRepository.registerUser(
+                nuevoUsuario.getCorreo(),
+                password,
+                nuevoUsuario,
+                photoUri  // será null si no hay foto
+        ).addOnSuccessListener(usuario -> {
+            loadingDialog.dismiss();
+            showSuccess(getString(R.string.mensaje_registro_exitoso));
+            finish();
+            startActivity(new Intent(this, ConfirmRegisterActivity.class));
+        }).addOnFailureListener(e -> {
+            loadingDialog.dismiss();
+            handleRegistrationError(e);
+        });
+    }
+
+    /**
+     * Crea y configura el objeto Usuario con todos sus datos
+     */
+    private Usuario createUserObject() {
         Usuario nuevoUsuario;
         if (tipoUsuario.equals(SelectRolActivity.TIPO_REPARTIDOR)) {
             Repartidor repartidor = new Repartidor();
@@ -210,7 +349,6 @@ public class RegisterActivity extends AppCompatActivity {
             nuevoUsuario = new Cliente();
         }
 
-        // Configurar datos comunes
         nuevoUsuario.setNombres(binding.etNombres.getText().toString().trim());
         nuevoUsuario.setApellidos(binding.etApellidos.getText().toString().trim());
         nuevoUsuario.setCorreo(binding.etCorreo.getText().toString().trim());
@@ -218,34 +356,18 @@ public class RegisterActivity extends AppCompatActivity {
         nuevoUsuario.setDireccion(binding.etDireccion.getText().toString().trim());
         nuevoUsuario.setDocumentoId(binding.etDni.getText().toString().trim());
         nuevoUsuario.setFechaNacimiento(fechaNacimiento);
-        nuevoUsuario.setFoto("");
         nuevoUsuario.setEstado("Activo");
         nuevoUsuario.setTipoUsuario(tipoUsuario);
 
-        String password = binding.etPassword.getText().toString();
-
-        // Intentar registro en Firebase
-        usuarioRepository.registerUser(nuevoUsuario.getCorreo(), password, nuevoUsuario)
-                .addOnSuccessListener(usuario -> {
-                    loadingDialog.dismiss();
-                    showSuccess(getString(R.string.mensaje_registro_exitoso));
-                    finish();
-                    startActivity(new Intent(this, ConfirmRegisterActivity.class));
-                })
-                .addOnFailureListener(e -> {
-                    loadingDialog.dismiss();
-                    handleRegistrationError(e);
-                });
+        return nuevoUsuario;
     }
 
     /**
      * Valida todos los campos del formulario
-     * @return true si todos los campos son válidos
      */
     private boolean validateFields() {
         boolean isValid = true;
 
-        // Validar todos los campos y acumular el resultado
         isValid &= validateNombres(binding.etNombres.getText().toString());
         isValid &= validateApellidos(binding.etApellidos.getText().toString());
         isValid &= validateEmail(binding.etCorreo.getText().toString());
@@ -258,9 +380,7 @@ public class RegisterActivity extends AppCompatActivity {
         return isValid;
     }
 
-    /**
-     * Valida la fecha de nacimiento
-     */
+    // Los métodos de validación existentes se mantienen igual...
     private boolean validateFechaNacimiento() {
         if (fechaNacimiento.isEmpty()) {
             binding.etFechaNacimientoLayout.setError(getString(R.string.error_seleccionar_fecha));
@@ -270,10 +390,6 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
-
-    /**
-     * Valida el formato de los nombres
-     */
     private boolean validateNombres(String nombres) {
         if (nombres.trim().isEmpty()) {
             binding.etNombresLayout.setError(getString(R.string.error_ingresa_nombres));
@@ -289,9 +405,6 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
-    /**
-     * Valida el formato de los apellidos
-     */
     private boolean validateApellidos(String apellidos) {
         if (apellidos.trim().isEmpty()) {
             binding.etApellidosLayout.setError(getString(R.string.error_ingresa_apellidos));
@@ -307,9 +420,6 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
-    /**
-     * Valida el formato del email
-     */
     private boolean validateEmail(String email) {
         if (email.trim().isEmpty()) {
             binding.etCorreoLayout.setError(getString(R.string.error_ingresa_email));
@@ -322,9 +432,6 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
-    /**
-     * Valida el formato del teléfono (9 dígitos comenzando con 9)
-     */
     private boolean validateTelefono(String telefono) {
         if (telefono.trim().isEmpty()) {
             binding.etTelefonoLayout.setError(getString(R.string.error_ingresa_telefono));
@@ -340,9 +447,6 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
-    /**
-     * Valida el formato del DNI (8 dígitos)
-     */
     private boolean validateDni(String dni) {
         if (dni.trim().isEmpty()) {
             binding.etDniLayout.setError(getString(R.string.error_ingresa_dni));
@@ -358,9 +462,6 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
-    /**
-     * Valida que la dirección no esté vacía
-     */
     private boolean validateDireccion(String direccion) {
         if (direccion.trim().isEmpty()) {
             binding.etDireccionLayout.setError(getString(R.string.error_ingresa_direccion));
@@ -370,15 +471,10 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
-
-    /**
-     * Valida las contraseñas y su coincidencia
-     */
     private boolean validatePasswords() {
         String password = binding.etPassword.getText().toString();
         String confirmPassword = binding.etConfirmPassword.getText().toString();
 
-        // Validar contraseña principal
         if (password.isEmpty()) {
             binding.etPasswordLayout.setError(getString(R.string.error_ingresa_password));
             return false;
@@ -389,7 +485,6 @@ public class RegisterActivity extends AppCompatActivity {
             binding.etPasswordLayout.setError(null);
         }
 
-        // Validar confirmación de contraseña
         if (confirmPassword.isEmpty()) {
             binding.etConfirmPasswordLayout.setError(getString(R.string.error_confirma_password));
             return false;
@@ -447,7 +542,6 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Limpiar recursos
         if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
         }

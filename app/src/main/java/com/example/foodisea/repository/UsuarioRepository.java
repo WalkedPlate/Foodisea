@@ -1,5 +1,6 @@
 package com.example.foodisea.repository;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.example.foodisea.model.AdministradorRestaurante;
@@ -13,11 +14,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import javax.annotation.Nullable;
 
 /**
  * Repositorio que maneja todas las operaciones relacionadas con usuarios en Firebase
@@ -26,12 +31,16 @@ import java.util.Objects;
 public class UsuarioRepository {
     private final FirebaseFirestore db;
     private final FirebaseAuth auth;
+    private final FirebaseStorage storage;
     private static final String COLLECTION_USUARIOS = "usuarios";
+    private static final String STORAGE_USUARIOS = "usuarios";
     private static final String TAG = "UsuarioRepository";
+
 
     public UsuarioRepository() {
         this.db = FirebaseFirestore.getInstance();
         this.auth = FirebaseAuth.getInstance();
+        this.storage = FirebaseStorage.getInstance();
     }
 
     /**
@@ -160,24 +169,68 @@ public class UsuarioRepository {
     }
 
     /**
-     * Registra un nuevo usuario en Firebase Auth y Firestore
-     * Soporta múltiples tipos de usuario (Cliente, Repartidor)
+     * Registra un nuevo usuario en Firebase Auth y Firestore, incluyendo su foto de perfil
      * @param email Correo del usuario
      * @param password Contraseña del usuario
-     * @param usuario Datos del usuario a registrar (Cliente o Repartidor)
+     * @param usuario Datos del usuario a registrar
+     * @param photoUri URI de la foto de perfil (puede ser null)
      * @return Task<Usuario> con los datos del usuario registrado
      */
-    public Task<Usuario> registerUser(String email, String password, Usuario usuario) {
+    public Task<Usuario> registerUser(String email, String password, Usuario usuario, @Nullable Uri photoUri) {
         return auth.createUserWithEmailAndPassword(email, password)
                 .continueWithTask(task -> {
                     if (!task.isSuccessful()) {
                         throw Objects.requireNonNull(task.getException());
                     }
+
                     String uid = Objects.requireNonNull(task.getResult().getUser()).getUid();
-                    return db.collection(COLLECTION_USUARIOS)
-                            .document(uid)
-                            .set(usuario)
-                            .continueWith(firestoreTask -> usuario);
+
+                    // Si no hay foto, registrar usuario directamente
+                    if (photoUri == null) {
+                        usuario.setFoto("");
+                        return db.collection(COLLECTION_USUARIOS)
+                                .document(uid)
+                                .set(usuario)
+                                .continueWith(firestoreTask -> usuario);
+                    }
+
+                    // Si hay foto, subirla primero y luego registrar usuario
+                    return uploadUserPhoto(photoUri, uid)
+                            .continueWithTask(uploadTask -> {
+                                String photoUrl = uploadTask.getResult();
+                                usuario.setFoto(photoUrl);
+                                return db.collection(COLLECTION_USUARIOS)
+                                        .document(uid)
+                                        .set(usuario)
+                                        .continueWith(firestoreTask -> usuario);
+                            });
+                });
+    }
+
+    /**
+     * Sube una foto de usuario a Firebase Storage en la carpeta correspondiente
+     * @param imageUri URI de la imagen a subir
+     * @param userId ID del usuario
+     * @return Task<String> con la URL de descarga de la imagen
+     */
+    private Task<String> uploadUserPhoto(Uri imageUri, String userId) {
+        StorageReference photoRef = storage.getReference()
+                .child(STORAGE_USUARIOS)
+                .child(userId)
+                .child("profile.jpg");
+
+        return photoRef.putFile(imageUri)
+                .continueWithTask(task -> {
+                    if (!task.isSuccessful()) {
+                        throw Objects.requireNonNull(task.getException());
+                    }
+                    return photoRef.getDownloadUrl();
+                })
+                .continueWith(task -> {
+                    if (!task.isSuccessful()) {
+                        throw Objects.requireNonNull(task.getException());
+                    }
+                    return task.getResult().toString();
                 });
     }
 
