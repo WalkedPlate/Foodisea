@@ -4,6 +4,10 @@ public class ProductoCantidad {
     private String productoId;  // ID del producto
     private int cantidad;     // Cantidad del producto solicitada
 
+    public ProductoCantidad(){
+
+    }
+
     // Constructor
     public ProductoCantidad(String productoId, int cantidad) {
         this.productoId = productoId;

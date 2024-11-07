@@ -15,6 +15,7 @@ import com.example.foodisea.R;
 import com.example.foodisea.activity.adminRes.AdminResPedidosActivity;
 import com.example.foodisea.activity.repartidor.RepartidorRestauranteActivity;
 import com.example.foodisea.activity.repartidor.RepartidorVerOrdenActivity;
+import com.example.foodisea.dto.PedidoConCliente;
 import com.example.foodisea.model.Cliente;
 import com.example.foodisea.model.Pago;
 import com.example.foodisea.model.Pedido;
@@ -24,16 +25,15 @@ import java.util.Map;
 
 public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoViewHolder> {
 
-    private List<Pedido> pedidos;
+    private List<PedidoConCliente> pedidosConCliente;
     private Context context;
-    private Map<String, Cliente> clientesMap;
-    private Map<String, Pago> pagosMap;
+    //private Map<String, Cliente> clientesMap;
+    //private Map<String, Pago> pagosMap;
 
-    public PedidosAdapter(Context context, List<Pedido> pedidos, Map<String, Cliente> clientesMap, Map<String, Pago> pagosMap) {
-        this.pedidos = pedidos;
+
+    public PedidosAdapter(List<PedidoConCliente> pedidosConCliente, Context context) {
+        this.pedidosConCliente = pedidosConCliente;
         this.context = context;
-        this.clientesMap = clientesMap;
-        this.pagosMap = pagosMap;
     }
 
     @NonNull
@@ -45,28 +45,28 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoVi
 
     @Override
     public void onBindViewHolder(@NonNull PedidoViewHolder holder, int position) {
-        Pedido pedido = pedidos.get(position);
-        holder.bind(pedido, clientesMap.get(pedido.getClienteId()), pagosMap.get(pedido.getPagoId()));
+        PedidoConCliente pedidoConCliente = pedidosConCliente.get(position);
+        holder.bind(pedidoConCliente);
 
         holder.itemView.setOnClickListener(v -> {
             if (context instanceof RepartidorRestauranteActivity) {
                 Intent intent = new Intent(context, RepartidorVerOrdenActivity.class);
-                intent.putExtra("pedidoId", pedido.getId());
-                Cliente cliente = clientesMap.get(pedido.getClienteId());
-                intent.putExtra("clienteNombre", cliente.getNombres() + " " + cliente.getApellidos());
-                intent.putExtra("direccionEntrega", pedido.getDireccionEntrega());
-                Pago pago = pagosMap.get(pedido.getPagoId());
-                intent.putExtra("precio", pago.getMonto());
+                intent.putExtra("pedidoId", pedidoConCliente.getPedido().getId());
+                //Cliente cliente = clientesMap.get(pedido.getClienteId());
+                intent.putExtra("clienteNombre", pedidoConCliente.getCliente().obtenerNombreCompleto());
+                intent.putExtra("direccionEntrega", pedidoConCliente.getPedido().getDireccionEntrega());
+                //Pago pago = pagosMap.get(pedido.getPagoId());
+                intent.putExtra("precio", pedidoConCliente.getPedido().getMontoTotal());
                 context.startActivity(intent);
             } else if (context instanceof AdminResPedidosActivity) {
-                ((AdminResPedidosActivity) context).mostrarBottonSheet(pedido);
+                ((AdminResPedidosActivity) context).mostrarBottonSheet(pedidoConCliente.getPedido());
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return pedidos.size();
+        return pedidosConCliente.size();
     }
 
     static class PedidoViewHolder extends RecyclerView.ViewHolder {
@@ -82,11 +82,11 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoVi
             ivDelivery = itemView.findViewById(R.id.ivDelivery);
         }
 
-        void bind(Pedido pedido, Cliente cliente, Pago pago) {
-            tvOrderNumber.setText(pedido.getId());
-            tvCustomerName.setText(cliente.getNombres() + " " + cliente.getApellidos());
-            tvAddress.setText(pedido.getDireccionEntrega());
-            tvPrice.setText(String.format("S/. %.2f", pago.getMonto()));
+        void bind(PedidoConCliente pedidoConCliente) {
+            tvOrderNumber.setText(pedidoConCliente.getPedido().getId());
+            tvCustomerName.setText(pedidoConCliente.getCliente().obtenerNombreCompleto());
+            tvAddress.setText(pedidoConCliente.getPedido().getDireccionEntrega());
+            tvPrice.setText(String.format("S/. %.2f", pedidoConCliente.getPedido().getMontoTotal()));
 
 
             // Actualizar el ícono basado en el estado del pedido

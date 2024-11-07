@@ -2,9 +2,11 @@ package com.example.foodisea.activity.adminRes;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -14,12 +16,18 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.repartidor.PedidosAdapter;
+import com.example.foodisea.data.SessionManager;
 import com.example.foodisea.databinding.ActivityAdminResPedidosBinding;
+import com.example.foodisea.dto.PedidoConCliente;
+import com.example.foodisea.model.AdministradorRestaurante;
 import com.example.foodisea.model.Cliente;
 import com.example.foodisea.model.CodigoQR;
 import com.example.foodisea.model.Pago;
 import com.example.foodisea.model.Pedido;
+import com.example.foodisea.model.Producto;
 import com.example.foodisea.model.ProductoCantidad;
+import com.example.foodisea.model.Usuario;
+import com.example.foodisea.repository.PedidoRepository;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -32,6 +40,10 @@ public class AdminResPedidosActivity extends AppCompatActivity {
     ActivityAdminResPedidosBinding binding;
     private Map<String, Cliente> clientesMap = new HashMap<>();
     private Map<String, Pago> pagosMap = new HashMap<>();
+    private PedidoRepository pedidoRepository;
+    private List<PedidoConCliente> listaCompletaPedidos = new ArrayList<>();
+    private SessionManager sessionManager;
+    private AdministradorRestaurante administradorRestauranteActual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +51,7 @@ public class AdminResPedidosActivity extends AppCompatActivity {
 
         binding = ActivityAdminResPedidosBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        sessionManager = SessionManager.getInstance(this);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -46,10 +59,31 @@ public class AdminResPedidosActivity extends AppCompatActivity {
             return insets;
         });
 
-        List<Pedido> pedidosList = getPedidosList();
-        PedidosAdapter adapter = new PedidosAdapter(this, pedidosList, clientesMap, pagosMap);
-        binding.rvPedidos.setAdapter(adapter);
-        binding.rvPedidos.setLayoutManager(new GridLayoutManager(this, 2));
+        validateSession();
+
+
+        //List<Pedido> pedidosList = getPedidosList();
+        pedidoRepository = new PedidoRepository(this);
+
+        /*List<ProductoCantidad> platosPedido = new ArrayList<>();
+        platosPedido.add(new ProductoCantidad("plato1", 2));
+        platosPedido.add(new ProductoCantidad("plato2", 1));
+
+        Pedido pedido = new Pedido();
+        pedido.setClienteId("CL001");
+        pedido.setCodigoQrId("QR001");
+        pedido.setDireccionEntrega("Av.Roca y Bologna 274");
+        pedido.setEstado("Recibido");
+        pedido.setPagoId("PAG001");
+        pedido.setProductos(platosPedido);
+        pedido.setRepartidorId("RP001");
+        pedido.setRestauranteId("REST001");
+
+        pedidoRepository.crearPedido(pedido);*/
+
+        obtenerListaPedidos();
+
+        //setupReciclerView();
 
         binding.btnBack.setOnClickListener(view -> {
             Intent home = new Intent(this, AdminResHomeActivity.class);
@@ -62,6 +96,27 @@ public class AdminResPedidosActivity extends AppCompatActivity {
             highlightOrder(highlightOrderId);
         }
 
+    }
+
+    /**
+     * Verifica la existencia de una sesión válida
+     */
+    private void validateSession() {
+        //loadingDialog.show("Verificando sesión...");
+
+        sessionManager.checkExistingSession(this, new SessionManager.SessionCallback() {
+            @Override
+            public void onSessionValid(Usuario usuario) {
+                administradorRestauranteActual = sessionManager.getAdminRestauranteActual();
+                //loadingDialog.dismiss();
+
+            }
+
+            @Override
+            public void onSessionError() {
+
+            }
+        });
     }
 
     private void highlightOrder(String orderId) {
@@ -123,6 +178,20 @@ public class AdminResPedidosActivity extends AppCompatActivity {
         return pedidos;
     }
 
+    //Obtiene lista de pedidos de la BD
+    public void obtenerListaPedidos(){
+        pedidoRepository.getPedidosActivosRestaurante("REST001")
+                .addOnSuccessListener(pedidos -> {
+                    // Guardar la lista completa
+                    listaCompletaPedidos = pedidos;
+                    setupReciclerView();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al cargar productos: " + e.getMessage(),Toast.LENGTH_SHORT).show();
+                    Log.d("error",e.getMessage());
+                });
+    }
+
     public void mostrarBottonSheet(Pedido pedido) {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(AdminResPedidosActivity.this);
         View bottomSheetView = getLayoutInflater().inflate(R.layout.botton_sheet_admin_res_pedidos, null);
@@ -150,5 +219,12 @@ public class AdminResPedidosActivity extends AppCompatActivity {
 
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
+    }
+
+    public void setupReciclerView(){
+        //Se manda la lista de pedidos a un adapter
+        PedidosAdapter adapter = new PedidosAdapter(listaCompletaPedidos,this);
+        binding.rvPedidos.setAdapter(adapter);
+        binding.rvPedidos.setLayoutManager(new GridLayoutManager(this, 2));
     }
 }

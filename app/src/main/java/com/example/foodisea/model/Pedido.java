@@ -1,5 +1,6 @@
 package com.example.foodisea.model;
 
+import com.example.foodisea.repository.UsuarioRepository;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
@@ -21,6 +22,9 @@ public class Pedido {
     private String direccionEntrega;
     private String codigoQrId;  // Referencia al Código QR (ID)
     private String pagoId;  // Referencia al Pago (ID)
+    private Double montoTotal;
+
+    private UsuarioRepository usuarioRepository;
 
 
     //Constructor, getter y setter
@@ -140,5 +144,11 @@ public class Pedido {
         this.pagoId = pagoId;
     }
 
+    public Double getMontoTotal() {
+        return montoTotal;
+    }
 
+    public void setMontoTotal(Double montoTotal) {
+        this.montoTotal = montoTotal;
+    }
 }

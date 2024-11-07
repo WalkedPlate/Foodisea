@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.repartidor.PedidosAdapter;
 import com.example.foodisea.databinding.ActivityRepartidorRestauranteBinding;
+import com.example.foodisea.dto.PedidoConCliente;
 import com.example.foodisea.model.Cliente;
 import com.example.foodisea.model.CodigoQR;
 import com.example.foodisea.model.Pago;
@@ -51,7 +52,7 @@ public class RepartidorRestauranteActivity extends AppCompatActivity {
         binding.rvPedidos.setLayoutManager(new GridLayoutManager(this, 2)); // 2 columnas
 
         List<Pedido> pedidosList = getPedidosList(); // Método para obtener los datos de pedidos
-        PedidosAdapter adapter = new PedidosAdapter(this, pedidosList, clientesMap, pagosMap);
+        PedidosAdapter adapter = new PedidosAdapter(new ArrayList<PedidoConCliente>(),this);
         binding.rvPedidos.setAdapter(adapter);
 
         // Configurar el título con la cantidad de pedidos
