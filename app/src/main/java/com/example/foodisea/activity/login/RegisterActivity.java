@@ -1,11 +1,14 @@
 package com.example.foodisea.activity.login;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -13,7 +16,10 @@ import android.util.Patterns;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -56,6 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private Uri imageUri;
     private boolean hasSelectedImage = false;
+    private static final int REQUEST_CAMERA_PERMISSION = 100;
 
     // Launchers para resultados de cámara y galería
     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
@@ -218,14 +225,28 @@ public class RegisterActivity extends AppCompatActivity {
      * Inicia la captura de foto con la cámara
      */
     private void dispatchTakePictureIntent() {
+        // Verificar permiso de cámara
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    REQUEST_CAMERA_PERMISSION);
+            return;
+        }
+
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         try {
             ContentValues values = new ContentValues();
-            values.put(MediaStore.Images.Media.TITLE, "New Picture");
-            values.put(MediaStore.Images.Media.DESCRIPTION, "From Camera");
-            imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-            cameraLauncher.launch(takePictureIntent);
+            values.put(MediaStore.Images.Media.TITLE, "Perfil_" + UUID.randomUUID().toString());
+            values.put(MediaStore.Images.Media.DESCRIPTION, "Foto de perfil");
+
+            imageUri = getContentResolver().insert(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+            if (imageUri != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                cameraLauncher.launch(takePictureIntent);
+            }
         } catch (Exception e) {
             showError("Error al abrir la cámara: " + e.getMessage());
         }
@@ -538,6 +559,45 @@ public class RegisterActivity extends AppCompatActivity {
                 .setPositiveButton(getString(R.string.aceptar), null)
                 .show();
     }
+
+    /**
+     * Maneja permisos de la cámara
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permiso concedido, intentar abrir la cámara de nuevo
+                dispatchTakePictureIntent();
+            } else {
+                // Permiso denegado
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                    // Usuario marcó "No volver a preguntar"
+                    showSettingsDialog();
+                } else {
+                    showError("Error en el permiso de cámara");
+                }
+            }
+        }
+    }
+
+    private void showSettingsDialog() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Permiso de Cámara Necesario")
+                .setMessage("Se necesita acceso a la cámara para tomar la foto de perfil. " +
+                        "Por favor, habilita el permiso en la configuración.")
+                .setPositiveButton("Configuración", (dialog, which) -> {
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package", getPackageName(), null);
+                    intent.setData(uri);
+                    startActivity(intent);
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
 
     @Override
     protected void onDestroy() {
