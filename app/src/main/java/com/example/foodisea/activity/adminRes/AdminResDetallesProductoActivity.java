@@ -8,17 +8,27 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.foodisea.R;
 import com.example.foodisea.adapter.adminRes.ImageAdapter;
+import com.example.foodisea.data.SessionManager;
 import com.example.foodisea.databinding.ActivityAdminResDetallesProductoBinding;
+import com.example.foodisea.notification.NotificationHelper;
+import com.example.foodisea.repository.PedidoRepository;
 import com.example.foodisea.repository.ProductoRepository;
+import com.example.foodisea.repository.RestauranteRepository;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.Locale;
 
@@ -43,6 +53,14 @@ public class AdminResDetallesProductoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAdminResDetallesProductoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Configurar Edge to Edge
+        EdgeToEdge.enable(this);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         productoRepository = new ProductoRepository();
         productoId = getIntent().getStringExtra("PRODUCTO_ID");

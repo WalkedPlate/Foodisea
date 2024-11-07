@@ -1,31 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:background="@color/bg_color"
     tools:context=".activity.adminRes.AdminResDetallesProductoActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <!-- Header con botón de regresar y título -->
+    <LinearLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:background="@android:color/transparent"
-        app:elevation="0dp">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="12dp">
 
         <!-- Botón de regresar (flecha) -->
         <Button
-            android:id="@+id/btnBack"
             style="?attr/materialIconButtonFilledTonalStyle"
+            android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:contentDescription="regresar"
-            app:icon="@drawable/baseline_arrow_back_ios_new_24"/>
+            app:icon="@drawable/baseline_arrow_back_ios_new_24"
+            android:contentDescription="@string/btnBack"
+            android:backgroundTint="@color/bg_color"/>
 
-    </com.google.android.material.appbar.AppBarLayout>
+
+        <TextView
+            android:id="@+id/nombreProducto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre del producto"
+            android:textSize="22sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/sen_font">
+        </TextView>
+    </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -53,7 +67,7 @@
                     <androidx.viewpager2.widget.ViewPager2
                         android:id="@+id/viewPagerImages"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp"/>
+                        android:layout_height="280dp"/>
 
                     <!-- Overlay gradiente en la parte inferior -->
                     <View
@@ -103,15 +117,15 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Titulo-nombre del producto -->
+                <!-- Descripción del producto -->
                 <TextView
-                    android:id="@+id/nombreProducto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Burger Ferguson"
-                    android:textSize="24sp"
+                    android:text="Descripción:"
+                    android:textSize="20sp"
                     android:textStyle="bold"
-                    android:layout_marginLeft="20dp"/>
+                    android:fontFamily="@font/sen_font"
+                    android:paddingHorizontal="18dp"/>
 
                 <!-- Descripción del producto -->
                 <TextView
@@ -119,7 +133,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="6dp"
-                    android:padding="20dp"
+                    android:padding="18dp"
                     android:text="La Classic Burger es una jugosa hamburguesa de res a la parrilla, servida en un pan brioche suave, con queso cheddar derretido, lechuga fresca, tomate, cebolla caramelizada y una salsa especial de la casa."
                     android:textAlignment="viewStart"
                     android:textAllCaps="false"/>
@@ -128,15 +142,18 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="18dp"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Precio:"
-                        android:textSize="24sp"
+                        android:textSize="20sp"
                         android:textStyle="bold"
-                        android:layout_marginStart="20dp"/>
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sen_font"/>
 
                     <TextView
                         android:id="@+id/productDetailPrice"
@@ -144,25 +161,29 @@
                         android:layout_height="wrap_content"
                         android:text="S/. 32"
                         android:textColor="@android:color/black"
-                        android:textSize="24sp"
+                        android:textSize="22sp"
                         android:textStyle="bold"
                         android:paddingStart="10dp"/>
                 </LinearLayout>
+
 
                 <!-- Botón para EDITAR -->
                 <Button
                     android:id="@+id/btnEditar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:backgroundTint="@android:color/holo_red_light"
-                    android:padding="16dp"
                     android:text="EDITAR"
-                    android:textColor="@android:color/white"
                     android:textSize="18sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:textColor="@android:color/holo_red_light"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@android:color/holo_red_light"
+                    android:backgroundTint="@android:color/white"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="10dp"
+                    android:padding="16dp"
+              />
 
                 <!-- Botón para ELIMINAR -->
                 <Button
@@ -190,4 +211,4 @@
         android:layout_gravity="center"
         android:visibility="gone"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>
