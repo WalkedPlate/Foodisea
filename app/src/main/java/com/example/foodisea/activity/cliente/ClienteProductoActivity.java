@@ -13,24 +13,29 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
+import com.example.foodisea.databinding.ActivityClienteProductoBinding;
 
 public class ClienteProductoActivity extends AppCompatActivity {
+
+    ActivityClienteProductoBinding binding;
+    private int quantity = 0; // Variable para mantener la cantidad
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Inflar el layout usando View Binding
+        binding = ActivityClienteProductoBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_cliente_producto);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        ImageView productImage = findViewById(R.id.productDetailImage);
-        TextView productName = findViewById(R.id.productDetailName);
-        TextView productDescription = findViewById(R.id.tvDescripcionProduct);
-        TextView productPrice = findViewById(R.id.productDetailPrice);
 
 
         // Obtener los datos del intent
@@ -41,26 +46,35 @@ public class ClienteProductoActivity extends AppCompatActivity {
         String imageResource = intent.getStringExtra("productImage");
 
         // Configurar la vista con los datos recibidos
-        productName.setText(name);
-        productPrice.setText("S/." + price);
-        productDescription.setText(descripcion);
-        productImage.setImageResource(getResources().getIdentifier(imageResource, "drawable", getPackageName()));
+        binding.productDetailName.setText(name);
+        binding.productDetailPrice.setText("S/." + price);
+        binding.tvDescripcionProduct.setText(descripcion);
+        binding.productDetailImage.setImageResource(getResources().getIdentifier(imageResource, "drawable", getPackageName()));
 
 
         // funcion de los botones
-        Button btnBack = findViewById(R.id.btnBack);
-        Button btnCart = findViewById(R.id.btnCart);
-        TextView tvCartItemCount = findViewById(R.id.tvCartItemCount);
+        binding.btnBack.setOnClickListener(v -> finish());
 
-        btnBack.setOnClickListener(v -> {
-            // Acción para regresar
-            finish(); // Cierra la actividad actual y regresa
-        });
-
-        btnCart.setOnClickListener(v -> {
-            // Acción para ir al carrito de compras
+        // Botón de carrito de compras
+        binding.btnCart.setOnClickListener(v -> {
             Intent carrito = new Intent(this, ClienteCarritoActivity.class);
             startActivity(carrito);
+        });
+
+
+        // Botones de cantidad
+        // Configurar el listener para disminuir la cantidad
+        binding.btnMinus.setOnClickListener(v -> {
+            if (quantity > 0) {
+                quantity--;
+                binding.tvQuantity.setText(String.valueOf(quantity));
+            }
+        });
+
+        // Configurar el listener para aumentar la cantidad
+        binding.btnPlus.setOnClickListener(v -> {
+            quantity++;
+            binding.tvQuantity.setText(String.valueOf(quantity));
         });
     }
 }
