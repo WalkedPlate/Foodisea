@@ -58,8 +58,14 @@ public class RepartidorPerfilActivity extends AppCompatActivity {
      */
     private void updateUIWithUserData() {
         if (repartidorActual != null) {
-            // Actualizar el nombre del repartidor
+            // Actualizar los datos del repartidor
             binding.tvUserName.setText(repartidorActual.obtenerNombreCompleto());
+            binding.tvUserDNI.setText(repartidorActual.getDocumentoId());
+            binding.tvUserBirthdate.setText(repartidorActual.getFechaNacimiento());
+            binding.tvUserMail.setText(repartidorActual.getCorreo());
+            binding.tvUserCell.setText(repartidorActual.getTelefono());
+            binding.tvUserAddress.setText(repartidorActual.getDireccion());
+
 
             // Cargar imagen de perfil
             if (repartidorActual.getFoto() != null && !repartidorActual.getFoto().isEmpty()) {

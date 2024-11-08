@@ -10,6 +10,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
 import com.example.foodisea.activity.cliente.ClienteInfoPerfilActivity;
 import com.example.foodisea.activity.login.LoginActivity;
@@ -58,19 +59,27 @@ public class SuperAdminPerfilActivity extends AppCompatActivity {
      */
     private void updateUIWithUserData() {
         if (superadminActual != null) {
-            // Actualizar el nombre del superadmin
+            // Actualizar datos del superadmin
             binding.tvUserName.setText(superadminActual.obtenerNombreCompleto());
+            binding.tvUserDNI.setText(superadminActual.getDocumentoId());
+            binding.tvUserBirthdate.setText(superadminActual.getFechaNacimiento());
+            binding.tvUserMail.setText(superadminActual.getCorreo());
+            binding.tvUserAddress.setText(superadminActual.getDireccion());
 
-            // Si tienes una foto de perfil, también podrías actualizarla aquí
-            // Por ejemplo, si usas Glide para cargar imágenes:
-        /*
-        if (clienteActual.getPhotoUrl() != null && !clienteActual.getPhotoUrl().isEmpty()) {
-            Glide.with(this)
-                .load(clienteActual.getPhotoUrl())
-                .circleCrop()
-                .into(binding.ivUserPhoto);
-        }
-        */
+            // Cargar imagen de perfil
+            if (superadminActual.getFoto() != null && !superadminActual.getFoto().isEmpty()) {
+                Glide.with(this)
+                        .load(superadminActual.getFoto())
+                        .placeholder(R.drawable.ic_profile)
+                        .error(R.drawable.error_image)
+                        .circleCrop()
+                        .into(binding.ivUserPhoto);
+            } else {
+                Glide.with(this)
+                        .load(R.drawable.ic_profile)
+                        .circleCrop()
+                        .into(binding.ivUserPhoto);
+            }
         }
     }
 

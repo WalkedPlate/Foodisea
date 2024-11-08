@@ -73,7 +73,7 @@ public class ClienteInfoPerfilActivity extends AppCompatActivity {
      */
     private void updateUIWithUserData() {
         if (clienteActual != null) {
-            // Actualizar datos del administrador del restaurante
+            // Actualizar datos del cliente
             binding.tvUserName.setText(clienteActual.obtenerNombreCompleto());
             binding.tvUserDNI.setText(clienteActual.getDocumentoId());
             binding.tvUserBirthdate.setText(clienteActual.getFechaNacimiento());
