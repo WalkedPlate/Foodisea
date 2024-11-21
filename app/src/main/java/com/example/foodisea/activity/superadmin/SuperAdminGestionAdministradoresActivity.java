@@ -16,6 +16,7 @@ import com.example.foodisea.databinding.ActivitySuperAdminGestionAdministradores
 import com.example.foodisea.databinding.ActivitySuperAdminGestionUsuariosBinding;
 import com.example.foodisea.databinding.ActivitySuperAdminSelectionBinding;
 import com.example.foodisea.model.Usuario;
+import com.example.foodisea.repository.UsuarioRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +52,10 @@ public class SuperAdminGestionAdministradoresActivity extends AppCompatActivity 
             startActivity(intent);
         });
 
+        // Crear instancia de UsuarioRepository
+        UsuarioRepository usuarioRepository = new UsuarioRepository();
         // Configurar el adaptador
-        UsuarioAdapter adapter = new UsuarioAdapter(this, getUsuariosList());
+        UsuarioAdapter adapter = new UsuarioAdapter(this, getUsuariosList(),usuarioRepository);
         binding.rvUsers.setLayoutManager(new LinearLayoutManager(this));
         binding.rvUsers.setAdapter(adapter);
     }

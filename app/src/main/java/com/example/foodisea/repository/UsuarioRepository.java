@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.foodisea.model.AdministradorRestaurante;
 import com.example.foodisea.model.Cliente;
+import com.example.foodisea.model.Producto;
 import com.example.foodisea.model.Repartidor;
 import com.example.foodisea.model.Superadmin;
 import com.example.foodisea.model.Usuario;
@@ -281,6 +282,25 @@ public class UsuarioRepository {
                     usuario.setId(documentId);
 
                     return usuario;
+                });
+    }
+
+    public Task<List<Usuario>> getUsuariosPorTipo(String tipoUsuario){
+        return db.collection(COLLECTION_USUARIOS)
+                .whereEqualTo("tipoUsuario",tipoUsuario)
+                .get()
+                .continueWith(task -> {
+                   List<Usuario> usuarios = new ArrayList<>();
+                   if(task.isSuccessful() && task.getResult() != null){
+                       for (DocumentSnapshot doc : task.getResult()) {
+                            Usuario usuario = doc.toObject(Usuario.class);
+                           if (usuario != null) {
+                               usuario.setId(doc.getId()); // Establecer ID del documento
+                               usuarios.add(usuario);
+                           }
+                       }
+                   }
+                   return usuarios;
                 });
     }
 }

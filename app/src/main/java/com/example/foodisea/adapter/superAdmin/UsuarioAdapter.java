@@ -13,17 +13,20 @@ import com.example.foodisea.R;
 import com.example.foodisea.databinding.ItemRestaurantBinding;
 import com.example.foodisea.databinding.ItemUserBinding;
 import com.example.foodisea.model.Usuario;
+import com.example.foodisea.repository.UsuarioRepository;
 
 import java.util.List;
 
 public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioViewHolder> {
 
-    private Context context;
-    private List<Usuario> usuarioList;
+    private final UsuarioRepository usuarioRepository;
+    private final Context context;
+    private final List<Usuario> usuarioList;
 
-    public UsuarioAdapter(Context context, List<Usuario> usuarioList) {
+    public UsuarioAdapter(Context context, List<Usuario> usuarioList, UsuarioRepository usuarioRepository) {
         this.context = context;
         this.usuarioList = usuarioList;
+        this.usuarioRepository = usuarioRepository; // Inyección de dependencia
     }
 
     @NonNull
@@ -62,7 +65,8 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
         holder.binding.swUserActive.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // Actualizar el estado del usuario
             usuario.setEstado(isChecked ? "Activo" : "Inactivo");
-            // Aquí puedes añadir la lógica para actualizar el estado en la base de datos o backend
+            // Actualizar el estado en la base de datos o backend
+            usuarioRepository.actualizarEstadoUsuario(usuario.getId(), usuario.getEstado());
         });
 
         // Opcional: si quieres agregar un onClickListener al ítem de usuario

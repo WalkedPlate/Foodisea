@@ -2,6 +2,8 @@ package com.example.foodisea.activity.superadmin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,8 +17,10 @@ import com.example.foodisea.adapter.cliente.RestauranteAdapter;
 import com.example.foodisea.adapter.superAdmin.UsuarioAdapter;
 import com.example.foodisea.databinding.ActivitySuperAdminGestionUsuariosBinding;
 import com.example.foodisea.databinding.ActivitySuperadminMainBinding;
+import com.example.foodisea.dto.PedidoConCliente;
 import com.example.foodisea.model.Restaurante;
 import com.example.foodisea.model.Usuario;
+import com.example.foodisea.repository.UsuarioRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +29,8 @@ import java.util.List;
 public class SuperAdminGestionUsuariosActivity extends AppCompatActivity {
 
     ActivitySuperAdminGestionUsuariosBinding binding;
+    UsuarioRepository usuarioRepository;
+    private List<Usuario> listaUsuarios = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +56,15 @@ public class SuperAdminGestionUsuariosActivity extends AppCompatActivity {
             startActivity(home);
         });
 
+        // Crear instancia de UsuarioRepository
+        usuarioRepository = new UsuarioRepository();
+
+        obtenerUsuarios();
+
         // Configurar el adaptador
-        UsuarioAdapter adapter = new UsuarioAdapter(this, getUsuariosList());
-        binding.rvUsers.setLayoutManager(new LinearLayoutManager(this));
-        binding.rvUsers.setAdapter(adapter);
+        //UsuarioAdapter adapter = new UsuarioAdapter(this, listaUsuarios,usuarioRepository);
+        //binding.rvUsers.setLayoutManager(new LinearLayoutManager(this));
+        //binding.rvUsers.setAdapter(adapter);
     }
 
     // Método que devuelve una lista de usuarios de ejemplo
@@ -79,5 +90,23 @@ public class SuperAdminGestionUsuariosActivity extends AppCompatActivity {
         }
 
         return usuariosClientes;
+    }
+
+    public void obtenerUsuarios(){
+        usuarioRepository.getUsuariosPorTipo("Cliente")
+                .addOnSuccessListener(usuarios -> {
+                    listaUsuarios = usuarios;
+                    setupReciclerView();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al cargar los usuarios: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.d("error", e.getMessage());
+                });
+    }
+
+    public void setupReciclerView(){
+        UsuarioAdapter adapter = new UsuarioAdapter(this, listaUsuarios,usuarioRepository);
+        binding.rvUsers.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvUsers.setAdapter(adapter);
     }
 }
