@@ -76,7 +76,7 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
     private Button btnOrderDetails;
     private GoogleMap mMap;
     private TextView orderStatus1, orderStatus2, orderStatus3, orderStatus4;
-    private ImageButton btnChat;
+    private Button btnChat;
     private TextView tvRestaurant, tvOrderTime;
     private ImageView restaurantLogo;
     private TextView deliveryPersonName;
@@ -104,6 +104,7 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
 
         // Obtener pedidoId del intent
         pedidoId = getIntent().getStringExtra("pedido_id");
+        pedidoId = "PED001";
         if (pedidoId == null) {
             Toast.makeText(this, "Error: No se encontró el pedido", Toast.LENGTH_SHORT).show();
             finish();

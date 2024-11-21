@@ -211,7 +211,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         } else {
             FirebaseAuth.getInstance().signOut();
-            showError("Error en el tipo de usuario");
+            showError("El usuario no tiene acceso");
         }
     }
 
