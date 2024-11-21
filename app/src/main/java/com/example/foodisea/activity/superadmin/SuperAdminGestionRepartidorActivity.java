@@ -2,6 +2,8 @@ package com.example.foodisea.activity.superadmin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +25,9 @@ import java.util.List;
 
 public class SuperAdminGestionRepartidorActivity extends AppCompatActivity {
     ActivitySuperAdminGestionRepartidorBinding binding;
+    UsuarioRepository usuarioRepository;
+    private List<Usuario> listaUsuarios = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,11 +53,10 @@ public class SuperAdminGestionRepartidorActivity extends AppCompatActivity {
         });
 
         // Crear instancia de UsuarioRepository
-        UsuarioRepository usuarioRepository = new UsuarioRepository();
-        // Configurar el adaptador
-        UsuarioAdapter adapter = new UsuarioAdapter(this, getUsuariosList(),usuarioRepository);
-        binding.rvUsers.setLayoutManager(new LinearLayoutManager(this));
-        binding.rvUsers.setAdapter(adapter);
+        usuarioRepository = new UsuarioRepository();
+
+        //Obtiene los usuarios de BD y los carga al Recicler View
+        obtenerUsuarios();
     }
 
     // Método que devuelve una lista de usuarios de ejemplo
@@ -78,5 +82,23 @@ public class SuperAdminGestionRepartidorActivity extends AppCompatActivity {
         }
 
         return usuariosClientes;
+    }
+
+    public void obtenerUsuarios(){
+        usuarioRepository.getUsuariosPorTipo("Repartidor")
+                .addOnSuccessListener(usuarios -> {
+                    listaUsuarios = usuarios;
+                    setupReciclerView();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al cargar los usuarios: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.d("error", e.getMessage());
+                });
+    }
+
+    public void setupReciclerView(){
+        UsuarioAdapter adapter = new UsuarioAdapter(this, listaUsuarios,usuarioRepository);
+        binding.rvUsers.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvUsers.setAdapter(adapter);
     }
 }
