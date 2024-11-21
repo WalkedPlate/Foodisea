@@ -85,8 +85,6 @@ public class AdminResPedidosActivity extends AppCompatActivity {
 
         obtenerListaPedidos();
 
-        //setupReciclerView();
-
         binding.btnBack.setOnClickListener(view -> {
             Intent home = new Intent(this, AdminResHomeActivity.class);
             startActivity(home);
@@ -194,28 +192,28 @@ public class AdminResPedidosActivity extends AppCompatActivity {
                 });
     }
 
-    public void mostrarBottonSheet(Pedido pedido) {
+    public void mostrarBottonSheet(PedidoConCliente pedidoConCliente) {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(AdminResPedidosActivity.this);
         View bottomSheetView = getLayoutInflater().inflate(R.layout.botton_sheet_admin_res_pedidos, null);
 
-        Cliente cliente = clientesMap.get(pedido.getClienteId());
-        Pago pago = pagosMap.get(pedido.getPagoId());
+        //Cliente cliente = clientesMap.get(pedido.getClienteId());
+        //Pago pago = pagosMap.get(pedido.getPagoId());
 
         TextView textView = bottomSheetView.findViewById(R.id.nombreCliente);
-        textView.setText(cliente.getNombres() + " " + cliente.getApellidos());
+        textView.setText(pedidoConCliente.getCliente().getNombres() + " " + pedidoConCliente.getCliente().getApellidos());
 
         TextView textViewIdPedido = bottomSheetView.findViewById(R.id.idPedido);
-        textViewIdPedido.setText(pedido.getId());
+        textViewIdPedido.setText(pedidoConCliente.getPedido().getId());
 
         Button botonDetallePedido = bottomSheetView.findViewById(R.id.buttonVerDetalles);
         botonDetallePedido.setOnClickListener(view -> {
             Intent intent = new Intent(this, AdminResDetallesPedidosActivity.class);
-            intent.putExtra("idPedido", pedido.getId());
-            intent.putExtra("direccionDestino", pedido.getDireccionEntrega());
-            intent.putExtra("nombreCliente", cliente.getNombres() + " " + cliente.getApellidos());
-            intent.putExtra("telefono", cliente.getTelefono());
-            intent.putExtra("metodoPago", pago.getMetodoPago());
-            intent.putExtra("estadoPago", pago.getEstadoPago());
+            intent.putExtra("idPedido", pedidoConCliente.getPedido().getId());
+            intent.putExtra("direccionDestino", pedidoConCliente.getCliente().getDireccion());
+            intent.putExtra("nombreCliente", pedidoConCliente.getCliente().getNombres() + " " + pedidoConCliente.getCliente().getApellidos());
+            intent.putExtra("telefono", pedidoConCliente.getCliente().getTelefono());
+            intent.putExtra("metodoPago", pedidoConCliente.getPedido().getPagoId());
+            intent.putExtra("estadoPago", pedidoConCliente.getPedido().getEstado());
             startActivity(intent);
         });
 

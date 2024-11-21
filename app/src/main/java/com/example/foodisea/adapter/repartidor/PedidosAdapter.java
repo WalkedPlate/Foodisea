@@ -59,7 +59,8 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoVi
                 intent.putExtra("precio", pedidoConCliente.getPedido().getMontoTotal());
                 context.startActivity(intent);
             } else if (context instanceof AdminResPedidosActivity) {
-                ((AdminResPedidosActivity) context).mostrarBottonSheet(pedidoConCliente.getPedido());
+                //((AdminResPedidosActivity) context).mostrarBottonSheet(pedidoConCliente.getPedido());
+                ((AdminResPedidosActivity) context).mostrarBottonSheet(pedidoConCliente);
             }
         });
     }
