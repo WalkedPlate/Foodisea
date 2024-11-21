@@ -76,6 +76,8 @@ public class AdminResHomeActivity extends AppCompatActivity {
         sessionManager = SessionManager.getInstance(this);
         notificationHelper = new NotificationHelper(this);
 
+
+
         // Configurar Edge to Edge
         EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -92,6 +94,16 @@ public class AdminResHomeActivity extends AppCompatActivity {
     private void setupUI() {
         setupButtons();
         setupNotificationButton();
+        try {
+            String welcomeMessage = String.format("¡Hola %s, administra tu restaurant",
+                    administradorRestauranteActual.getNombres().split(" ")[0]);
+            binding.tvWelcome.setText(welcomeMessage);
+        } catch (Exception e) {
+            // En caso de algún error con el nombre, usar mensaje genérico
+            binding.tvWelcome.setText("¡Hola, administra tu restaurant");
+            Log.e("AdminResHomeActivity", "Error al configurar mensaje de bienvenida", e);
+        }
+
     }
 
     private void setupButtons() {

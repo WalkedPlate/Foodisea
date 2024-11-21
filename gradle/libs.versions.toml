@@ -1,6 +1,9 @@
 [versions]
 agp = "8.5.1"
 firebaseAdmin = "9.1.1"
+firebaseAuth = "23.1.0"
+firebaseBom = "33.6.0"
+firebaseMessaging = "24.1.0"
 gson = "2.10.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -10,9 +13,16 @@ lottie = "6.3.0"
 material = "1.12.0"
 activity = "1.9.1"
 constraintlayout = "2.1.4"
+playServicesLocation = "21.3.0"
+playServicesMaps = "19.0.0"
+playServicesMapsVersion = "18.2.0"
 
 [libraries]
 firebase-admin = { module = "com.google.firebase:firebase-admin", version.ref = "firebaseAdmin" }
+firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessaging" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -22,6 +32,9 @@ lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
+play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
+play-services-maps-v1820 = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMapsVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -3,13 +3,18 @@ package com.example.foodisea.repository;
 import android.content.Context;
 
 import com.example.foodisea.dto.PedidoConCliente;
+import com.example.foodisea.dto.PedidoConDetalles;
 import com.example.foodisea.model.Cliente;
 import com.example.foodisea.model.Pedido;
+import com.example.foodisea.model.Repartidor;
+import com.example.foodisea.model.Restaurante;
 import com.example.foodisea.notification.NotificationHelper;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
@@ -116,6 +121,105 @@ public class PedidoRepository {
                         pedidos.add(doc.toObject(Pedido.class));
                     }
                     return pedidos;
+                });
+    }
+
+
+
+
+    /**
+     * Configura un listener para escuchar cambios en un pedido específico
+     * @param pedidoId ID del pedido a escuchar
+     * @param listener Listener para manejar los cambios
+     * @return ListenerRegistration que puede usarse para detener la escucha
+     */
+    public ListenerRegistration listenToPedido(String pedidoId, EventListener<DocumentSnapshot> listener) {
+        return db.collection("pedidos")
+                .document(pedidoId)
+                .addSnapshotListener(listener);
+    }
+
+    /**
+     * Configura un listener para escuchar cambios en la ubicación de un repartidor
+     * @param repartidorId ID del repartidor
+     * @param listener Listener para manejar los cambios
+     * @return ListenerRegistration que puede usarse para detener la escucha
+     */
+    public ListenerRegistration listenToRepartidor(String repartidorId, EventListener<DocumentSnapshot> listener) {
+        return db.collection("usuarios")
+                .document(repartidorId)
+                .addSnapshotListener(listener);
+    }
+
+    /**
+     * Obtiene los detalles completos de un pedido
+     * @param pedidoId ID del pedido
+     * @return Task con el pedido y su información relacionada
+     */
+    public Task<PedidoConDetalles> getPedidoConDetalles(String pedidoId) {
+        return db.collection("pedidos")
+                .document(pedidoId)
+                .get()
+                .continueWithTask(task -> {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    DocumentSnapshot pedidoDoc = task.getResult();
+                    Pedido pedido = pedidoDoc.toObject(Pedido.class);
+                    if (pedido == null) {
+                        throw new Exception("Pedido no encontrado");
+                    }
+                    pedido.setId(pedidoDoc.getId());
+
+                    // Obtener datos del restaurante y repartidor en paralelo
+                    Task<DocumentSnapshot> restauranteTask = db.collection("restaurantes")
+                            .document(pedido.getRestauranteId())
+                            .get();
+
+                    Task<DocumentSnapshot> repartidorTask;
+                    if (pedido.getRepartidorId() != null) {
+                        repartidorTask = db.collection("usuarios")
+                                .document(pedido.getRepartidorId())
+                                .get();
+                    } else {
+                        repartidorTask = null;
+                    }
+
+                    List<Task<?>> tasks = new ArrayList<>();
+                    tasks.add(restauranteTask);
+                    if (repartidorTask != null) tasks.add(repartidorTask);
+
+                    return Tasks.whenAllComplete(tasks)
+                            .continueWith(allTask -> {
+                                Restaurante restaurante = restauranteTask.getResult()
+                                        .toObject(Restaurante.class);
+
+                                Repartidor repartidor = null;
+                                if (repartidorTask != null && repartidorTask.isSuccessful()) {
+                                    repartidor = repartidorTask.getResult()
+                                            .toObject(Repartidor.class);
+                                }
+
+                                return new PedidoConDetalles(pedido, restaurante, repartidor);
+                            });
+                });
+    }
+
+    // Obtener un pedido específico
+    public Task<Pedido> getPedidoById(String pedidoId) {
+        return db.collection("pedidos")
+                .document(pedidoId)
+                .get()
+                .continueWith(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        Pedido pedido = task.getResult().toObject(Pedido.class);
+                        if (pedido != null) {
+                            pedido.setId(task.getResult().getId());
+                        }
+                        return pedido;
+                    }
+                    throw task.getException();
                 });
     }
 

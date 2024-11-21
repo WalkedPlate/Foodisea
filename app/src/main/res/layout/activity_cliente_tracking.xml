@@ -1,162 +1,304 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_color"
     tools:context=".activity.cliente.ClienteTrackingActivity">
 
-    <!-- Imagen del mapa por ahora -->
-    <ImageView
-        android:id="@+id/map_image"
+    <!-- Google Maps Fragment -->
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/mapa"
-        android:scaleType="centerCrop"/>
+        android:layout_height="match_parent" />
 
-    <!-- Aquí definimos el Bottom Sheet -->
-    <LinearLayout
+    <!-- Aquí definimos el Bottom Sheet con diseño mejorado -->
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@android:color/white"
-        android:elevation="16dp"
-        android:padding="16dp"
+        app:cardElevation="16dp"
+        app:shapeAppearanceOverlay="@style/RoundedBottomCornersShape"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-        <!-- Contenido del Bottom Sheet -->
-        <TextView
-            android:id="@+id/tvRestaurant"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Burger Bistro"
-            android:textStyle="bold"
-            android:textSize="18sp" />
-
-        <!-- Hora del pedido -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Order At 06 Sept, 10:00pm" />
-
-        <!-- Estado del pedido -->
-        <TextView
-            android:id="@+id/order_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tu orden ha sido recibida"
-            android:textColor="@android:color/holo_orange_dark" />
-
-
-        <!-- Contenido del Bottom Sheet expandido -->
+        <!-- Contenedor principal -->
         <LinearLayout
-            android:id="@+id/delivery_info_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:background="@color/white">
 
-            <!-- Progreso del Pedido -->
+            <!-- Indicador de arrastre -->
+            <View
+                android:layout_width="48dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/gray_300" />
+
+            <!-- Contenido del Bottom Sheet -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingTop="16dp">
+                android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/order_status_1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tu orden ha sido recibida"
-                    android:textColor="#FF6F00" />
-
-                <TextView
-                    android:id="@+id/order_status_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="El restaurante está preparando tu pedido"
-                    android:textColor="#FF6F00" />
-
-                <TextView
-                    android:id="@+id/order_status_3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tu pedido está en camino a su destino"
-                    android:textColor="#888888" />
-
-                <TextView
-                    android:id="@+id/order_status_4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tu pedido ha sido entregado"
-                    android:textColor="#888888" />
-            </LinearLayout>
-
-            <!-- Botón para Detalles de compra -->
-            <Button
-                android:id="@+id/btn_order_details"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="@android:color/holo_red_light"
-                android:text="Detalles de compra"
-                android:textColor="@android:color/white" />
-
-
-            <!-- Información del repartidor -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical">
-
-                <!-- Foto del repartidor -->
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginEnd="8dp"
-                    android:src="@drawable/rounded_person_24"
-                    android:contentDescription="Foto del repartidor" />
-
-                <!-- Nombre del repartidor -->
+                <!-- Header con info del restaurante -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-                    <TextView
-                        android:id="@+id/delivery_person_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Speedy Gonzales"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                        <ImageView
+                            android:id="@+id/restaurant_logo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:contentDescription="@string/imgRest"
+                            android:src="@drawable/restaurant_placeholder"/>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Repartidor" />
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+
+                        <TextView
+                            android:id="@+id/tvRestaurant"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/nameRest"
+                            android:textColor="@color/text_primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:id="@+id/tvOrderTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:textColor="@color/text_secondary"
+                            android:text="Order At 06 Sept, 10:00pm"/>
+                    </LinearLayout>
                 </LinearLayout>
 
-                <!-- Icono de Contacto (Botón de chat) -->
-                <ImageButton
-                    android:id="@+id/btnChat"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="8dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Chat con el repartidor"
-                    android:src="@drawable/ic_chat" />
+                <!-- Separador -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="16dp"
+                    android:background="@color/gray_light"/>
+
+                <!-- Estado visible cuando está colapsado -->
+                <TextView
+                    android:id="@+id/order_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_delivery_status"
+                    android:drawablePadding="12dp"
+                    android:gravity="center_vertical"
+                    android:text="Tu orden ha sido recibida"
+                    android:textColor="@color/btn_medium"
+                    android:textSize="16sp"/>
+
+                <!-- Contenido expandido -->
+                <LinearLayout
+                    android:id="@+id/delivery_info_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <!-- Timeline de estados -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="2dp"
+                        app:cardBackgroundColor="@color/bg_gray_light">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <!-- Estado 1 -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="16dp">
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/ic_check_circle"
+                                    app:tint="@color/success"/>
+
+                                <TextView
+                                    android:id="@+id/order_status_1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:text="Tu orden ha sido recibida"
+                                    android:textColor="@color/success"/>
+                            </LinearLayout>
+
+                            <!-- Estado 2 -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="16dp">
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/ic_check_circle"
+                                    app:tint="@color/success"/>
+
+                                <TextView
+                                    android:id="@+id/order_status_2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:text="El restaurante está preparando tu pedido"
+                                    android:textColor="@color/success"/>
+                            </LinearLayout>
+
+                            <!-- Estado 3 -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="16dp">
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/ic_delivery"
+                                    app:tint="@color/btn_medium"/>
+
+                                <TextView
+                                    android:id="@+id/order_status_3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:text="Tu pedido está en camino a su destino"
+                                    android:textColor="@color/btn_medium"/>
+                            </LinearLayout>
+
+                            <!-- Estado 4 -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/ic_location_flag"
+                                    app:tint="@color/gray_500"/>
+
+                                <TextView
+                                    android:id="@+id/order_status_4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:text="Tu pedido ha sido entregado"
+                                    android:textColor="@color/gray_500"/>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Información del repartidor -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="2dp"
+                        app:cardBackgroundColor="@color/white">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="16dp"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:layout_width="64dp"
+                                android:layout_height="64dp"
+                                android:src="@drawable/rounded_person_24"
+                                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.RoundedCorners16dp"
+                                android:scaleType="centerCrop"/>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_marginStart="16dp">
+
+                                <TextView
+                                    android:id="@+id/delivery_person_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Speedy Gonzales"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="Repartidor"
+                                    android:textColor="@color/text_secondary"/>
+                            </LinearLayout>
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnChat"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Chat"
+                                android:textColor="@color/white"
+                                app:icon="@drawable/ic_chat"
+                                app:iconTint="@color/white"
+                                android:backgroundTint="@color/btn_medium"
+                                style="@style/Widget.MaterialComponents.Button"/>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Botón de detalles -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_order_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Detalles de compra"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/btn_dark"
+                        app:cornerRadius="12dp"/>
+                </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
-
-
-
-    </LinearLayout>
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </com.google.android.material.card.MaterialCardView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
