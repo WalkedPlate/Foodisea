@@ -142,26 +142,40 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
     }
 
     private void setupBottomSheet() {
+        bottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottom_sheet));
+
+        // Configurar el estado inicial y comportamiento
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        bottomSheetBehavior.setHideable(false);
+
+        // Configurar el callback
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 TextView orderStatus = findViewById(R.id.order_status);
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    deliveryInfoContainer.setVisibility(View.VISIBLE);
-                    orderStatus.setVisibility(View.GONE);
-                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    deliveryInfoContainer.setVisibility(View.GONE);
-                    orderStatus.setVisibility(View.VISIBLE);
+                LinearLayout deliveryInfo = findViewById(R.id.delivery_info_container);
+
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        orderStatus.setVisibility(View.GONE);
+                        deliveryInfo.setVisibility(View.VISIBLE);
+                        break;
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        orderStatus.setVisibility(View.VISIBLE);
+                        deliveryInfo.setVisibility(View.GONE);
+                        break;
                 }
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                // Opcional: implementar animaciones durante el deslizamiento
+                // Opcional: Añadir animaciones durante el deslizamiento
+                deliveryInfoContainer.setAlpha(slideOffset);
             }
         });
 
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        // Ajustar la altura del peek
+        bottomSheetBehavior.setPeekHeight(getResources().getDimensionPixelSize(R.dimen.bottom_sheet_peek_height));
     }
 
     private void setupClickListeners() {
@@ -309,23 +323,27 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
 
     private void updateMapLocations() {
         try {
-            // Convertir dirección del restaurante a coordenadas
+            Log.d(TAG, "Actualizando ubicaciones en el mapa");
+
             if (restaurante != null && restaurante.getDireccion() != null) {
+                Log.d(TAG, "Geocoding dirección restaurante: " + restaurante.getDireccion());
                 List<Address> addresses = geocoder.getFromLocationName(
                         restaurante.getDireccion(), 1);
                 if (!addresses.isEmpty()) {
-                    android.location.Address address = addresses.get(0);
+                    Address address = addresses.get(0);
                     restauranteLocation = new LatLng(address.getLatitude(), address.getLongitude());
+                    Log.d(TAG, "Ubicación restaurante: " + restauranteLocation.toString());
                 }
             }
 
-            // Convertir dirección de entrega a coordenadas
             if (currentPedido != null && currentPedido.getDireccionEntrega() != null) {
-                List<android.location.Address> addresses = geocoder.getFromLocationName(
+                Log.d(TAG, "Geocoding dirección entrega: " + currentPedido.getDireccionEntrega());
+                List<Address> addresses = geocoder.getFromLocationName(
                         currentPedido.getDireccionEntrega(), 1);
                 if (!addresses.isEmpty()) {
-                    android.location.Address address = addresses.get(0);
+                    Address address = addresses.get(0);
                     clienteLocation = new LatLng(address.getLatitude(), address.getLongitude());
+                    Log.d(TAG, "Ubicación entrega: " + clienteLocation.toString());
                 }
             }
 
@@ -336,43 +354,86 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
     }
 
     private void updateDeliveryRoute() {
-        if (mMap == null || restauranteLocation == null) return;
+        if (mMap == null) return;
 
         // Limpiar mapa anterior
         mMap.clear();
 
-        // Agregar marcadores
-        addMarkerToMap(restauranteLocation, restaurante.getNombre(), R.drawable.ic_restaurant);
+        try {
+            // Primero agregar los marcadores que tengamos disponibles
+            if (restauranteLocation != null) {
+                addMarkerToMap(restauranteLocation,
+                        restaurante != null ? restaurante.getNombre() : "Restaurante",
+                        R.drawable.ic_restaurant);
+            }
 
-        if (repartidor != null) {
-            LatLng repartidorLatLng = new LatLng(repartidor.getLatitud(), repartidor.getLongitud());
-            addMarkerToMap(repartidorLatLng,
-                    "Repartidor: " + repartidor.getNombres(),
-                    R.drawable.ic_delivery_marker);
-        }
+            if (repartidor != null) {
+                LatLng repartidorLatLng = new LatLng(repartidor.getLatitud(), repartidor.getLongitud());
+                addMarkerToMap(repartidorLatLng,
+                        "Repartidor: " + repartidor.getNombres(),
+                        R.drawable.ic_delivery_marker);
+            }
 
-        if (clienteLocation != null) {
-            addMarkerToMap(clienteLocation, "Punto de entrega", R.drawable.ic_location_flag);
-        }
+            if (clienteLocation != null) {
+                addMarkerToMap(clienteLocation, "Punto de entrega", R.drawable.ic_location_flag);
+            }
 
-        // Dibujar ruta si tenemos todos los puntos necesarios
-        if (repartidor != null && clienteLocation != null) {
-            LatLng repartidorLatLng = new LatLng(repartidor.getLatitud(), repartidor.getLongitud());
-            PolylineOptions polylineOptions = new PolylineOptions()
-                    .add(restauranteLocation)
-                    .add(repartidorLatLng)
-                    .add(clienteLocation)
-                    .width(10)
-                    .color(ContextCompat.getColor(this, R.color.btn_medium));
-            mMap.addPolyline(polylineOptions);
+            // Dibujar la ruta dependiendo del estado del pedido
+            if (currentPedido != null) {
+                PolylineOptions polylineOptions = new PolylineOptions()
+                        .width(10)
+                        .color(ContextCompat.getColor(this, R.color.btn_medium));
 
-            // Ajustar la cámara
+                switch (currentPedido.getEstado()) {
+                    case "En preparación":
+                        // Solo mostrar restaurante y cliente
+                        if (restauranteLocation != null && clienteLocation != null) {
+                            polylineOptions.add(restauranteLocation).add(clienteLocation);
+                            mMap.addPolyline(polylineOptions);
+                        }
+                        break;
+
+                    case "En camino":
+                        // Mostrar ruta completa con repartidor
+                        if (restauranteLocation != null && repartidor != null && clienteLocation != null) {
+                            LatLng repartidorLatLng = new LatLng(repartidor.getLatitud(), repartidor.getLongitud());
+                            polylineOptions.add(restauranteLocation)
+                                    .add(repartidorLatLng)
+                                    .add(clienteLocation);
+                            mMap.addPolyline(polylineOptions);
+                        }
+                        break;
+                }
+            }
+
+            // Ajustar la cámara para mostrar todos los puntos
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            builder.include(restauranteLocation);
-            builder.include(repartidorLatLng);
-            builder.include(clienteLocation);
-            LatLngBounds bounds = builder.build();
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+            boolean hasPoints = false;
+
+            if (restauranteLocation != null) {
+                builder.include(restauranteLocation);
+                hasPoints = true;
+            }
+            if (repartidor != null) {
+                LatLng repartidorLatLng = new LatLng(repartidor.getLatitud(), repartidor.getLongitud());
+                builder.include(repartidorLatLng);
+                hasPoints = true;
+            }
+            if (clienteLocation != null) {
+                builder.include(clienteLocation);
+                hasPoints = true;
+            }
+
+            if (hasPoints) {
+                try {
+                    LatLngBounds bounds = builder.build();
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+                } catch (Exception e) {
+                    Log.e(TAG, "Error adjusting camera", e);
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error updating delivery route", e);
         }
     }
 
@@ -449,6 +510,7 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
         int inactiveColor = ContextCompat.getColor(this, R.color.gray_500);
         int activeColor = ContextCompat.getColor(this, R.color.success);
 
+        // Resetear todos los estados
         orderStatus1.setTextColor(inactiveColor);
         orderStatus2.setTextColor(inactiveColor);
         orderStatus3.setTextColor(inactiveColor);
@@ -457,10 +519,19 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
         switch (status) {
             case 4:
                 orderStatus4.setTextColor(activeColor);
+                orderStatus3.setTextColor(activeColor);
+                orderStatus2.setTextColor(activeColor);
+                orderStatus1.setTextColor(activeColor);
+                break;
             case 3:
                 orderStatus3.setTextColor(activeColor);
+                orderStatus2.setTextColor(activeColor);
+                orderStatus1.setTextColor(activeColor);
+                break;
             case 2:
                 orderStatus2.setTextColor(activeColor);
+                orderStatus1.setTextColor(activeColor);
+                break;
             case 1:
                 orderStatus1.setTextColor(activeColor);
                 break;

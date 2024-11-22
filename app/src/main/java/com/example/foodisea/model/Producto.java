@@ -32,12 +32,11 @@ public class Producto {
     }
 
 
-    @Exclude
+
     public String getRestauranteId() {
         return restauranteId;
     }
 
-    @Exclude
     public void setRestauranteId(String restauranteId) {
         this.restauranteId = restauranteId;
     }
@@ -50,10 +49,12 @@ public class Producto {
         this.outOfStock = outOfStock;
     }
 
+    @Exclude
     public String getId() {
         return id;
     }
 
+    @Exclude
     public void setId(String id) {
         this.id = id;
     }
