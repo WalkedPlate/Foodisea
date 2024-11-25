@@ -1,5 +1,6 @@
 package com.example.foodisea.model;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
@@ -20,6 +21,8 @@ public class Restaurante {
     private List<String> imagenes;  // Lista de URLs o recursos de imágenes
     private String administradorId;  // Referencia al administrador (ID)
     private String descripcion;
+    private Double latitud;
+    private Double longitud;
 
     //Constructor
     public Restaurante() {
@@ -126,4 +129,28 @@ public class Restaurante {
     }
 
     public String getDescripcion(){return descripcion;}
+
+    public Double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(Double latitud) {
+        this.latitud = latitud;
+    }
+
+    public Double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(Double longitud) {
+        this.longitud = longitud;
+    }
+
+    @Exclude
+    public LatLng getUbicacion() {
+        if (latitud != null && longitud != null) {
+            return new LatLng(latitud, longitud);
+        }
+        return null;
+    }
 }

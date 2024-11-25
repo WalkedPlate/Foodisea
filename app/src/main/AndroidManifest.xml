@@ -12,12 +12,17 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
 
     <application
         android:name=".FoodiseaApplication"
@@ -30,6 +35,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Foodisea"
         tools:targetApi="31">
+        <activity
+            android:name=".activity.cliente.ClienteSeleccionDireccionActivity"
+            android:exported="false" />
 
         <service
             android:name=".notification.MyFirebaseMessagingService"
@@ -37,9 +45,7 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
-
-        <!-- Google Maps -->
+        </service> <!-- Google Maps -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCMRS8oov3wtY6nnW4d6o2VXcX5kABugyc" />
@@ -77,7 +83,6 @@
         <activity
             android:name=".activity.login.LoginActivity"
             android:exported="false" /> <!-- SERVICIOS -->
-
         <activity
             android:name=".activity.cliente.ClienteNotificacionesActivity"
             android:exported="false" />
@@ -140,11 +145,9 @@
         <activity
             android:name=".activity.adminRes.AdminResNuevoProductoActivity"
             android:exported="false" />
-
         <activity
             android:name=".activity.adminRes.AdminResEditarProductoActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".activity.repartidor.RepartidorChatActivity"
             android:exported="false" />

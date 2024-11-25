@@ -20,11 +20,12 @@ public class Pedido {
     private String estado;  // "Recibido", "En preparación", "En camino", "Entregado"
     private Date fechaPedido;
     private String direccionEntrega;
+    private Double latitudEntrega;
+    private Double longitudEntrega;
     private String codigoQrId;  // Referencia al Código QR (ID)
     private String pagoId;  // Referencia al Pago (ID)
     private Double montoTotal;
 
-    private UsuarioRepository usuarioRepository;
 
 
     //Constructor, getter y setter
@@ -128,6 +129,22 @@ public class Pedido {
 
     public void setDireccionEntrega(String direccionEntrega) {
         this.direccionEntrega = direccionEntrega;
+    }
+
+    public Double getLongitudEntrega() {
+        return longitudEntrega;
+    }
+
+    public void setLongitudEntrega(Double longitudEntrega) {
+        this.longitudEntrega = longitudEntrega;
+    }
+
+    public Double getLatitudEntrega() {
+        return latitudEntrega;
+    }
+
+    public void setLatitudEntrega(Double latitudEntrega) {
+        this.latitudEntrega = latitudEntrega;
     }
 
     public String getCodigoQrId() {

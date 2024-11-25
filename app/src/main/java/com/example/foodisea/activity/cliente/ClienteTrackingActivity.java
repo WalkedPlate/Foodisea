@@ -9,8 +9,12 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,6 +25,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -37,24 +42,34 @@ import com.example.foodisea.model.Restaurante;
 import com.example.foodisea.repository.PedidoRepository;
 import com.example.foodisea.repository.RestauranteRepository;
 import com.example.foodisea.repository.UsuarioRepository;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Dot;
+import com.google.android.gms.maps.model.Gap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class ClienteTrackingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -89,7 +104,6 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
     private Marker repartidorMarker;
     private LatLng restauranteLocation;
     private LatLng clienteLocation;
-    private Geocoder geocoder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,11 +114,9 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
         pedidoRepository = new PedidoRepository(this);
         restauranteRepository = new RestauranteRepository();
         usuarioRepository = new UsuarioRepository();
-        geocoder = new Geocoder(this, Locale.getDefault());
 
         // Obtener pedidoId del intent
-        pedidoId = getIntent().getStringExtra("pedido_id");
-        pedidoId = "PED001";
+        pedidoId = getIntent().getStringExtra("pedidoId");
         if (pedidoId == null) {
             Toast.makeText(this, "Error: No se encontró el pedido", Toast.LENGTH_SHORT).show();
             finish();
@@ -198,12 +210,22 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
     }
 
     private void startListeningToUpdates() {
-        // Primero obtener todos los detalles iniciales
         pedidoRepository.getPedidoConDetalles(pedidoId)
                 .addOnSuccessListener(detalles -> {
                     currentPedido = detalles.getPedido();
                     restaurante = detalles.getRestaurante();
                     repartidor = detalles.getRepartidor();
+
+                    // Asignar las coordenadas inmediatamente
+                    restauranteLocation = new LatLng(
+                            restaurante.getLatitud(),
+                            restaurante.getLongitud()
+                    );
+
+                    clienteLocation = new LatLng(
+                            currentPedido.getLatitudEntrega(),
+                            currentPedido.getLongitudEntrega()
+                    );
 
                     // Actualizar UI con los datos iniciales
                     updatePedidoInfo();
@@ -214,16 +236,23 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
 
                     // Iniciar escucha de cambios
                     setupListeners();
+
+                    // Actualizar mapa si ya está listo
+                    if (mMap != null) {
+                        updateDeliveryRoute();
+                    }
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error al obtener detalles del pedido", e);
-                    Toast.makeText(this, "Error al cargar el pedido", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Error al cargar el pedido",
+                            Toast.LENGTH_SHORT).show();
                     finish();
                 });
     }
 
+
+
     private void setupListeners() {
-        // Escuchar cambios en el pedido
         pedidoListener = pedidoRepository.listenToPedido(pedidoId, (snapshot, e) -> {
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e);
@@ -235,44 +264,54 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
                 if (updatedPedido != null) {
                     updatedPedido.setId(snapshot.getId());
 
-                    // Si no había repartidor y ahora sí, actualizar UI y empezar a escuchar al repartidor
-                    if (currentPedido.getRepartidorId() == null &&
-                            updatedPedido.getRepartidorId() != null) {
-                        setupRepartidorListener(updatedPedido.getRepartidorId());
-                    }
+                    // Actualizar coordenadas de entrega
+                    clienteLocation = new LatLng(
+                            updatedPedido.getLatitudEntrega(),
+                            updatedPedido.getLongitudEntrega()
+                    );
+
+                    boolean estadoCambio = currentPedido == null ||
+                            !currentPedido.getEstado().equals(updatedPedido.getEstado());
 
                     currentPedido = updatedPedido;
                     updatePedidoInfo();
+
+                    if (estadoCambio) {
+                        updateDeliveryRoute();
+                    }
                 }
             }
         });
     }
 
     private void setupRepartidorListener(String repartidorId) {
-        usuarioRepository.getUserById(repartidorId)
-                .addOnSuccessListener(usuario -> {
-                    if (usuario instanceof Repartidor) {
-                        repartidor = (Repartidor) usuario;
-                        updateRepartidorInfo();
+        // Remover listener anterior si existe
+        if (repartidorListener != null) {
+            repartidorListener.remove();
+        }
 
-                        repartidorListener = pedidoRepository.listenToRepartidor(repartidorId,
-                                (snapshot, e) -> {
-                                    if (e != null) {
-                                        Log.w(TAG, "Repartidor listen failed.", e);
-                                        return;
-                                    }
+        if (repartidorId != null) {
+            repartidorListener = pedidoRepository.listenToRepartidor(repartidorId,
+                    new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                            @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                Log.w(TAG, "Repartidor listen failed.", e);
+                                return;
+                            }
 
-                                    if (snapshot != null && snapshot.exists()) {
-                                        Repartidor updatedRepartidor = snapshot.toObject(Repartidor.class);
-                                        if (updatedRepartidor != null) {
-                                            repartidor = updatedRepartidor;
-                                            updateRepartidorInfo();
-                                            updateDeliveryRoute();
-                                        }
-                                    }
-                                });
-                    }
-                });
+                            if (snapshot != null && snapshot.exists()) {
+                                Repartidor updatedRepartidor = snapshot.toObject(Repartidor.class);
+                                if (updatedRepartidor != null) {
+                                    repartidor = updatedRepartidor;
+                                    updateRepartidorInfo();
+                                    updateDeliveryRoute();
+                                }
+                            }
+                        }
+                    });
+        }
     }
 
     private void initializeMap() {
@@ -313,8 +352,9 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
             mMap.getUiSettings().setZoomControlsEnabled(true);
 
-            if (currentPedido != null) {
-                updateMapLocations();
+            // Actualizar el mapa si ya tenemos las coordenadas
+            if (restauranteLocation != null && clienteLocation != null) {
+                updateDeliveryRoute();
             }
         } catch (SecurityException e) {
             Log.e(TAG, "Error setting up map", e);
@@ -322,120 +362,217 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
     }
 
     private void updateMapLocations() {
-        try {
-            Log.d(TAG, "Actualizando ubicaciones en el mapa");
+        // Verificar que tenemos todos los datos necesarios
+        if (restaurante == null || currentPedido == null) {
+            Log.e(TAG, "Datos incompletos para actualizar ubicaciones");
+            return;
+        }
 
-            if (restaurante != null && restaurante.getDireccion() != null) {
-                Log.d(TAG, "Geocoding dirección restaurante: " + restaurante.getDireccion());
-                List<Address> addresses = geocoder.getFromLocationName(
-                        restaurante.getDireccion(), 1);
-                if (!addresses.isEmpty()) {
-                    Address address = addresses.get(0);
-                    restauranteLocation = new LatLng(address.getLatitude(), address.getLongitude());
-                    Log.d(TAG, "Ubicación restaurante: " + restauranteLocation.toString());
-                }
-            }
+        // Actualizar ubicaciones
+        restauranteLocation = new LatLng(
+                restaurante.getLatitud(),
+                restaurante.getLongitud()
+        );
 
-            if (currentPedido != null && currentPedido.getDireccionEntrega() != null) {
-                Log.d(TAG, "Geocoding dirección entrega: " + currentPedido.getDireccionEntrega());
-                List<Address> addresses = geocoder.getFromLocationName(
-                        currentPedido.getDireccionEntrega(), 1);
-                if (!addresses.isEmpty()) {
-                    Address address = addresses.get(0);
-                    clienteLocation = new LatLng(address.getLatitude(), address.getLongitude());
-                    Log.d(TAG, "Ubicación entrega: " + clienteLocation.toString());
-                }
-            }
+        clienteLocation = new LatLng(
+                currentPedido.getLatitudEntrega(),
+                currentPedido.getLongitudEntrega()
+        );
 
+        // Log para debug
+        Log.d(TAG, "Ubicación restaurante: " + restauranteLocation.toString());
+        Log.d(TAG, "Ubicación entrega: " + clienteLocation.toString());
+
+        updateDeliveryRoute();
+    }
+
+    private void procederConActualizacion() {
+        // Solo actualizar la ruta cuando tengamos ambas ubicaciones
+        if (restauranteLocation != null && clienteLocation != null) {
             updateDeliveryRoute();
-        } catch (IOException e) {
-            Log.e(TAG, "Error geocoding addresses", e);
         }
     }
 
+
     private void updateDeliveryRoute() {
         if (mMap == null) return;
-
-        // Limpiar mapa anterior
         mMap.clear();
 
         try {
-            // Primero agregar los marcadores que tengamos disponibles
-            if (restauranteLocation != null) {
-                addMarkerToMap(restauranteLocation,
-                        restaurante != null ? restaurante.getNombre() : "Restaurante",
-                        R.drawable.ic_restaurant);
+            // Agregar marcadores de origen y destino
+            addMarkerToMap(restauranteLocation,
+                    restaurante.getNombre(),
+                    R.drawable.ic_restaurant);
+
+            addMarkerToMap(clienteLocation,
+                    "Punto de entrega",
+                    R.drawable.ic_location_flag);
+
+            // Dibujar rutas según el estado del pedido
+            switch (currentPedido.getEstado()) {
+                case "Recibido":
+                    // Ruta punteada entre restaurante y destino
+                    drawDottedRoute(restauranteLocation, clienteLocation,
+                            ContextCompat.getColor(this, R.color.gray_500));
+                    break;
+
+                case "En preparación":
+                    // Ruta sólida del restaurante al destino
+                    drawStaticRoute(restauranteLocation, clienteLocation,
+                            ContextCompat.getColor(this, R.color.warning));
+                    break;
+
+                case "En camino":
+                    if (repartidor != null) {
+                        LatLng repartidorLatLng = new LatLng(
+                                repartidor.getLatitud(),
+                                repartidor.getLongitud()
+                        );
+
+                        // Actualizar marcador del repartidor
+                        updateRepartidorMarker(repartidorLatLng,
+                                repartidor.getNombres() + " " + repartidor.getApellidos());
+
+                        // Ruta completada en verde (restaurante a repartidor)
+                        drawStaticRoute(restauranteLocation, repartidorLatLng,
+                                ContextCompat.getColor(this, R.color.success));
+
+                        // Ruta activa en azul (repartidor a destino)
+                        drawStaticRoute(repartidorLatLng, clienteLocation,
+                                ContextCompat.getColor(this, R.color.btn_medium));
+                    }
+                    break;
+
+                case "Entregado":
+                    // Ruta completa en verde
+                    drawStaticRoute(restauranteLocation, clienteLocation,
+                            ContextCompat.getColor(this, R.color.success));
+                    break;
             }
 
-            if (repartidor != null) {
-                LatLng repartidorLatLng = new LatLng(repartidor.getLatitud(), repartidor.getLongitud());
-                addMarkerToMap(repartidorLatLng,
-                        "Repartidor: " + repartidor.getNombres(),
-                        R.drawable.ic_delivery_marker);
-            }
+            // Ajustar cámara para mostrar toda la ruta
+            adjustMapCamera();
 
-            if (clienteLocation != null) {
-                addMarkerToMap(clienteLocation, "Punto de entrega", R.drawable.ic_location_flag);
-            }
-
-            // Dibujar la ruta dependiendo del estado del pedido
-            if (currentPedido != null) {
-                PolylineOptions polylineOptions = new PolylineOptions()
-                        .width(10)
-                        .color(ContextCompat.getColor(this, R.color.btn_medium));
-
-                switch (currentPedido.getEstado()) {
-                    case "En preparación":
-                        // Solo mostrar restaurante y cliente
-                        if (restauranteLocation != null && clienteLocation != null) {
-                            polylineOptions.add(restauranteLocation).add(clienteLocation);
-                            mMap.addPolyline(polylineOptions);
-                        }
-                        break;
-
-                    case "En camino":
-                        // Mostrar ruta completa con repartidor
-                        if (restauranteLocation != null && repartidor != null && clienteLocation != null) {
-                            LatLng repartidorLatLng = new LatLng(repartidor.getLatitud(), repartidor.getLongitud());
-                            polylineOptions.add(restauranteLocation)
-                                    .add(repartidorLatLng)
-                                    .add(clienteLocation);
-                            mMap.addPolyline(polylineOptions);
-                        }
-                        break;
-                }
-            }
-
-            // Ajustar la cámara para mostrar todos los puntos
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            boolean hasPoints = false;
-
-            if (restauranteLocation != null) {
-                builder.include(restauranteLocation);
-                hasPoints = true;
-            }
-            if (repartidor != null) {
-                LatLng repartidorLatLng = new LatLng(repartidor.getLatitud(), repartidor.getLongitud());
-                builder.include(repartidorLatLng);
-                hasPoints = true;
-            }
-            if (clienteLocation != null) {
-                builder.include(clienteLocation);
-                hasPoints = true;
-            }
-
-            if (hasPoints) {
-                try {
-                    LatLngBounds bounds = builder.build();
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
-                } catch (Exception e) {
-                    Log.e(TAG, "Error adjusting camera", e);
-                }
-            }
         } catch (Exception e) {
             Log.e(TAG, "Error updating delivery route", e);
         }
     }
+
+    private void updateRepartidorMarker(LatLng position, String nombre) {
+        if (mMap == null) return;
+
+        try {
+            if (repartidorMarker == null) {
+                BitmapDescriptor icon = getBitmapDescriptor(R.drawable.ic_delivery_marker);
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(position)
+                        .title("Repartidor: " + nombre)
+                        .icon(icon)
+                        .flat(true)
+                        .anchor(0.5f, 0.5f);
+
+                repartidorMarker = mMap.addMarker(markerOptions);
+            } else {
+                // Solo animar si la posición cambió
+                LatLng currentPos = repartidorMarker.getPosition();
+                if (currentPos.latitude != position.latitude ||
+                        currentPos.longitude != position.longitude) {
+                    animateMarker(repartidorMarker, position);
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error updating delivery marker", e);
+        }
+    }
+
+    // Métodos auxiliares para las rutas
+    private void drawCompletedRoute(LatLng start, LatLng end) {
+        PolylineOptions options = new PolylineOptions()
+                .add(start, end)
+                .width(10)
+                .color(ContextCompat.getColor(this, R.color.success));
+        mMap.addPolyline(options);
+    }
+
+    private void drawActiveRoute(LatLng start, LatLng end) {
+        PolylineOptions options = new PolylineOptions()
+                .add(start, end)
+                .width(10)
+                .color(ContextCompat.getColor(this, R.color.btn_medium));
+        mMap.addPolyline(options);
+    }
+
+    private void drawDottedRoute(LatLng start, LatLng end, int color) {
+        PolylineOptions options = new PolylineOptions()
+                .add(start, end)
+                .width(10)
+                .color(color)
+                .pattern(Arrays.asList(
+                        new Dot(), new Gap(20)
+                ));
+        mMap.addPolyline(options);
+    }
+
+    // Método para dibujar una ruta estática
+    private void drawStaticRoute(LatLng origin, LatLng destination, int color) {
+        PolylineOptions polylineOptions = new PolylineOptions()
+                .add(origin, destination)
+                .width(10)
+                .color(color);
+        mMap.addPolyline(polylineOptions);
+    }
+
+    // Método para ajustar la cámara del mapa
+    private void adjustMapCamera() {
+        try {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder()
+                    .include(restauranteLocation)
+                    .include(clienteLocation);
+
+            if (repartidor != null) {
+                builder.include(new LatLng(
+                        repartidor.getLatitud(),
+                        repartidor.getLongitud()
+                ));
+            }
+
+            LatLngBounds bounds = builder.build();
+            int padding = getResources().getDimensionPixelSize(R.dimen.map_padding);
+
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+            mMap.animateCamera(cu);
+        } catch (Exception e) {
+            Log.e(TAG, "Error adjusting camera", e);
+        }
+    }
+
+    // Método para animar el movimiento del marcador
+    private void animateMarker(final Marker marker, final LatLng toPosition) {
+        final Handler handler = new Handler();
+        final long start = SystemClock.uptimeMillis();
+        final long duration = 3000; // Duración de la animación en ms
+
+        final LatLng startPosition = marker.getPosition();
+        final Interpolator interpolator = new LinearInterpolator();
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                long elapsed = SystemClock.uptimeMillis() - start;
+                float t = interpolator.getInterpolation((float) elapsed / duration);
+
+                double lat = t * toPosition.latitude + (1 - t) * startPosition.latitude;
+                double lng = t * toPosition.longitude + (1 - t) * startPosition.longitude;
+                marker.setPosition(new LatLng(lat, lng));
+
+                // Calcular la rotación del marcador
+                if (t < 1.0) {
+                    handler.postDelayed(this, 16); // 60fps
+                }
+            }
+        });
+    }
+
 
     private void addMarkerToMap(LatLng position, String title, int iconResource) {
         if (position == null || mMap == null) return;
@@ -448,23 +585,34 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
     }
 
     private BitmapDescriptor getBitmapDescriptor(int vectorResourceId) {
-        Drawable vectorDrawable = ContextCompat.getDrawable(this, vectorResourceId);
-        if (vectorDrawable == null) {
+        try {
+            Drawable vectorDrawable = ContextCompat.getDrawable(this, vectorResourceId);
+            if (vectorDrawable == null) {
+                return BitmapDescriptorFactory.defaultMarker();
+            }
+
+            int width = vectorDrawable.getIntrinsicWidth();
+            int height = vectorDrawable.getIntrinsicHeight();
+            // Si el drawable no tiene tamaño intrínseco, usar valores por defecto
+            if (width <= 0) width = 48;
+            if (height <= 0) height = 48;
+
+            vectorDrawable.setBounds(0, 0, width, height);
+            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            vectorDrawable.draw(canvas);
+
+            // Asegurarse de que el bitmap no sea nulo
+            if (bitmap == null) {
+                return BitmapDescriptorFactory.defaultMarker();
+            }
+
+            return BitmapDescriptorFactory.fromBitmap(bitmap);
+        } catch (Exception e) {
+            Log.e(TAG, "Error creating marker icon", e);
             return BitmapDescriptorFactory.defaultMarker();
         }
-
-        vectorDrawable.setBounds(0, 0,
-                vectorDrawable.getIntrinsicWidth(),
-                vectorDrawable.getIntrinsicHeight());
-        Bitmap bitmap = Bitmap.createBitmap(
-                vectorDrawable.getIntrinsicWidth(),
-                vectorDrawable.getIntrinsicHeight(),
-                Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        vectorDrawable.draw(canvas);
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
-
     private void updatePedidoInfo() {
         if (currentPedido == null) return;
 

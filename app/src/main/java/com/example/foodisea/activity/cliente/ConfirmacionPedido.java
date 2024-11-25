@@ -3,6 +3,7 @@ package com.example.foodisea.activity.cliente;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.foodisea.R;
 
 public class ConfirmacionPedido extends AppCompatActivity {
+
+    private String pedidoId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +28,15 @@ public class ConfirmacionPedido extends AppCompatActivity {
             return insets;
         });
 
+        // Obtener el ID del pedido
+        pedidoId = getIntent().getStringExtra("pedidoId");
+        if (pedidoId == null) {
+            Toast.makeText(this, "Error: No se encontró el pedido", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+
         // Botón de cerrar
         Button btnClose = findViewById(R.id.btnClose);
         btnClose.setOnClickListener(v -> {
@@ -35,8 +47,8 @@ public class ConfirmacionPedido extends AppCompatActivity {
         // Botón "Sigue tu orden"
         Button btnTracking = findViewById(R.id.btnTracking);
         btnTracking.setOnClickListener(v -> {
-            // Aquí puedes abrir la pantalla para seguir la orden
             Intent intent = new Intent(this, ClienteTrackingActivity.class);
+            intent.putExtra("pedidoId", pedidoId);
             startActivity(intent);
         });
     }
