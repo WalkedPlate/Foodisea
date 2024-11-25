@@ -9,12 +9,8 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.foodisea.MainActivity;
+
 import com.example.foodisea.R;
-import com.example.foodisea.activity.adminRes.AdminResHomeActivity;
-import com.example.foodisea.activity.cliente.ClienteMainActivity;
-import com.example.foodisea.activity.repartidor.RepartidorMainActivity;
-import com.example.foodisea.activity.superadmin.SuperadminMainActivity;
 import com.example.foodisea.data.SessionManager;
 import com.example.foodisea.databinding.ActivityStartAppBinding;
 import com.example.foodisea.dialog.LoadingDialog;

@@ -85,9 +85,7 @@ public class PlatoAdapter extends RecyclerView.Adapter<PlatoAdapter.PlatoViewHol
             intent.putExtra("productName", producto.getNombre());
             intent.putExtra("productPrice", producto.getPrecio());
             intent.putExtra("productDescription", producto.getDescripcion());
-            if (!producto.getImagenes().isEmpty()) {
-                intent.putExtra("productImage", producto.getImagenes().get(0));
-            }
+            intent.putExtra("restauranteId", producto.getRestauranteId());
             context.startActivity(intent);
         });
     }

@@ -4,11 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
 import com.example.foodisea.model.Producto;
 import com.example.foodisea.model.ProductoCantidad;
@@ -19,19 +21,52 @@ import java.util.Locale;
 
 
 public class CarritoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
     private static final int VIEW_TYPE_CARRITO = 0;
     private static final int VIEW_TYPE_CHECKOUT = 1;
 
-    private List<ProductoCantidad> cartItemList;
-    private Context context; // Añadido contexto
+    private List<CarritoItem> cartItems; // Clase auxiliar que combina ProductoCantidad y Producto
+    private Context context;
     private boolean isCheckout;
+    private CarritoItemListener listener;
 
-    // Constructor del adaptador
-    public CarritoAdapter(Context context, List<ProductoCantidad> cartItemList, boolean isCheckout) {
-        this.context = context; // Asignar el contexto
-        this.cartItemList = cartItemList;
+    // Interfaz para manejar eventos
+    public interface CarritoItemListener {
+        void onQuantityChanged(String productoId, int newQuantity);
+        void onDeleteItem(String productoId);
+    }
+
+    public static class CarritoItem {
+        private ProductoCantidad productoCantidad;
+        private Producto producto;
+
+        public CarritoItem(ProductoCantidad pc, Producto p) {
+            this.productoCantidad = pc;
+            this.producto = p;
+        }
+
+        public ProductoCantidad getProductoCantidad() {
+            return productoCantidad;
+        }
+
+        public void setProductoCantidad(ProductoCantidad productoCantidad) {
+            this.productoCantidad = productoCantidad;
+        }
+
+        public Producto getProducto() {
+            return producto;
+        }
+
+        public void setProducto(Producto producto) {
+            this.producto = producto;
+        }
+    }
+
+    public CarritoAdapter(Context context, List<CarritoItem> cartItems, boolean isCheckout,
+                          CarritoItemListener listener) {
+        this.context = context;
+        this.cartItems = cartItems;
         this.isCheckout = isCheckout;
+        this.listener = listener;
     }
 
     @Override
@@ -53,44 +88,33 @@ public class CarritoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ProductoCantidad cartItem = cartItemList.get(position);
-        Producto producto = obtenerPlatoPorId(cartItem.getProductoId());
+        CarritoItem item = cartItems.get(position);
+        Producto producto = item.producto;
+        ProductoCantidad pc = item.productoCantidad;
 
         if (holder instanceof CartViewHolder) {
             CartViewHolder cartViewHolder = (CartViewHolder) holder;
-            cartViewHolder.productName.setText(producto.getNombre());
-            cartViewHolder.productPrice.setText(String.format(Locale.getDefault(), "S/. %.2f", producto.getPrecio()));
-            cartViewHolder.productQuantity.setText(String.valueOf(cartItem.getCantidad()));
-
-            // Cargar la imagen correspondiente
-            if (!producto.getImagenes().isEmpty()) {
-                int imageResource = getImageResource(producto.getImagenes().get(0));
-                cartViewHolder.productImage.setImageResource(imageResource);
-            }
-
+            cartViewHolder.bind(producto, pc);
         } else if (holder instanceof CheckoutViewHolder) {
             CheckoutViewHolder checkoutViewHolder = (CheckoutViewHolder) holder;
-            checkoutViewHolder.productName.setText(producto.getNombre());
-            checkoutViewHolder.productPrice.setText(String.format(Locale.getDefault(), "S/. %.2f", producto.getPrecio()));
-            checkoutViewHolder.productQuantity1.setText(String.valueOf(cartItem.getCantidad()));
-
-            // Cargar la imagen correspondiente
-            if (!producto.getImagenes().isEmpty()) {
-                int imageResource = getImageResource(producto.getImagenes().get(0));
-                ((ImageView) holder.itemView.findViewById(R.id.productImage)).setImageResource(imageResource);
-            }
+            checkoutViewHolder.bind(producto, pc);
         }
     }
 
     @Override
     public int getItemCount() {
-        return cartItemList.size();
+        return cartItems.size();
     }
 
-    public static class CartViewHolder extends RecyclerView.ViewHolder {
+    public void updateItems(List<CarritoItem> newItems) {
+        this.cartItems = newItems;
+        notifyDataSetChanged();
+    }
 
+    public class CartViewHolder extends RecyclerView.ViewHolder {
         ImageView productImage;
         TextView productName, productPrice, productQuantity;
+        Button btnMinus, btnPlus, btnDelete;
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -98,47 +122,70 @@ public class CarritoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             productName = itemView.findViewById(R.id.productName);
             productPrice = itemView.findViewById(R.id.productPrice);
             productQuantity = itemView.findViewById(R.id.tvQuantity);
+            btnMinus = itemView.findViewById(R.id.btnMinus);
+            btnPlus = itemView.findViewById(R.id.btnPlus);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
+        }
+
+        void bind(Producto producto, ProductoCantidad pc) {
+            productName.setText(producto.getNombre());
+            productPrice.setText(String.format(Locale.getDefault(), "S/. %.2f", producto.getPrecio()));
+            productQuantity.setText(String.valueOf(pc.getCantidad()));
+
+            // Cargar la primera imagen del producto
+            if (!producto.getImagenes().isEmpty()) {
+                Glide.with(context)
+                        .load(producto.getImagenes().get(0))
+                        .placeholder(R.drawable.placeholder_image)
+                        .into(productImage);
+            }
+
+            // Configurar listeners
+            btnMinus.setOnClickListener(v -> {
+                int newQuantity = pc.getCantidad() - 1;
+                if (newQuantity >= 0 && listener != null) {
+                    listener.onQuantityChanged(pc.getProductoId(), newQuantity);
+                }
+            });
+
+            btnPlus.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onQuantityChanged(pc.getProductoId(), pc.getCantidad() + 1);
+                }
+            });
+
+            btnDelete.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onDeleteItem(pc.getProductoId());
+                }
+            });
         }
     }
 
-
-    public static class CheckoutViewHolder extends RecyclerView.ViewHolder {
-        TextView productName, productPrice, productQuantity1;
+    public class CheckoutViewHolder extends RecyclerView.ViewHolder {
+        TextView productName, productPrice, productQuantity;
+        ImageView productImage;
 
         public CheckoutViewHolder(@NonNull View itemView) {
             super(itemView);
             productName = itemView.findViewById(R.id.productName);
             productPrice = itemView.findViewById(R.id.productPrice);
-            productQuantity1 = itemView.findViewById(R.id.productQuantity1);
+            productQuantity = itemView.findViewById(R.id.productQuantity1);
+            productImage = itemView.findViewById(R.id.productImage);
         }
-    }
 
-    private Producto obtenerPlatoPorId(String platoId) {
-        switch (platoId) {
-            case "PlatoId1":
-                return new Producto(platoId, "Burger Ferguson", "Pizza clásica con tomate y mozzarella", 10.00,
-                        List.of("burger"), "Platos", false);
-            case "PlatoId2":
-                return new Producto(platoId, "Rockin' Burgers", "Hamburguesa con queso cheddar y lechuga", 15.30,
-                        List.of("burger2"), "Platos", false);
-            case "PlatoId3":
-                return new Producto(platoId, "Coca Cola", "Ensalada con pollo, lechuga y salsa César", 5.00,
-                        List.of("soda"), "Bebidas", true);
-            case "PlatoId4":
-                return new Producto(platoId, "Crack' Burgers", "Taco con carne de cerdo y piña", 25.00,
-                        List.of("burger2"), "Tacos", false);
-            default:
-                return new Producto(platoId, "Plato Desconocido", "Descripción no disponible", 0.0,
-                        List.of("default_image"), "Desconocido", false);
+        void bind(Producto producto, ProductoCantidad pc) {
+            productName.setText(producto.getNombre());
+            productPrice.setText(String.format(Locale.getDefault(), "S/. %.2f", producto.getPrecio()));
+            productQuantity.setText(String.valueOf(pc.getCantidad()));
+
+            // Cargar la primera imagen
+            if (!producto.getImagenes().isEmpty()) {
+                Glide.with(context)
+                        .load(producto.getImagenes().get(0))
+                        .placeholder(R.drawable.placeholder_image)
+                        .into(productImage);
+            }
         }
-    }
-
-
-    // Método para obtener el recurso de imagen (debes implementar esta lógica)
-    private int getImageResource(String imagen) {
-        // Aquí puedes usar el contexto para obtener el recurso de imagen.
-        // Por ejemplo, usando `context.getResources().getIdentifier` para cargar imágenes por nombre
-        int resourceId = context.getResources().getIdentifier(imagen, "drawable", context.getPackageName());
-        return resourceId != 0 ? resourceId : R.drawable.burger_image; // Retorna una imagen por defecto si no se encuentra
     }
 }

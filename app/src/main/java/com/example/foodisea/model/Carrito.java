@@ -23,6 +23,9 @@ public class Carrito {
         this.total = calcularTotal();  // Inicializa el total
     }
 
+    public Carrito() {
+    }
+
     // Método para calcular el total del carrito
     public double calcularTotal() {
         double total = 0.0;

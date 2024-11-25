@@ -22,8 +22,13 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.cliente.PlatoAdapter;
+import com.example.foodisea.data.SessionManager;
 import com.example.foodisea.databinding.ActivityClienteRestauranteBinding;
+import com.example.foodisea.model.Carrito;
+import com.example.foodisea.model.Cliente;
 import com.example.foodisea.model.Producto;
+import com.example.foodisea.model.ProductoCantidad;
+import com.example.foodisea.repository.CarritoRepository;
 import com.example.foodisea.repository.ProductoRepository;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -41,8 +46,12 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
     private String restauranteId;
     private ProductoRepository productoRepository;
     private PlatoAdapter adapter;
+    private SessionManager sessionManager;
+    private Cliente clienteActual;
     private List<Producto> listaCompletaProductos = new ArrayList<>();
     private String categoriaSeleccionada = "TODOS";
+    private CarritoRepository carritoRepository;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +59,12 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
         binding = ActivityClienteRestauranteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Inicializar Firebase Storage y repository
+        // Inicializar componentes pricipales
         storage = FirebaseStorage.getInstance();
         productoRepository = new ProductoRepository();
+        sessionManager = SessionManager.getInstance(this);
+        clienteActual = sessionManager.getClienteActual();
+        carritoRepository = new CarritoRepository();
 
         EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -86,6 +98,9 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
             carrito.putExtra("restauranteId", restauranteId);
             startActivity(carrito);
         });
+
+        // Actualizar contador del carrito
+        actualizarContadorCarrito();
     }
 
     private void setupRecyclerView() {
@@ -187,5 +202,32 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
                 .apply(requestOptions)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(binding.ivRestaurantImage);
+    }
+
+    private void actualizarContadorCarrito() {
+
+        carritoRepository.obtenerCarritoActivo(clienteActual.getId())
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Carrito carrito = documentSnapshot.toObject(Carrito.class);
+                        if (carrito != null && carrito.getProductos() != null) {
+                            int totalItems = 0;
+                            for (ProductoCantidad pc : carrito.getProductos()) {
+                                totalItems += pc.getCantidad();
+                            }
+                            binding.tvCartItemCount.setText(String.valueOf(totalItems));
+                            binding.tvCartItemCount.setVisibility(totalItems > 0 ? View.VISIBLE : View.GONE);
+                        }
+                    } else {
+                        binding.tvCartItemCount.setVisibility(View.GONE);
+                    }
+                });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Actualizar contador del carrito
+        actualizarContadorCarrito();
     }
 }

@@ -1,27 +1,14 @@
 package com.example.foodisea.notification;
 
-import static android.Manifest.permission.POST_NOTIFICATIONS;
-
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
-import com.example.foodisea.MainActivity;
 import com.example.foodisea.R;
 import com.example.foodisea.activity.adminRes.AdminResHomeActivity;
-import com.example.foodisea.activity.adminRes.AdminResPedidosActivity;
-import com.example.foodisea.activity.cliente.ClienteTrackingActivity;
-import com.example.foodisea.activity.repartidor.RepartidorVerOrdenActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;

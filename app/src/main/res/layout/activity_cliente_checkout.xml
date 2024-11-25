@@ -183,6 +183,7 @@
                     android:padding="8dp">
 
                     <TextView
+                        android:id="@+id/tvTotalConsumo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Total consumo:"
@@ -192,6 +193,7 @@
                         android:layout_weight="1" />
 
                     <TextView
+                        android:id="@+id/tvDelivery"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="S/. 281.20"

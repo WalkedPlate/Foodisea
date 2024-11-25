@@ -16,6 +16,7 @@ constraintlayout = "2.1.4"
 playServicesLocation = "21.3.0"
 playServicesMaps = "19.0.0"
 playServicesMapsVersion = "18.2.0"
+whynotimagecarousel = "2.1.0"
 
 [libraries]
 firebase-admin = { module = "com.google.firebase:firebase-admin", version.ref = "firebaseAdmin" }
@@ -35,6 +36,7 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 play-services-maps-v1820 = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMapsVersion" }
+whynotimagecarousel = { module = "org.imaginativeworld.whynotimagecarousel:whynotimagecarousel", version.ref = "whynotimagecarousel" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

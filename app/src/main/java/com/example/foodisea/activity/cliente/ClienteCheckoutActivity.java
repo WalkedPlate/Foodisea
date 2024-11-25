@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,72 +15,251 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.cliente.CarritoAdapter;
+import com.example.foodisea.data.SessionManager;
+import com.example.foodisea.databinding.ActivityClienteCheckoutBinding;
+import com.example.foodisea.dialog.LoadingDialog;
+import com.example.foodisea.model.Carrito;
+import com.example.foodisea.model.Cliente;
+import com.example.foodisea.model.Pedido;
+import com.example.foodisea.model.Producto;
 import com.example.foodisea.model.ProductoCantidad;
+import com.example.foodisea.repository.CarritoRepository;
+import com.example.foodisea.repository.PedidoRepository;
+import com.example.foodisea.repository.ProductoRepository;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ClienteCheckoutActivity extends AppCompatActivity {
-
-    private RecyclerView recyclerView;
-    private CarritoAdapter checkoutAdapter ;
+    private ActivityClienteCheckoutBinding binding;
+    private CarritoAdapter checkoutAdapter;
+    private CarritoRepository carritoRepository;
+    private ProductoRepository productoRepository;
+    private LoadingDialog loadingDialog;
+    private Cliente clienteActual;
+    private double totalConsumption = 0.0;
+    private static final double DELIVERY_FEE = 15.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_cliente_checkout);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        binding = ActivityClienteCheckoutBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        // Inicializar el RecyclerView
-        recyclerView = findViewById(R.id.orderItemsRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // Inicializaciones
+        carritoRepository = new CarritoRepository();
+        productoRepository = new ProductoRepository();
+        loadingDialog = new LoadingDialog(this);
+        clienteActual = SessionManager.getInstance(this).getClienteActual();
 
-        // Inicializar el adaptador y asignarlo al RecyclerView
-        checkoutAdapter = new CarritoAdapter(this, getPlatosCarrito(), true); // isCheckout = true
-        recyclerView.setAdapter(checkoutAdapter);
+        if (clienteActual == null) {
+            Toast.makeText(this, "Error de sesión", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
+        // Configurar RecyclerView
+        setupRecyclerView();
 
-        // funcion de los botones
-        Button btnBack = findViewById(R.id.btnBack);
-        TextView btnEditOrder = findViewById(R.id.btnEditOrder);
-        Button btnAccept = findViewById(R.id.btnAccept);
+        // Configurar botones y direcciones
+        setupViews();
 
-        btnBack.setOnClickListener(v -> {
-            finish(); // Cierra la actividad actual y regresa
-        });
+        // Cargar datos
+        cargarCarrito();
+    }
 
-        btnEditOrder.setOnClickListener(v -> {
-            // Acción para ver el carrito
+    private void setupRecyclerView() {
+        checkoutAdapter = new CarritoAdapter(this, new ArrayList<>(), true, null);
+        binding.orderItemsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.orderItemsRecyclerView.setAdapter(checkoutAdapter);
+    }
+
+    private void setupViews() {
+        // Cargar dirección del cliente
+        binding.tvAddress.setText(clienteActual.getDireccion());
+
+        // Configurar listeners
+        binding.btnBack.setOnClickListener(v -> finish());
+
+        binding.btnEditOrder.setOnClickListener(v -> {
             Intent carrito = new Intent(this, ClienteCarritoActivity.class);
             startActivity(carrito);
         });
 
-        btnAccept.setOnClickListener(v -> {
-            // Acción para ver el mensaje de confirmación
-            Intent confirmacion = new Intent(this, ConfirmacionPedido.class);
-            startActivity(confirmacion);
+        binding.btnEditAddress.setOnClickListener(v -> {
+            // TODO: Implementar edición de dirección
+            Toast.makeText(this, "Función en desarrollo", Toast.LENGTH_SHORT).show();
         });
+
+        binding.btnAccept.setOnClickListener(v -> confirmarPedido());
     }
 
-    // Obtener desde bd
-    private List<ProductoCantidad> getPlatosCarrito() {
-        // Inicializar la lista de productos del carrito
-        List<ProductoCantidad> platoCarritos = new ArrayList<>();
+    private void cargarCarrito() {
+        loadingDialog.show("Cargando resumen...");
 
-        // Agregar ítems de prueba al carrito
-        platoCarritos.add(new ProductoCantidad("PlatoId1",3));
-        platoCarritos.add(new ProductoCantidad("PlatoId2", 4));
-        platoCarritos.add(new ProductoCantidad("PlatoId3",8));
-        platoCarritos.add(new ProductoCantidad("PlatoId4", 3));
+        carritoRepository.obtenerCarritoActivo(clienteActual.getId())
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (!documentSnapshot.exists()) {
+                        loadingDialog.dismiss();
+                        Toast.makeText(this, "El carrito está vacío", Toast.LENGTH_SHORT).show();
+                        finish();
+                        return;
+                    }
 
+                    Carrito carrito = documentSnapshot.toObject(Carrito.class);
+                    if (carrito == null || carrito.getProductos() == null || carrito.getProductos().isEmpty()) {
+                        loadingDialog.dismiss();
+                        Toast.makeText(this, "El carrito está vacío", Toast.LENGTH_SHORT).show();
+                        finish();
+                        return;
+                    }
 
-        return platoCarritos;
+                    // Cargar productos
+                    List<Task<Producto>> productoTasks = new ArrayList<>();
+                    for (ProductoCantidad pc : carrito.getProductos()) {
+                        productoTasks.add(productoRepository.getProductoById(pc.getProductoId()));
+                    }
+
+                    Tasks.whenAllComplete(productoTasks)
+                            .addOnSuccessListener(tasks -> {
+                                List<CarritoAdapter.CarritoItem> cartItems = new ArrayList<>();
+                                for (int i = 0; i < tasks.size(); i++) {
+                                    Task<Producto> task = productoTasks.get(i);
+                                    if (task.isSuccessful()) {
+                                        Producto producto = task.getResult();
+                                        if (producto != null) {
+                                            cartItems.add(new CarritoAdapter.CarritoItem(
+                                                    carrito.getProductos().get(i), producto
+                                            ));
+                                        }
+                                    }
+                                }
+
+                                checkoutAdapter.updateItems(cartItems);
+                                totalConsumption = carrito.getTotal();
+                                actualizarTotales();
+                                loadingDialog.dismiss();
+                            })
+                            .addOnFailureListener(e -> {
+                                loadingDialog.dismiss();
+                                Toast.makeText(this, "Error al cargar productos: " + e.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    loadingDialog.dismiss();
+                    Toast.makeText(this, "Error al cargar carrito: " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void actualizarTotales() {
+        // Total consumo
+        binding.tvTotalConsumo.setText(String.format(Locale.getDefault(), "S/. %.2f", totalConsumption));
+
+        // Delivery
+        binding.tvDelivery.setText(String.format(Locale.getDefault(), "S/. %.2f", DELIVERY_FEE));
+
+        // Total final
+        double totalFinal = totalConsumption + DELIVERY_FEE;
+        binding.tvTotalPrice.setText(String.format(Locale.getDefault(), "S/. %.2f", totalFinal));
+    }
+
+    private void confirmarPedido() {
+        // Verificar dirección
+        if (binding.tvAddress.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, "Por favor ingresa una dirección de entrega",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Confirmar pedido")
+                .setMessage("¿Estás seguro de que deseas realizar este pedido?")
+                .setPositiveButton("Confirmar", (dialog, which) -> {
+                    crearPedido();
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void crearPedido() {
+        loadingDialog.show("Procesando pedido...");
+
+        carritoRepository.obtenerCarritoActivo(clienteActual.getId())
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (!documentSnapshot.exists()) {
+                        loadingDialog.dismiss();
+                        Toast.makeText(this, "Error: Carrito no encontrado",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    Carrito carrito = documentSnapshot.toObject(Carrito.class);
+                    if (carrito == null) {
+                        loadingDialog.dismiss();
+                        return;
+                    }
+
+                    // Crear nuevo pedido
+                    Pedido pedido = new Pedido();
+                    pedido.setClienteId(clienteActual.getId());
+                    pedido.setRestauranteId(carrito.getRestauranteId());
+                    pedido.setProductos(carrito.getProductos());
+                    pedido.setEstado("Recibido");
+                    pedido.setFechaPedido(new Date());
+                    pedido.setDireccionEntrega(binding.tvAddress.getText().toString());
+                    pedido.setMontoTotal(totalConsumption + DELIVERY_FEE);
+                    // El repartidor se asignará después
+                    pedido.setRepartidorId(null);
+                    // Estos campos se llenarán más tarde
+                    pedido.setCodigoQrId(null);
+                    pedido.setPagoId(null);
+
+                    // Guardar pedido usando PedidoRepository
+                    PedidoRepository pedidoRepository = new PedidoRepository(this);
+                    pedidoRepository.crearPedido(pedido)
+                            .addOnSuccessListener(aVoid -> {
+                                // Limpiar carrito después de crear el pedido exitosamente
+                                carritoRepository.limpiarCarrito(clienteActual.getId())
+                                        .addOnSuccessListener(aVoid2 -> {
+                                            loadingDialog.dismiss();
+                                            // Ir a pantalla de confirmación
+                                            Intent intent = new Intent(this, ConfirmacionPedido.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                                                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+                                            finish();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            loadingDialog.dismiss();
+                                            Toast.makeText(this, "Error al limpiar carrito: " +
+                                                    e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        });
+                            })
+                            .addOnFailureListener(e -> {
+                                loadingDialog.dismiss();
+                                Toast.makeText(this, "Error al crear pedido: " +
+                                        e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    loadingDialog.dismiss();
+                    Toast.makeText(this, "Error al obtener carrito: " +
+                            e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cargarCarrito();
     }
 }

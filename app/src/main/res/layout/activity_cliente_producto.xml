@@ -21,14 +21,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- Imagen del producto -->
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/productDetailImage"
+            <!-- Carrusel de imágenes del producto -->
+            <org.imaginativeworld.whynotimagecarousel.ImageCarousel
+                android:id="@+id/carousel"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:scaleType="centerCrop"
-                app:shapeAppearanceOverlay="@style/RoundedBottomCornersShape"
-                android:alpha="0.95"/>
+                app:showCaption="false"
+                app:showNavigationButtons="false"
+                app:showIndicator="true"
+                app:autoPlay="true"
+                app:autoPlayDelay="3000"
+                app:imageScaleType="centerCrop"/>
 
             <!-- Botón de regresar (flecha) -->
             <Button
