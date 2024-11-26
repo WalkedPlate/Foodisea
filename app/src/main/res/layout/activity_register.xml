@@ -169,27 +169,141 @@
                     android:inputType="none"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Dirección -->
+            <!-- Sección de domicilio -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Datos del domicilio"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Campo de dirección -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/etDireccionLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Domicilio"
+                android:hint="Domicilio (Calle, número, distrito)"
                 android:layout_marginBottom="16dp"
-                app:endIconMode="custom"
-                app:endIconDrawable="@drawable/ic_home"
+                app:startIconDrawable="@drawable/round_search_24"
+                app:endIconMode="clear_text"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:boxStrokeColor="@color/border_light"
                 app:hintTextColor="@color/border_light"
-                app:cursorColor="@color/border_light">
+                app:helperText="Busca una dirección o selecciona en el mapa"
+                app:helperTextEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDireccion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPostalAddress"
-                    android:maxLength="100" />
+                    android:imeOptions="actionSearch"
+                    android:maxLength="100"/>
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Mapa en CardView para consistencia -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/border_light">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <fragment
+                        android:id="@+id/mapView"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                    <!-- Botones flotantes -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|bottom"
+                        android:layout_margin="16dp"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/btnMyLocation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:src="@drawable/ic_location_search"
+                            app:fabSize="mini"
+                            app:backgroundTint="@color/white"
+                            app:tint="@color/black"
+                            app:borderWidth="0dp"
+                            android:contentDescription="Mi ubicación"/>
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/btnAdjustMap"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_center_map"
+                            app:fabSize="mini"
+                            app:backgroundTint="@color/white"
+                            app:tint="@color/black"
+                            app:borderWidth="0dp"
+                            android:contentDescription="Centrar mapa"/>
+                    </LinearLayout>
+                </FrameLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Coordenadas -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilLatitud"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:hint="Latitud"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/border_light"
+                    app:hintTextColor="@color/border_light">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtLatitud"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:textSize="14sp"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilLongitud"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:hint="Longitud"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/border_light"
+                    app:hintTextColor="@color/border_light">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtLongitud"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:textSize="14sp"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
 
             <!-- Teléfono -->
             <com.google.android.material.textfield.TextInputLayout

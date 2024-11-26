@@ -13,6 +13,8 @@ public class Usuario {
     protected String correo;
     protected String telefono;
     protected String direccion;
+    protected Double latitudDireccion;
+    protected Double longitudDireccion;
     protected String documentoId; //DNI
     protected String fechaNacimiento;
     protected String foto;
@@ -144,5 +146,21 @@ public class Usuario {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public Double getLongitudDireccion() {
+        return longitudDireccion;
+    }
+
+    public void setLongitudDireccion(Double longitudDireccion) {
+        this.longitudDireccion = longitudDireccion;
+    }
+
+    public Double getLatitudDireccion() {
+        return latitudDireccion;
+    }
+
+    public void setLatitudDireccion(Double latitudDireccion) {
+        this.latitudDireccion = latitudDireccion;
     }
 }

@@ -3,15 +3,24 @@ package com.example.foodisea.activity.login;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -24,6 +33,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+
 import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
 import com.example.foodisea.dialog.LoadingDialog;
@@ -32,6 +42,16 @@ import com.example.foodisea.model.Cliente;
 import com.example.foodisea.model.Repartidor;
 import com.example.foodisea.model.Usuario;
 import com.example.foodisea.repository.UsuarioRepository;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseNetworkException;
@@ -39,8 +59,11 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.function.Function;
@@ -49,7 +72,7 @@ import java.util.function.Function;
  * Activity que maneja el registro de nuevos usuarios tipo Cliente.
  * Permite el registro con datos personales y foto de perfil opcional.
  */
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private ActivityRegisterBinding binding;
     private UsuarioRepository usuarioRepository;
@@ -63,6 +86,21 @@ public class RegisterActivity extends AppCompatActivity {
     private Uri imageUri;
     private boolean hasSelectedImage = false;
     private static final int REQUEST_CAMERA_PERMISSION = 100;
+
+    // Variables para manejo de ubicaciones
+    private GoogleMap mMap;
+    private FusedLocationProviderClient fusedLocationClient;
+    private Marker currentLocationMarker;
+    private static final LatLng DEFAULT_LOCATION = new LatLng(-12.046374, -77.042793); // Lima
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
+    private static final float DEFAULT_ZOOM = 15f;
+    private Geocoder geocoder;
+    private static final int DEBOUNCE_TIME = 800; // milisegundos
+    private Handler searchHandler = new Handler();
+    private Runnable searchRunnable;
+    private String lastSearchText = "";
+    private boolean isUpdatingFromMap = false;
+
 
     // Launchers para resultados de cámara y galería
     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
@@ -106,6 +144,17 @@ public class RegisterActivity extends AppCompatActivity {
         loadingDialog = new LoadingDialog(this);
         EdgeToEdge.enable(this);
         setupWindowInsets();
+
+        // Inicializar componentes de ubicación
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        // Inicializar mapa
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.mapView);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
     }
 
     /**
@@ -127,7 +176,275 @@ public class RegisterActivity extends AppCompatActivity {
         setupInputValidation();
         setupDatePicker();
         setupPhotoSelection();
+        setupLocationViews();
     }
+
+    /**
+     * Configura las vistas del mapa
+     */
+    private void setupLocationViews() {
+        // Configurar el botón de mi ubicación
+        binding.btnMyLocation.setOnClickListener(v -> getCurrentLocation());
+
+        // Botón para ajustar el mapa al marcador
+        binding.btnAdjustMap.setOnClickListener(v -> {
+            if (currentLocationMarker != null) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                        currentLocationMarker.getPosition(), DEFAULT_ZOOM));
+            }
+        });
+
+        // Mejorar la búsqueda con debounce
+        binding.etDireccion.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (isUpdatingFromMap) return; // Evitar bucle infinito
+
+                String text = s.toString().trim();
+                if (text.isEmpty()) {
+                    // Si se borra el texto, limpiar el marcador
+                    if (currentLocationMarker != null) {
+                        currentLocationMarker.remove();
+                        currentLocationMarker = null;
+                    }
+                    binding.txtLatitud.setText("");
+                    binding.txtLongitud.setText("");
+                    return;
+                }
+
+                // Cancelar búsqueda anterior si existe
+                if (searchRunnable != null) {
+                    searchHandler.removeCallbacks(searchRunnable);
+                }
+
+                // Programar nueva búsqueda
+                if (!text.equals(lastSearchText)) {
+                    searchRunnable = () -> searchAddress(text);
+                    searchHandler.postDelayed(searchRunnable, DEBOUNCE_TIME);
+                    lastSearchText = text;
+                }
+            }
+        });
+
+        // Agregar acción de búsqueda al teclado
+        binding.etDireccion.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                String address = binding.etDireccion.getText().toString().trim();
+                if (!address.isEmpty()) {
+                    searchAddress(address);
+                    hideKeyboard();
+                }
+                return true;
+            }
+            return false;
+        });
+    }
+
+    // Método para ocultar el teclado
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null && getCurrentFocus() != null) {
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+    }
+
+
+    private void updateLocationOnMap(LatLng location) {
+        if (location == null) return;
+
+        try {
+            // Actualizar marcador
+            if (currentLocationMarker == null) {
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(location)
+                        .title("Ubicación seleccionada")
+                        .draggable(true); // Permitir arrastrar el marcador
+                currentLocationMarker = mMap.addMarker(markerOptions);
+            } else {
+                currentLocationMarker.setPosition(location);
+            }
+
+            // Actualizar campos
+            binding.txtLatitud.setText(String.format(Locale.US, "%.6f", location.latitude));
+            binding.txtLongitud.setText(String.format(Locale.US, "%.6f", location.longitude));
+
+            // Obtener y actualizar dirección
+            getAddressFromLocation(location);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Error al actualizar la ubicación");
+        }
+    }
+
+    private void getAddressFromLocation(LatLng location) {
+        try {
+            if (Geocoder.isPresent()) {
+                isUpdatingFromMap = true; // Evitar bucle infinito
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    geocoder.getFromLocation(location.latitude, location.longitude, 1, addresses -> {
+                        runOnUiThread(() -> {
+                            if (!addresses.isEmpty()) {
+                                String addressText = getFormattedAddress(addresses.get(0));
+                                binding.etDireccion.setText(addressText);
+                            }
+                            isUpdatingFromMap = false;
+                        });
+                    });
+                } else {
+                    List<Address> addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
+                    if (!addresses.isEmpty()) {
+                        String addressText = getFormattedAddress(addresses.get(0));
+                        binding.etDireccion.setText(addressText);
+                    }
+                    isUpdatingFromMap = false;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            isUpdatingFromMap = false;
+        }
+    }
+
+    private String getFormattedAddress(Address address) {
+        List<String> addressParts = new ArrayList<>();
+
+        // Priorizar el nombre de la vía
+        if (address.getThoroughfare() != null) {
+            String thoroughfare = address.getThoroughfare();
+            if (address.getSubThoroughfare() != null) {
+                thoroughfare += " " + address.getSubThoroughfare();
+            }
+            addressParts.add(thoroughfare);
+        }
+
+        // Agregar distrito
+        if (address.getSubLocality() != null) {
+            addressParts.add(address.getSubLocality());
+        } else if (address.getLocality() != null) {
+            addressParts.add(address.getLocality());
+        }
+
+        // Agregar provincia si es diferente al distrito
+        if (address.getLocality() != null && !address.getLocality().equals(address.getSubLocality())) {
+            addressParts.add(address.getLocality());
+        }
+
+        return TextUtils.join(", ", addressParts);
+    }
+
+    private void searchAddress(String address) {
+        if (TextUtils.isEmpty(address)) return;
+
+        loadingDialog.show("Buscando ubicación...");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            geocoder.getFromLocationName(address, 5, new Geocoder.GeocodeListener() {
+                @Override
+                public void onGeocode(@NonNull List<Address> addresses) {
+                    runOnUiThread(() -> {
+                        loadingDialog.dismiss();
+                        if (!addresses.isEmpty()) {
+                            Address location = addresses.get(0);
+                            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            updateLocationOnMap(latLng);
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+                        } else {
+                            showError("No se encontró la dirección");
+                        }
+                    });
+                }
+
+                @Override
+                public void onError(@NonNull String errorMessage) {
+                    runOnUiThread(() -> {
+                        loadingDialog.dismiss();
+                        showError("Error al buscar la dirección: " + errorMessage);
+                    });
+                }
+            });
+        }
+    }
+
+    private void getCurrentLocation() {
+        if (!checkLocationPermission()) {
+            requestLocationPermission();
+            return;
+        }
+
+        try {
+            Task<Location> locationResult = fusedLocationClient.getLastLocation();
+            locationResult.addOnCompleteListener(this, task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    Location location = task.getResult();
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    updateLocationOnMap(latLng);
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+                } else {
+                    showError("No se pudo obtener tu ubicación actual");
+                }
+            });
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            showError("Error al obtener la ubicación");
+        }
+    }
+
+    /**
+     * Verifica si se tienen los permisos de ubicación necesarios
+     */
+    private boolean checkLocationPermission() {
+        return ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    /**
+     * Solicita los permisos de ubicación necesarios
+     */
+    private void requestLocationPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)) {
+            // El usuario ya ha rechazado el permiso antes, mostrar explicación
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle("Permiso de ubicación necesario")
+                    .setMessage("Se necesita acceso a tu ubicación para poder seleccionar correctamente tu domicilio en el mapa.")
+                    .setPositiveButton("Aceptar", (dialog, which) -> {
+                        // Solicitar permiso
+                        ActivityCompat.requestPermissions(RegisterActivity.this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                LOCATION_PERMISSION_REQUEST_CODE);
+                    })
+                    .setNegativeButton("Cancelar", null)
+                    .show();
+        } else {
+            // Primera vez que se solicita el permiso
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    private boolean validateLocation() {
+        if (binding.etDireccion.getText().toString().trim().isEmpty()) {
+            binding.etDireccionLayout.setError("Ingresa una dirección");
+            return false;
+        }
+
+        if (currentLocationMarker == null) {
+            showError("Por favor, selecciona una ubicación en el mapa");
+            return false;
+        }
+
+        binding.etDireccionLayout.setError(null);
+        return true;
+    }
+
 
     /**
      * Configura los listeners para los botones y campos clickeables
@@ -380,6 +697,13 @@ public class RegisterActivity extends AppCompatActivity {
         nuevoUsuario.setEstado("Activo");
         nuevoUsuario.setTipoUsuario(tipoUsuario);
 
+        // Agregar coordenadas
+        if (currentLocationMarker != null) {
+            LatLng position = currentLocationMarker.getPosition();
+            nuevoUsuario.setLatitudDireccion(position.latitude);
+            nuevoUsuario.setLongitudDireccion(position.longitude);
+        }
+
         return nuevoUsuario;
     }
 
@@ -397,6 +721,7 @@ public class RegisterActivity extends AppCompatActivity {
         isValid &= validateDireccion(binding.etDireccion.getText().toString());
         isValid &= validateFechaNacimiento();
         isValid &= validatePasswords();
+        isValid &= validateLocation();
 
         return isValid;
     }
@@ -567,7 +892,12 @@ public class RegisterActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                setupMapSettings();
+                getCurrentLocation();
+            }
+        } else if (requestCode == REQUEST_CAMERA_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permiso concedido, intentar abrir la cámara de nuevo
                 dispatchTakePictureIntent();
@@ -607,4 +937,52 @@ public class RegisterActivity extends AppCompatActivity {
         }
         binding = null;
     }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        setupMapSettings();
+    }
+
+    private void setupMapSettings() {
+        if (mMap == null) return;
+
+        try {
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            mMap.getUiSettings().setZoomControlsEnabled(true);
+            mMap.getUiSettings().setZoomGesturesEnabled(true);
+            mMap.getUiSettings().setScrollGesturesEnabled(true);
+
+            // Click listener para el mapa
+            mMap.setOnMapClickListener(this::updateLocationOnMap);
+
+            // Agregar listener para cuando se arrastra el marcador
+            mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                @Override
+                public void onMarkerDragStart(Marker marker) {}
+
+                @Override
+                public void onMarkerDrag(Marker marker) {}
+
+                @Override
+                public void onMarkerDragEnd(Marker marker) {
+                    updateLocationOnMap(marker.getPosition());
+                }
+            });
+
+            // Comprobar permisos
+            if (checkLocationPermission()) {
+                mMap.setMyLocationEnabled(true);
+                mMap.getUiSettings().setMyLocationButtonEnabled(false);
+            }
+
+            // Centrar en Lima
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 12f));
+
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            showError("Error al configurar el mapa");
+        }
+    }
+
 }
