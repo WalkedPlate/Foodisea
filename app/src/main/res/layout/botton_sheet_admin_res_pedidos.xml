@@ -59,14 +59,14 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/cart"
-            app:tint="@color/orange" />
+            app:tint="@color/gray" />
 
         <TextView
             android:id="@+id/step1_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="La orden ha sido recibida"
-            android:textColor="@color/orange"
+            android:textColor="@color/gray"
             android:layout_marginStart="8dp" />
     </LinearLayout>
 
@@ -75,7 +75,7 @@
         android:layout_width="2dp"
         android:layout_height="24dp"
         android:layout_marginStart="41dp"
-        android:background="@color/orange" />
+        android:background="@color/gray" />
 
     <!-- Paso 2: Pedido en preparación -->
     <LinearLayout
@@ -89,14 +89,14 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/cooking_time"
-            app:tint="@color/orange" />
+            app:tint="@color/gray" />
 
         <TextView
             android:id="@+id/step2_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="El restaurante está preparando el pedido"
-            android:textColor="@color/orange"
+            android:textColor="@color/gray"
             android:layout_marginStart="8dp" />
     </LinearLayout>
 

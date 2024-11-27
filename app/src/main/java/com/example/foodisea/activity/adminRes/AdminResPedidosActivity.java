@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -36,6 +38,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class AdminResPedidosActivity extends AppCompatActivity {
     ActivityAdminResPedidosBinding binding;
@@ -204,6 +207,48 @@ public class AdminResPedidosActivity extends AppCompatActivity {
 
         TextView textViewIdPedido = bottomSheetView.findViewById(R.id.idPedido);
         textViewIdPedido.setText(pedidoConCliente.getPedido().getId());
+
+        TextView textViewOrdenRecibida = bottomSheetView.findViewById(R.id.step1_text);
+        ImageView imageViewOrdenRecibida = bottomSheetView.findViewById(R.id.step1_icon);
+
+        TextView textViewOrdenPreparando = bottomSheetView.findViewById(R.id.step2_text);
+        ImageView imageViewOrdenPreparando = bottomSheetView.findViewById(R.id.step2_icon);
+
+        TextView textViewOrdenEnCamino = bottomSheetView.findViewById(R.id.step3_text);
+        ImageView imageViewOrdenEnCamino = bottomSheetView.findViewById(R.id.step3_icon);
+
+        TextView textViewOrdenEntregada = bottomSheetView.findViewById(R.id.step4_text);
+        ImageView imageViewOrdenEntregada = bottomSheetView.findViewById(R.id.step4_icon);
+
+        if(Objects.equals(pedidoConCliente.getPedido().getEstado(), "Recibido")){
+            imageViewOrdenRecibida.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
+            textViewOrdenRecibida.setTextColor(ContextCompat.getColor(this, R.color.orange));
+        } else{
+            if(Objects.equals(pedidoConCliente.getPedido().getEstado(),"Preparando")){
+                imageViewOrdenRecibida.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
+                textViewOrdenRecibida.setTextColor(ContextCompat.getColor(this, R.color.orange));
+                imageViewOrdenPreparando.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
+                textViewOrdenPreparando.setTextColor(ContextCompat.getColor(this, R.color.orange));
+            } else{
+                if(Objects.equals(pedidoConCliente.getPedido().getEstado(),"En camino")){
+                    imageViewOrdenRecibida.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
+                    textViewOrdenRecibida.setTextColor(ContextCompat.getColor(this, R.color.orange));
+                    imageViewOrdenPreparando.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
+                    textViewOrdenPreparando.setTextColor(ContextCompat.getColor(this, R.color.orange));
+                    imageViewOrdenEnCamino.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
+                    textViewOrdenEnCamino.setTextColor(ContextCompat.getColor(this, R.color.orange));
+                } else{
+                    imageViewOrdenRecibida.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
+                    textViewOrdenRecibida.setTextColor(ContextCompat.getColor(this, R.color.orange));
+                    imageViewOrdenPreparando.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
+                    textViewOrdenPreparando.setTextColor(ContextCompat.getColor(this, R.color.orange));
+                    imageViewOrdenEnCamino.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
+                    textViewOrdenEnCamino.setTextColor(ContextCompat.getColor(this, R.color.orange));
+                    imageViewOrdenEntregada.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
+                    textViewOrdenEntregada.setTextColor(ContextCompat.getColor(this, R.color.orange));
+                }
+            }
+        }
 
         Button botonDetallePedido = bottomSheetView.findViewById(R.id.buttonVerDetalles);
         botonDetallePedido.setOnClickListener(view -> {
