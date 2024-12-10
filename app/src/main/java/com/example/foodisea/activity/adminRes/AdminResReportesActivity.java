@@ -51,11 +51,6 @@ public class AdminResReportesActivity extends AppCompatActivity {
         });
 
         // Ejemplo de datos
-        Map<String, Integer> ventasPorPlato = new HashMap<>();
-        ventasPorPlato.put("Ceviche", 50);
-        ventasPorPlato.put("Lomo Saltado", 30);
-        ventasPorPlato.put("Ají de Gallina", 20);
-
         Map<String, Integer> ventasPorUsuario = new HashMap<>();
         ventasPorUsuario.put("Usuario1", 80);
         ventasPorUsuario.put("Usuario2", 60);
@@ -64,14 +59,10 @@ public class AdminResReportesActivity extends AppCompatActivity {
         pedidoRepository = new PedidoRepository(this);
         productoRepository = new ProductoRepository();
 
-
-
-        BarChart barChartUsuarios = findViewById(R.id.barChartUsuarios);
-
         // Configurar gráficos
         cargarMapaProductos();
         obtenerListaPedidos();
-        setupBarChart(barChartUsuarios, ventasPorUsuario, "Ventas por Usuario");
+
 
 
     }
@@ -83,6 +74,29 @@ public class AdminResReportesActivity extends AppCompatActivity {
         int index = 0;
         for (Map.Entry<String, Integer> entry : data.entrySet()) {
             entries.add(new BarEntry(index, entry.getValue()));
+            labels.add(entry.getKey());
+            index++;
+        }
+
+        BarDataSet dataSet = new BarDataSet(entries, label);
+        dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        BarData barData = new BarData(dataSet);
+
+        chart.setData(barData);
+        chart.getDescription().setEnabled(false);
+        chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+        chart.getXAxis().setGranularity(1f);
+        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        chart.invalidate(); // Refrescar gráfico
+    }
+
+    private void setupBarChart2(BarChart chart, Map<String,Double> data, String label) {
+        List<BarEntry> entries = new ArrayList<>();
+        List<String> labels = new ArrayList<>();
+
+        int index = 0;
+        for (Map.Entry<String, Double> entry : data.entrySet()) {
+            entries.add(new BarEntry(index, entry.getValue().floatValue()));
             labels.add(entry.getKey());
             index++;
         }
@@ -118,6 +132,7 @@ public class AdminResReportesActivity extends AppCompatActivity {
     // Obtiene la lista de pedidos y genera el resumen con nombres de productos
     public void obtenerListaPedidos() {
         BarChart barChartPlatos = findViewById(R.id.barChartPlatos);
+        BarChart barChartUsuarios = findViewById(R.id.barChartUsuarios);
         pedidoRepository.getPedidosActivosRestaurante("REST001")
                 .addOnSuccessListener(pedidos -> {
                     // Guardar la lista completa
@@ -125,6 +140,12 @@ public class AdminResReportesActivity extends AppCompatActivity {
 
                     // Sumar cantidades y usar nombres de productos
                     HashMap<String, Integer> listaProductoConCantidadTotal = sumaCantidadProductosConNombres(listaPedidosConCliente);
+
+                    //Suma
+                    HashMap<String,Double> listaUsuarioPorVentaTotal = sumaVentasPorUsuario(listaPedidosConCliente);
+
+                    //Configurar grafico
+                    setupBarChart2(barChartUsuarios, listaUsuarioPorVentaTotal, "Ventas por Usuario");
 
                     // Configurar el gráfico de barras con los nombres en lugar de IDs
                     setupBarChart(barChartPlatos, listaProductoConCantidadTotal, "Ventas por Plato");
@@ -154,5 +175,20 @@ public class AdminResReportesActivity extends AppCompatActivity {
         }
 
         return listaProductoConCantidadTotal;
+    }
+
+    //Metodo para obtener las ventas total por usuario
+    public HashMap<String,Double> sumaVentasPorUsuario(List<PedidoConCliente> listaPedidosConCliente){
+        HashMap<String,Double> listaUsuarioPorVentaTotal = new HashMap<>();
+        Double montoTotal = 0.0;
+        for (PedidoConCliente pedidoConCliente : listaPedidosConCliente){
+            if(listaUsuarioPorVentaTotal.containsKey(pedidoConCliente.getCliente().getDocumentoId())){
+                montoTotal = listaUsuarioPorVentaTotal.get(pedidoConCliente.getCliente().getDocumentoId()) + pedidoConCliente.getPedido().getMontoTotal();
+                listaUsuarioPorVentaTotal.put(pedidoConCliente.getCliente().getDocumentoId(),montoTotal);
+            } else{
+                listaUsuarioPorVentaTotal.put(pedidoConCliente.getCliente().getDocumentoId(),pedidoConCliente.getPedido().getMontoTotal());
+            }
+        }
+        return listaUsuarioPorVentaTotal;
     }
 }
