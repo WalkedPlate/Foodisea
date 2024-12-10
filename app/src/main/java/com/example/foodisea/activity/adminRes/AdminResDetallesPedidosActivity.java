@@ -12,6 +12,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.foodisea.R;
 import com.example.foodisea.databinding.ActivityAdminResDetallesPedidosBinding;
 
+import java.util.Objects;
+
 public class AdminResDetallesPedidosActivity extends AppCompatActivity {
 
     ActivityAdminResDetallesPedidosBinding binding;
@@ -26,6 +28,7 @@ public class AdminResDetallesPedidosActivity extends AppCompatActivity {
         String telefono = intent.getStringExtra("telefono");
         String metodoPago = intent.getStringExtra("metodoPago");
         String estadoPago = intent.getStringExtra("estadoPago");
+        Double montoPedido = intent.getDoubleExtra("montoPedido",0.0);
 
         super.onCreate(savedInstanceState);
         binding = ActivityAdminResDetallesPedidosBinding.inflate(getLayoutInflater());
@@ -43,6 +46,10 @@ public class AdminResDetallesPedidosActivity extends AppCompatActivity {
         binding.idTelefono.setText(telefono);
         binding.metodoPago.setText(metodoPago);
         binding.estadoPago.setText(estadoPago);
+        binding.montoPedido.setText("s/. " + montoPedido);
+        Double precioDelivery = 4.0;
+        Double montoTotal = montoPedido + precioDelivery;
+        binding.montoTotal.setText("s/. " + montoTotal);
         binding.btnBack.setOnClickListener(view -> {
             Intent pedidos = new Intent(this, AdminResPedidosActivity.class);
             startActivity(pedidos);
