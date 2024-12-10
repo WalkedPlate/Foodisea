@@ -118,7 +118,8 @@ public class AdminResHomeActivity extends AppCompatActivity {
         });
 
         binding.btnReporte.setOnClickListener(view -> {
-            // Implementar navegación a reportes
+            Intent reportes = new Intent(this, AdminResReportesActivity.class);
+            startActivity(reportes);
         });
 
         binding.btnProfile.setOnClickListener(v -> {

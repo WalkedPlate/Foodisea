@@ -36,6 +36,9 @@
         android:theme="@style/Theme.Foodisea"
         tools:targetApi="31">
         <activity
+            android:name=".activity.adminRes.AdminResReportesActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.cliente.ClienteSeleccionDireccionActivity"
             android:exported="false" />
 
@@ -147,7 +150,7 @@
             android:exported="false" />
         <activity
             android:name=".activity.adminRes.AdminResEditarProductoActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".activity.repartidor.RepartidorChatActivity"
             android:exported="false" />

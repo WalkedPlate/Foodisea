@@ -108,4 +108,7 @@ dependencies {
 
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.19.0'
 
+    //Graficas
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
 }
