@@ -102,6 +102,12 @@
     <string name="btn_si">Sí</string>
     <string name="btn_no">No</string>
 
+    <string-array name="document_types">
+        <item>DNI</item>
+        <item>Pasaporte</item>
+        <item>Carnet de extranjería</item>
+    </string-array>
+
 </resources>
 
 

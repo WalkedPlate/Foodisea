@@ -32,9 +32,24 @@ public class SuperadminMainActivity extends AppCompatActivity {
         });
 
         // funcion botones
-        binding.btnDashboard.setOnClickListener(v->{
-            Intent dashboard = new Intent(this, SuperAdminSelectionActivity.class);
-            startActivity(dashboard);
+        binding.btnClientes.setOnClickListener(v ->{
+            Intent clientes = new Intent(this, SuperAdminGestionUsuariosActivity.class);
+            startActivity(clientes);
+        });
+
+        binding.btnRestaurantes.setOnClickListener(v ->{
+            Intent restaurantes = new Intent(this, SuperAdminGestionRestauranteActivity.class);
+            startActivity(restaurantes);
+        });
+
+        binding.btnRepartidores.setOnClickListener(v ->{
+            Intent repartidores = new Intent(this, SuperAdminGestionRepartidorActivity.class);
+            startActivity(repartidores);
+        });
+
+        binding.btnAdministradores.setOnClickListener(v ->{
+            Intent administradores = new Intent(this, SuperAdminGestionAdministradoresActivity.class);
+            startActivity(administradores);
         });
 
         // boton logs

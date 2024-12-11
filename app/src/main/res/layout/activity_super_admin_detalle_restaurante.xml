@@ -60,8 +60,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="4dp">
 
             <!-- Imagen -->
             <com.google.android.material.imageview.ShapeableImageView
@@ -70,7 +72,6 @@
                 android:layout_height="200dp"
                 android:contentDescription="@string/imgRest"
                 android:scaleType="centerCrop"
-                android:layout_margin="16dp"
                 android:src="@drawable/restaurant_image"
                 app:shapeAppearanceOverlay="@style/RoundedCorners"/>
 
@@ -79,76 +80,143 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_marginVertical="18dp">
 
-                <!-- Descripción  -->
+                <!-- Descripción del restaurante -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Descripción:"
-                    android:textSize="20sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
+                    android:textColor="@color/black"
                     android:fontFamily="@font/sen_font"
-                    android:paddingHorizontal="18dp"/>
-
-                <!-- Descripción del restaurante -->
+                    android:layout_marginBottom="4dp"/>
                 <TextView
                     android:id="@+id/descripcionRestaurant"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="16dp"
                     android:text="@string/descripcionRest"
                     android:textSize="14sp"
                     android:textAlignment="viewStart"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginBottom="18dp"/>
 
-                <!-- Contenedor del admin -->
+                <!-- Admin del restaurante -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Administrador:"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/sen_font"
+                    android:layout_marginBottom="4dp"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingHorizontal="18dp"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="18dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Administrador:"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/sen_font"/>
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/rounded_person_24"
+                        app:tint="@color/btn_dark"/>
 
                     <TextView
                         android:id="@+id/productDetailPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Juan Perez"
-                        android:textColor="@android:color/black"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:paddingStart="10dp"/>
+                        android:layout_marginStart="8dp" />
                 </LinearLayout>
 
-
-
-                <!--Reporte de ventas-->
-                <Button
-                    android:id="@+id/btnReporte"
+                <!-- Información de contacto  -->
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:background="@drawable/search_view_bg"
-                    android:paddingHorizontal="40dp"
-                    app:backgroundTint="@color/bg_gray_light"
-                    android:text="@string/btnReporte"
+                    android:layout_height="wrap_content"
+                    android:text="Contacto:"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
                     android:fontFamily="@font/sen_font"
-                    app:icon="@drawable/report"
-                    app:iconSize="35dp"
-                    app:iconTint="#000000"/>
+                    android:layout_marginBottom="4dp"/>
+
+                <!-- locacion -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/ic_location"
+                        app:tint="@color/btn_dark"/>
+
+                    <TextView
+                        android:id="@+id/tvRestaurantAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2118 Thornridge Cir. Syracuse"
+                        android:layout_marginStart="8dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/ic_call"
+                        app:tint="@color/btn_dark"/>
+
+                    <TextView
+                        android:id="@+id/tvRestaurantTelef"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="990857621"
+                        android:layout_marginStart="8dp" />
+                </LinearLayout>
 
             </LinearLayout>
+
+            <!--Reporte de ventas-->
+            <Button
+                android:id="@+id/btnReporte"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:background="@drawable/search_view_bg"
+                android:paddingHorizontal="40dp"
+                app:backgroundTint="@color/bg_gray_light"
+                android:text="@string/btnReporte"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:fontFamily="@font/sen_font"
+                app:icon="@drawable/report"
+                app:iconSize="35dp"
+                app:iconTint="#000000"
+                android:layout_marginVertical="8dp"/>
+
+            <!-- Botón de registro -->
+            <Button
+                android:id="@+id/btnRegistrar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Eliminar"
+                android:textAllCaps="true"
+                android:textSize="18sp"
+                android:backgroundTint="@android:color/holo_red_light"
+                android:textColor="@android:color/white"
+                android:padding="14dp"
+                android:layout_marginVertical="8dp"
+                android:textStyle="bold"/>
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

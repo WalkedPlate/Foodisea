@@ -19,6 +19,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 
@@ -453,6 +454,9 @@ public class RegisterActivity extends AppCompatActivity implements OnMapReadyCal
         binding.btnBack.setOnClickListener(v -> finish());
         binding.btnRegistrar.setOnClickListener(v -> attemptRegister());
         binding.etFechaNacimiento.setOnClickListener(v -> showDatePicker());
+        binding.tvTipoDoc.setOnItemClickListener((parent, view, position, id) -> {
+            showCorrespondingField(getSelectedDocumentType());
+        });
     }
 
     /**
@@ -985,4 +989,29 @@ public class RegisterActivity extends AppCompatActivity implements OnMapReadyCal
         }
     }
 
+    /**
+     * Tipo de documento de identificación
+     */
+
+    private String getSelectedDocumentType() {
+        return binding.tvTipoDoc.getText().toString();
+    }
+
+    private void showCorrespondingField(String documentType) {
+        hideAllFields();
+        if (documentType.equals("DNI")) {
+            binding.etDniLayout.setVisibility(View.VISIBLE);
+        } else if (documentType.equals("Pasaporte")) {
+            binding.etPassportLayout.setVisibility(View.VISIBLE);
+        } else if (documentType.equals("Carnet de extranjería")) {
+            binding.etExtranjeriaLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    // Oculta todos los campos de entrada
+    private void hideAllFields() {
+        binding.etDniLayout.setVisibility(View.GONE);
+        binding.etPassportLayout.setVisibility(View.GONE);
+        binding.etExtranjeriaLayout.setVisibility(View.GONE);
+    }
 }

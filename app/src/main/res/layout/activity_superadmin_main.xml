@@ -14,6 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <!-- Header -->
         <LinearLayout
             android:id="@+id/headerLayout"
             android:layout_width="match_parent"
@@ -52,6 +53,7 @@
                 app:icon="@drawable/ic_notifications" />
         </LinearLayout>
 
+        <!-- Mensaje de bienvenida -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,154 +62,182 @@
             android:text="Hola *Admin NAME*, ¡Buen Día!"
             android:textSize="16sp" />
 
-        <LinearLayout
+        <!-- Opciones adminitrativas -->
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:padding="16dp">
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_background"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="20"
-                    android:textSize="32sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="RESTAURANTES\nREGISTRADOS"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_background"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="05"
-                    android:textSize="32sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="REPARTIDORES\nACTIVOS"
-                    android:textSize="12sp" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rounded_background"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="VENTAS TOTALES"
-                    android:textSize="14sp" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
-                <Spinner
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:entries="@array/period_options" />
-
-            </LinearLayout>
-
-            <TextView
+            <TableRow
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="$2,241"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:gravity="center_horizontal"
+                android:layout_marginBottom="12dp">
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/estadisticas" />
-        </LinearLayout>
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnRestaurantes"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="8dp"
+                    android:layout_margin="10dp"
+                    app:strokeColor="@color/gray_medium"
+                    app:strokeWidth="1dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:backgroundTint="@color/btn_light">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center">
+
+                        <!-- Texto del botón -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Restaurantes"
+                            android:textSize="14sp"
+                            android:textColor="@color/black"
+                            android:gravity="center"/>
+
+                        <!-- Imagen debajo del texto -->
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:src="@drawable/icon_restaurant"
+                            android:layout_marginTop="8dp"/>
+                    </LinearLayout>
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="@font/sen_font"
-            android:padding="16dp"
-            android:text="Restaurantes con más ventas"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+                </com.google.android.material.card.MaterialCardView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:orientation="horizontal"
-            android:paddingHorizontal="16dp">
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/restaurant_image"
-                android:scaleType="centerCrop" />
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnAdministradores"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="8dp"
+                    app:strokeColor="@color/gray_medium"
+                    app:strokeWidth="1dp"
+                    android:layout_margin="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:backgroundTint="@color/btn_light">
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/restaurant_image"
-                android:scaleType="centerCrop" />
-        </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center">
+
+                        <!-- Texto del botón -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Administradores"
+                            android:textSize="14sp"
+                            android:textColor="@color/black"
+                            android:gravity="center"/>
+
+                        <!-- Imagen debajo del texto -->
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:src="@drawable/icon_admin"
+                            android:layout_marginTop="8dp"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </TableRow>
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="4dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnRepartidores"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="8dp"
+                    app:strokeWidth="1dp"
+                    android:layout_margin="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:backgroundTint="@color/btn_light"
+                    app:strokeColor="@color/gray_medium">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center">
+
+                        <!-- Texto del botón -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Repartidores"
+                            android:textSize="14sp"
+                            android:textColor="@color/black"
+                            android:gravity="center"/>
+
+                        <!-- Imagen debajo del texto -->
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:src="@drawable/ic_repartidor"
+                            android:layout_marginTop="8dp"/>
+                    </LinearLayout>
+
+
+                </com.google.android.material.card.MaterialCardView>
+
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnClientes"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="8dp"
+                    app:strokeWidth="1dp"
+                    android:layout_margin="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:backgroundTint="@color/btn_light"
+                    app:strokeColor="@color/gray_medium">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center">
+
+                        <!-- Texto del botón -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Clientes"
+                            android:textSize="14sp"
+                            android:textColor="@color/black"
+                            android:gravity="center"/>
+
+                        <!-- Imagen debajo del texto -->
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:src="@drawable/icon_cliente"
+                            android:layout_marginTop="8dp"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </TableRow>
+
+        </TableLayout>
+
+
 
     </LinearLayout>
-
-
-    <!-- FloatingActionButton en la parte inferior izquierda -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnDashboard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="20dp"
-        android:clickable="true"
-        android:backgroundTint="@color/btn_dark"
-        android:src="@drawable/ic_dashboard"
-        app:tint="@android:color/white"
-        android:contentDescription="Agregar nuevo producto"/>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

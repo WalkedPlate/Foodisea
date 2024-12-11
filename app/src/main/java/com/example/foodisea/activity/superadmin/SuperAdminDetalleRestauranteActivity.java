@@ -53,5 +53,9 @@ public class SuperAdminDetalleRestauranteActivity extends AppCompatActivity {
             Intent editRest = new Intent(this, SuperAdminEditRestauranteActivity.class);
             startActivity(editRest);
         });
+        binding.btnReporte.setOnClickListener(v -> {
+            Intent reporteRest = new Intent(this, SuperAdminRestaurantesReportesActivity.class);
+            startActivity(reporteRest);
+        });
     }
 }

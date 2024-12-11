@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:paddingBottom="16dp">
+                android:paddingBottom="20dp">
 
                 <!-- Contenedor circular con imagen de perfil e ícono de cámara -->
                 <FrameLayout
@@ -88,6 +88,16 @@
 
             </LinearLayout>
 
+            <!-- Sección de información personal -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Información personal"
+                android:padding="8dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/sen_font"
+                android:layout_marginBottom="8dp"/>
 
             <!-- Nombres -->
             <com.google.android.material.textfield.TextInputLayout
@@ -131,12 +141,35 @@
                     android:maxLength="50" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Seleccionar el tipo de documento -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etTipoDocLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Seleccionar doc. de identidad"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                app:boxStrokeColor="@color/border_light"
+                app:hintTextColor="@color/border_light"
+                app:cursorColor="@color/border_light">
+
+                <AutoCompleteTextView
+                    android:id="@+id/tvTipoDoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:backgroundTint="@color/bg_color"
+                    app:simpleItems="@array/document_types"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <!-- DNI -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/etDniLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="DNI"
+                android:visibility="gone"
                 android:layout_marginBottom="16dp"
                 app:endIconMode="custom"
                 app:endIconDrawable="@drawable/rounded_person_24"
@@ -150,6 +183,36 @@
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:maxLength="8" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Pasaporte -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etPassportLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Pasaporte"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPassport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Carnet de Extranjería -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etExtranjeriaLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Carnet de Extranjería"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etExtranjeria"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Fecha de Nacimiento -->
@@ -174,9 +237,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Datos del domicilio"
-                android:textSize="18sp"
+                android:padding="8dp"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="16dp"/>
+                android:fontFamily="@font/sen_font"
+                android:layout_marginBottom="10dp"/>
 
             <!-- Campo de dirección -->
             <com.google.android.material.textfield.TextInputLayout
@@ -304,6 +369,16 @@
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
+            <!-- Sección de contacato -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Información de contacto"
+                android:padding="8dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/sen_font"
+                android:layout_marginBottom="8dp"/>
 
             <!-- Teléfono -->
             <com.google.android.material.textfield.TextInputLayout
