@@ -49,11 +49,6 @@ public class SuperAdminLogsActivity extends AppCompatActivity {
         binding.btnBack.setOnClickListener(v -> {
             finish(); // Cierra la actividad actual y regresa
         });
-
-        binding.btnHome.setOnClickListener(v -> {
-            Intent home = new Intent(this, SuperadminMainActivity.class);
-            startActivity(home);
-        });
     }
 
     private void initRecyclerView() {

@@ -10,12 +10,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
-import com.example.foodisea.databinding.ActivitySuperAdminRestaurantesReportesBinding;
-import com.example.foodisea.databinding.ActivitySuperAdminSolicitudesRepartidorBinding;
+import com.example.foodisea.databinding.ActivitySuperAdminDetalleRestauranteBinding;
+import com.example.foodisea.databinding.ActivitySuperAdminEditRestauranteBinding;
 
-public class SuperAdminRestaurantesReportesActivity extends AppCompatActivity {
+public class SuperAdminEditRestauranteActivity extends AppCompatActivity {
 
-    ActivitySuperAdminRestaurantesReportesBinding binding;
+    ActivitySuperAdminEditRestauranteBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class SuperAdminRestaurantesReportesActivity extends AppCompatActivity {
      * Inicializa los componentes principales de la actividad
      */
     private void initializeComponents() {
-        binding = ActivitySuperAdminRestaurantesReportesBinding.inflate(getLayoutInflater());
+        binding = ActivitySuperAdminEditRestauranteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         EdgeToEdge.enable(this);
         setupWindowInsets();
@@ -50,11 +50,5 @@ public class SuperAdminRestaurantesReportesActivity extends AppCompatActivity {
      */
     private void setupListeners() {
         binding.btnBack.setOnClickListener(v -> finish());
-        binding.btnHome.setOnClickListener(v-> {
-            Intent home = new Intent(this, SuperadminMainActivity.class);
-            home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(home);
-            finish();
-        });
     }
 }

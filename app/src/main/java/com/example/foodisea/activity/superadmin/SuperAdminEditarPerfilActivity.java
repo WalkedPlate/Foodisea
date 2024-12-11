@@ -10,12 +10,17 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
-import com.example.foodisea.databinding.ActivitySuperAdminRestaurantesReportesBinding;
-import com.example.foodisea.databinding.ActivitySuperAdminSolicitudesRepartidorBinding;
+import com.example.foodisea.activity.cliente.ClienteEditarPerfilActivity;
+import com.example.foodisea.data.SessionManager;
+import com.example.foodisea.databinding.ActivitySuperAdminEditarPerfilBinding;
+import com.example.foodisea.databinding.ActivitySuperAdminInfoPerfilBinding;
+import com.example.foodisea.model.Superadmin;
 
-public class SuperAdminRestaurantesReportesActivity extends AppCompatActivity {
+public class SuperAdminEditarPerfilActivity extends AppCompatActivity {
 
-    ActivitySuperAdminRestaurantesReportesBinding binding;
+    ActivitySuperAdminEditarPerfilBinding binding;
+    private SessionManager sessionManager;
+    private Superadmin superadminActual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +33,18 @@ public class SuperAdminRestaurantesReportesActivity extends AppCompatActivity {
      * Inicializa los componentes principales de la actividad
      */
     private void initializeComponents() {
-        binding = ActivitySuperAdminRestaurantesReportesBinding.inflate(getLayoutInflater());
+        binding = ActivitySuperAdminEditarPerfilBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Inicializar SessionManager
+        sessionManager = SessionManager.getInstance(this);
+
+        // Obtener al administrador de restaurante logueado
+        superadminActual = sessionManager.getSuperadminActual();
+
+        // Actualizar la UI con los datos del super administrador
+        //updateUIWithUserData();
+
         EdgeToEdge.enable(this);
         setupWindowInsets();
     }
@@ -50,11 +65,5 @@ public class SuperAdminRestaurantesReportesActivity extends AppCompatActivity {
      */
     private void setupListeners() {
         binding.btnBack.setOnClickListener(v -> finish());
-        binding.btnHome.setOnClickListener(v-> {
-            Intent home = new Intent(this, SuperadminMainActivity.class);
-            home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(home);
-            finish();
-        });
     }
 }

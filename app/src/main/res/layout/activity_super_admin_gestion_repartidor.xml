@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -13,52 +13,36 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <!-- Header -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
-            android:gravity="center_vertical">
-            <!-- Logo Foodisea -->
-            <ImageView
-                android:id="@+id/ivLogoFoodisea"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:contentDescription="@string/app_name"
-                app:srcCompat="@drawable/foodisea" />
-        </LinearLayout>
+            android:padding="12dp">
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
-            android:gravity="center_vertical">
-
-            <!-- Botón de regresar (flecha) -->
             <Button
                 android:id="@+id/btnBack"
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/btnBack"
                 app:icon="@drawable/baseline_arrow_back_ios_new_24"
-                app:iconTint="@color/black"
-                android:backgroundTint="@color/bg_color"/>
+                android:contentDescription="@string/btnBack"
+                android:backgroundTint="@color/bg_color"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Gestión de Repartidores"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/sen_font"
-                android:padding="8dp"/>
+                android:text="Gestión de repartidores"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:fontFamily="@font/sen_font"/>
 
-            <!-- Icono de home -->
             <Button
                 android:id="@+id/btnHome"
                 style="?attr/materialIconButtonFilledStyle"
@@ -66,18 +50,21 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="Home"
                 app:icon="@drawable/ic_home"
-                android:backgroundTint="@color/btn_medium"/>
-        </LinearLayout>
+                android:backgroundTint="@color/btn_medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Barra de búsqueda -->
         <androidx.appcompat.widget.SearchView
-            android:id="@+id/svRestaurants"
+            android:id="@+id/svRepartidores"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="8dp"
             android:layout_marginHorizontal="16dp"
-            app:queryHint="Buscar Repartidores"
+            app:queryHint="Buscar repartidores"
             app:iconifiedByDefault="false"
             android:background="@drawable/search_view_bg"/>
 
@@ -92,17 +79,17 @@
 
         <!-- FloatingActionButton en la parte inferior izquierda -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btnDashboard"
+            android:id="@+id/btnSolicitudes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="20dp"
             android:clickable="true"
             android:backgroundTint="@color/btn_dark"
-            android:src="@drawable/ic_add"
+            android:src="@drawable/ic_add_person"
             app:tint="@android:color/white"
-            android:contentDescription="Agregar nuevo producto"/>
+            android:contentDescription="solicitudes de repartidores"/>
 
 
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

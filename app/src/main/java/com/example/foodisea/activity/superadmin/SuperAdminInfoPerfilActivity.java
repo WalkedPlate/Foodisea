@@ -1,4 +1,4 @@
-package com.example.foodisea.activity.cliente;
+package com.example.foodisea.activity.superadmin;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,39 +11,40 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
+import com.example.foodisea.activity.cliente.ClienteEditarPerfilActivity;
 import com.example.foodisea.data.SessionManager;
-import com.example.foodisea.databinding.ActivityClienteInfoPerfilBinding;
-import com.example.foodisea.databinding.ActivityClientePerfilBinding;
-import com.example.foodisea.model.Cliente;
+import com.example.foodisea.databinding.ActivityClienteEditarPerfilBinding;
+import com.example.foodisea.databinding.ActivitySuperAdminInfoPerfilBinding;
+import com.example.foodisea.model.Superadmin;
 
-public class ClienteInfoPerfilActivity extends AppCompatActivity {
+public class SuperAdminInfoPerfilActivity extends AppCompatActivity {
 
-    ActivityClienteInfoPerfilBinding binding;
+    ActivitySuperAdminInfoPerfilBinding binding;
     private SessionManager sessionManager;
-    private Cliente clienteActual;
+    private Superadmin superadminActual;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeComponents();
         setupListeners();
-
     }
 
     /**
      * Inicializa los componentes principales de la actividad
      */
     private void initializeComponents() {
-        binding = ActivityClienteInfoPerfilBinding.inflate(getLayoutInflater());
+        binding = ActivitySuperAdminInfoPerfilBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Inicializar SessionManager
         sessionManager = SessionManager.getInstance(this);
 
-        // Obtener al cliente logueado
-        clienteActual = sessionManager.getClienteActual();
+        // Obtener al administrador de restaurante logueado
+        superadminActual = sessionManager.getSuperadminActual();
 
-        // Actualizar la UI con los datos del cliente
+        // Actualizar la UI con los datos del super administrador
         updateUIWithUserData();
 
         EdgeToEdge.enable(this);
@@ -67,43 +68,38 @@ public class ClienteInfoPerfilActivity extends AppCompatActivity {
     private void setupListeners() {
         binding.btnBack.setOnClickListener(v -> finish());
         binding.btnEdit.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ClienteEditarPerfilActivity.class);
+            Intent intent = new Intent(this, SuperAdminEditarPerfilActivity.class);
             startActivity(intent);
         });
     }
 
     /**
-     * Actualiza la UI con los datos del cliente actual
+     * Actualiza la UI con los datos del superadmin actual
      */
     private void updateUIWithUserData() {
-        if (clienteActual != null) {
-            // Actualizar datos del cliente
-            binding.tvUserName.setText(clienteActual.obtenerNombreCompleto());
-            binding.tvUserDNI.setText(clienteActual.getDocumentoId());
-            binding.tvUserBirthdate.setText(clienteActual.getFechaNacimiento());
-            binding.tvUserMail.setText(clienteActual.getCorreo());
-            binding.tvUserCell.setText(clienteActual.getTelefono());
-            binding.tvUserAddress.setText(clienteActual.getDireccion());
+        if (superadminActual != null) {
+            // Actualizar datos del superadmin
+            binding.tvUserName.setText(superadminActual.obtenerNombreCompleto());
+            binding.tvUserDNI.setText(superadminActual.getDocumentoId());
+            binding.tvUserBirthdate.setText(superadminActual.getFechaNacimiento());
+            binding.tvUserMail.setText(superadminActual.getCorreo());
+            binding.tvUserAddress.setText(superadminActual.getDireccion());
 
             // Cargar imagen de perfil
-            if (clienteActual.getFoto() != null && !clienteActual.getFoto().isEmpty()) {
-                // Cargar imagen desde URL
+            if (superadminActual.getFoto() != null && !superadminActual.getFoto().isEmpty()) {
                 Glide.with(this)
-                        .load(clienteActual.getFoto())
-                        .placeholder(R.drawable.ic_profile) // Imagen por defecto mientras carga
-                        .error(R.drawable.error_image)      // Imagen si hay error al cargar
+                        .load(superadminActual.getFoto())
+                        .placeholder(R.drawable.ic_profile)
+                        .error(R.drawable.error_image)
                         .circleCrop()
                         .into(binding.ivUserPhoto);
             } else {
-                // Si no hay foto, mostrar imagen por defecto
                 Glide.with(this)
                         .load(R.drawable.ic_profile)
                         .circleCrop()
                         .into(binding.ivUserPhoto);
             }
-
-            // Mostrar tipo de usuario
-            binding.tvTypeUser.setText("Cliente de Foodisea");
         }
     }
+
 }

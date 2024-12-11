@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/bg_color"
-    tools:context=".activity.superadmin.SuperAdminGestionUsuariosActivity">
+    tools:context=".activity.cliente.ClienteHistorialPedidosActivity">
 
     <!-- Header -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,7 +31,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Gestión de clientes"
+            android:text="Historial de pedidos"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -39,40 +39,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:fontFamily="@font/sen_font"/>
 
-        <Button
-            android:id="@+id/btnHome"
-            style="?attr/materialIconButtonFilledStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="Home"
-            app:icon="@drawable/ic_home"
-            android:backgroundTint="@color/btn_medium"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <!-- Barra de búsqueda -->
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/svClientes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="8dp"
-        android:layout_marginHorizontal="16dp"
-        app:queryHint="Buscar clientes"
-        app:iconifiedByDefault="false"
-        android:background="@drawable/search_view_bg"/>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvUsers"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_weight="1"
-        android:paddingHorizontal="16dp"
-        tools:listitem="@layout/item_user" />
 
 </LinearLayout>

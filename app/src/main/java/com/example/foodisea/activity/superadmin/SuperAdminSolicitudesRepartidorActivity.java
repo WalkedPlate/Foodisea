@@ -2,7 +2,6 @@ package com.example.foodisea.activity.superadmin;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,43 +10,27 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
-import com.example.foodisea.databinding.ActivitySuperAdminAgregarRestauranteBinding;
+import com.example.foodisea.data.SessionManager;
+import com.example.foodisea.databinding.ActivitySuperAdminInfoPerfilBinding;
 import com.example.foodisea.databinding.ActivitySuperAdminSolicitudesRepartidorBinding;
 
-public class SuperAdminAgregarRestauranteActivity extends AppCompatActivity {
-    ActivitySuperAdminAgregarRestauranteBinding binding;
+public class SuperAdminSolicitudesRepartidorActivity extends AppCompatActivity {
+
+    ActivitySuperAdminSolicitudesRepartidorBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeComponents();
         setupListeners();
-
-        // Configura el botón de guardar restaurante
-        binding.btnCrearRestaurante.setOnClickListener(v -> {
-            String nombre = binding.etNombreRes.getText().toString(); // Ajustado a etNombre
-            String ruc = binding.etRuc.getText().toString();
-            String telefono = binding.etTelefono.getText().toString();
-           // String categoria = binding.etCategoria.getText().toString();
-            //String direccion = binding.etDireccion.getText().toString();
-
-            if (!nombre.isEmpty()  && !telefono.isEmpty()) {
-                // Lógica para guardar el restaurante
-                Toast.makeText(this, "Restaurante guardado exitosamente", Toast.LENGTH_SHORT).show();
-                finish(); // Cierra la actividad después de guardar
-            } else {
-                Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 
     /**
      * Inicializa los componentes principales de la actividad
      */
     private void initializeComponents() {
-        binding = ActivitySuperAdminAgregarRestauranteBinding.inflate(getLayoutInflater());
+        binding = ActivitySuperAdminSolicitudesRepartidorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         EdgeToEdge.enable(this);
         setupWindowInsets();
     }
@@ -68,6 +51,11 @@ public class SuperAdminAgregarRestauranteActivity extends AppCompatActivity {
      */
     private void setupListeners() {
         binding.btnBack.setOnClickListener(v -> finish());
-
+        binding.btnHome.setOnClickListener(v-> {
+            Intent home = new Intent(this, SuperadminMainActivity.class);
+            home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(home);
+            finish();
+        });
     }
 }

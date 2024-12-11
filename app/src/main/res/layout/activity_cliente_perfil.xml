@@ -9,76 +9,71 @@
     tools:context=".activity.cliente.ClientePerfilActivity"
     android:background="@color/bg_color">
 
-
-    <!-- Header con botón de regresar y título -->
-    <LinearLayout
+    <!-- Header -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
         android:padding="12dp">
 
-        <!-- Botón de regresar (flecha) -->
         <Button
-            style="?attr/materialIconButtonFilledTonalStyle"
             android:id="@+id/btnBack"
+            style="?attr/materialIconButtonFilledTonalStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:icon="@drawable/baseline_arrow_back_ios_new_24"
             android:contentDescription="@string/btnBack"
-            android:backgroundTint="@color/bg_color"/>
-
+            android:backgroundTint="@color/bg_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Perfil"
-            android:textSize="20sp"
-            android:fontFamily="@font/sen_font">
-        </TextView>
-    </LinearLayout>
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:fontFamily="@font/sen_font"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/ivUserPhoto"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:layout_margin="8dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="16dp">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
 
-        <ImageView
-            android:id="@+id/ivUserPhoto"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop" />
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:orientation="vertical">
+            android:text="John Gomez"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:fontFamily="@font/sen_font"/>
 
-            <TextView
-                android:id="@+id/tvUserName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="John Gomez"
-                android:textColor="#000000"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:fontFamily="@font/sen_font"/>
-
-            <TextView
-                android:id="@+id/tvTypeUser"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cliente de Foodisea"
-                android:textColor="#808080"
-                android:textSize="14sp" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/tvTypeUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cliente de Foodisea"
+            android:textColor="#808080"
+            android:textSize="14sp" />
     </LinearLayout>
-
 
     <!-- Opción: Información Personal -->
     <LinearLayout
@@ -86,10 +81,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="24dp"
+        android:padding="20dp"
         android:background="@drawable/rounded_background"
         android:layout_marginTop="24dp"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginHorizontal="24dp"
         android:gravity="center_vertical">
 
         <ImageView
@@ -103,8 +98,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:text="Informacion Personal"
-            android:textSize="18sp"
+            android:text="Información personal"
+            android:textSize="16sp"
             android:fontFamily="@font/sen_font"
             android:textColor="@color/black"
             android:layout_weight="1" />
@@ -122,10 +117,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="24dp"
+        android:padding="20dp"
         android:background="@drawable/rounded_background"
         android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginHorizontal="24dp"
         android:gravity="center_vertical">
 
         <ImageView
@@ -139,8 +134,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:text="Mis pedidos"
-            android:textSize="18sp"
+            android:text="Historial de pedidos"
+            android:textSize="16sp"
             android:fontFamily="@font/sen_font"
             android:textColor="@color/black"
             android:layout_weight="1" />
@@ -159,10 +154,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="24dp"
+        android:padding="20dp"
         android:background="@drawable/rounded_background"
         android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="16dp">
+        android:layout_marginHorizontal="24dp">
 
         <ImageView
             android:id="@+id/ivMyFavoritesIcon"
@@ -176,7 +171,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:text="Restaurantes favoritos"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:fontFamily="@font/sen_font"
             android:textColor="@color/black"
             android:layout_weight="1" />
@@ -188,23 +183,60 @@
             android:src="@drawable/ic_arrow_right" />
     </LinearLayout>
 
+    <!-- Opción: Cambiar contraseña -->
+    <LinearLayout
+        android:id="@+id/llChangePass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        android:background="@drawable/rounded_background"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="24dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/ivLockIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_lock"/>
+
+        <TextView
+            android:id="@+id/tvChangePass"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="Cambiar contraseña"
+            android:textSize="16sp"
+            android:fontFamily="@font/sen_font"
+            android:textColor="@color/black"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/ivArrow4"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_right" />
+    </LinearLayout>
+
     <!-- Opción: Cerrar Sesión -->
     <LinearLayout
         android:id="@+id/llLogout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="24dp"
+        android:padding="20dp"
         android:background="@drawable/rounded_background"
         android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginHorizontal="24dp"
         android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/ivLogoutIcon"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_logout" />
+            android:src="@drawable/ic_logout"
+            app:tint="@color/btn_dark"/>
 
         <TextView
             android:id="@+id/tvLogout"
@@ -212,13 +244,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:text="Cerrar sesión"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:fontFamily="@font/sen_font"
             android:textColor="@color/black"
             android:layout_weight="1" />
 
         <ImageView
-            android:id="@+id/ivArrow4"
+            android:id="@+id/ivArrow5"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_arrow_right" />

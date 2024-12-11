@@ -41,14 +41,16 @@ public class SuperAdminGestionRestauranteActivity extends AppCompatActivity {
             finish(); // Cierra la actividad actual y regresa
         });
 
-        binding.btnDashboard.setOnClickListener(v -> {
+        binding.btnAddRestaurant.setOnClickListener(v -> {
             Intent intent = new Intent(SuperAdminGestionRestauranteActivity.this, SuperAdminAgregarRestauranteActivity.class);
             startActivity(intent);
         });
 
-        binding.btnHome.setOnClickListener(v -> {
+        binding.btnHome.setOnClickListener(v-> {
             Intent home = new Intent(this, SuperadminMainActivity.class);
+            home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(home);
+            finish();
         });
 
         // Configurar el adaptador

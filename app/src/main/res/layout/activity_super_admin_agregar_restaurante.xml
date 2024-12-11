@@ -8,218 +8,188 @@
     android:background="@color/bg_color"
     tools:context=".activity.superadmin.SuperAdminAgregarRestauranteActivity">
 
-    <!-- Top Bar -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <!-- Header -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_color"
-        android:elevation="0dp">
+        android:padding="12dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btnBack"
+            style="?attr/materialIconButtonFilledTonalStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            app:icon="@drawable/baseline_arrow_back_ios_new_24"
+            android:contentDescription="@string/btnBack"
+            android:backgroundTint="@color/bg_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-            <Button
-                android:id="@+id/btnBack"
-                style="?attr/materialIconButtonFilledTonalStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/btnBack"
-                app:icon="@drawable/baseline_arrow_back_ios_new_24"
-                android:backgroundTint="@color/bg_color"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nuevo restaurante"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:fontFamily="@font/sen_font"/>
 
-            <TextView
-                android:id="@+id/tvNewProduct"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nuevo Restaurante"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/sen_font" />
-        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </com.google.android.material.appbar.MaterialToolbar>
-
-    <!-- ScrollView para el contenido -->
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
-            <!-- Sección de Imágenes -->
-            <com.google.android.material.card.MaterialCardView
+            android:paddingHorizontal="32dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="28dp">
+
+            <!-- IMAGEN REST -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/gray_300">
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingBottom="16dp">
 
-                <LinearLayout
+                <!-- Contenedor e ícono de cámara -->
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_height="180dp"
+                    android:layout_gravity="center">
 
-                    <TextView
+                    <!-- Imagen de perfil circular -->
+                    <ImageView
+                        android:id="@+id/imgProfile"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Fotos del restaurante"
-                        android:textSize="16sp"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/sen_font"/>
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:background="@drawable/rounded_corners"
+                        android:backgroundTint="@color/btn_light"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSelectImages"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Seleccionar Imágenes"
-                        app:icon="@drawable/btn_add_img"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                        android:layout_height="180dp"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:text="Selecciona una imagen"
+                        android:textColor="@color/gray_500"
+                        android:textAlignment="center"
+                        android:gravity="center"
+                        app:icon="@drawable/ic_add_photo"
+                        app:iconGravity="textTop"
+                        app:iconSize="32dp"
+                        app:iconTint="@color/gray_500"
+                        app:iconPadding="8dp"
+                        android:backgroundTint="@android:color/transparent"
+                        android:background="@drawable/button_dashed_border"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
-                    <TextView
-                        android:id="@+id/tvImageCount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Imágenes seleccionadas: 0"
-                        android:textAlignment="center"/>
+                </FrameLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvImagePreview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal"
-                        android:clipToPadding="false"
-                        android:paddingStart="4dp"
-                        android:paddingEnd="4dp"/>
+            </LinearLayout>
 
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Nombre del Producto -->
+            <!-- NOMBRE REST -->
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etNombreLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:hint="Nombre del restaurante"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
+                android:layout_marginBottom="16dp"
+                app:endIconMode="custom"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/border_light"
+                app:hintTextColor="@color/border_light"
+                app:cursorColor="@color/border_light">
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etNombre"
+                    android:id="@+id/etNombreRes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"/>
+                    android:inputType="text"
+                    android:maxLength="50" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- DESCRIPCION -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etDescriptionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Descripción"
+                android:layout_marginBottom="16dp"
+                app:endIconMode="custom"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/border_light"
+                app:hintTextColor="@color/border_light"
+                app:cursorColor="@color/border_light">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="300" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- RUC -->
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etRucLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="RUC"
                 android:layout_marginBottom="16dp"
-                android:hint="Número de RUC"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
+                app:endIconMode="custom"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/border_light"
+                app:hintTextColor="@color/border_light"
+                app:cursorColor="@color/border_light">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etRuc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- WEB -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:hint="Página Web"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etWeb"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"/>
+                    android:inputType="number"
+                    android:maxLength="11" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- TELÉFONO -->
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etTelefonoLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:hint="Teléfono"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
+                android:layout_marginBottom="16dp"
+                app:endIconMode="custom"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/border_light"
+                app:hintTextColor="@color/border_light"
+                app:cursorColor="@color/border_light">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etTelefono"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- CATEGORÍA -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:hint="Categoría"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etCategoria"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"/>
+                    android:inputType="phone"
+                    android:maxLength="9" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- DIRECCIÓN -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:hint="Dirección"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDireccion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Tipo restaurante -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:hint="Tipo de Restaurante"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
-                <AutoCompleteTextView
-                    android:id="@+id/spinnerTipoRestaurante"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Administrador -->
+            <!-- ADMINISTRADOR -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:hint="Administrador"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                app:boxStrokeColor="@color/border_light"
+                app:hintTextColor="@color/border_light"
+                app:cursorColor="@color/border_light">
 
                 <AutoCompleteTextView
                     android:id="@+id/spinnerAdministrador"
@@ -228,62 +198,21 @@
                     android:inputType="none"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Botón Crear -->
+            <Button
+                android:id="@+id/btnCrearRestaurante"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Registrar"
+                android:textAllCaps="true"
+                android:textSize="18sp"
+                android:backgroundTint="@android:color/holo_red_light"
+                android:textColor="@android:color/white"
+                android:padding="16dp"
+                android:layout_marginVertical="8dp"
+                android:textStyle="bold"/>
+
         </LinearLayout>
-
-    </ScrollView>
-
-    <!-- Botón Crear y ProgressBar -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@color/white"
-        android:elevation="8dp">
-
-        <!-- Container para el progreso -->
-        <LinearLayout
-            android:id="@+id/layoutProgress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/tvProgressStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Subiendo imágenes..."
-                android:textAlignment="center"
-                android:layout_marginBottom="8dp"/>
-
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/progressBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:progress="0"
-                app:trackThickness="8dp"/>
-
-            <TextView
-                android:id="@+id/tvProgressPercentage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="0%"
-                android:textAlignment="center"
-                android:layout_marginBottom="8dp"/>
-        </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnCrearRestaurante"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="CREAR RESTAURANTE"
-            android:textSize="16sp"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:backgroundTint="@color/btn_medium"/>
-
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

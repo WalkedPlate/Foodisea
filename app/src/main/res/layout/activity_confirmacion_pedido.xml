@@ -53,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingHorizontal="65dp"
-        android:text="Se realizó la compra exitósamente, gracias por usar nuestro servicio"
+        android:text="Se registró el pedido exitósamente, gracias por usar nuestro servicio"
         android:textAlignment="center"
         android:textSize="16sp"
         android:fontFamily="@font/sen_font"

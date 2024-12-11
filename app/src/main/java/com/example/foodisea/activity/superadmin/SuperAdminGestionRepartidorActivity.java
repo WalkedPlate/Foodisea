@@ -17,6 +17,7 @@ import com.example.foodisea.adapter.superAdmin.UsuarioAdapter;
 import com.example.foodisea.databinding.ActivitySuperAdminGestionRepartidorBinding;
 import com.example.foodisea.databinding.ActivitySuperAdminGestionRestauranteBinding;
 import com.example.foodisea.databinding.ActivitySuperAdminGestionUsuariosBinding;
+import com.example.foodisea.databinding.ActivitySuperAdminSolicitudesRepartidorBinding;
 import com.example.foodisea.model.Usuario;
 import com.example.foodisea.repository.UsuarioRepository;
 
@@ -31,32 +32,52 @@ public class SuperAdminGestionRepartidorActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        binding = ActivitySuperAdminGestionRepartidorBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        EdgeToEdge.enable(this);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
-        //funcion de botones:
-        binding.btnBack.setOnClickListener(v -> {
-            finish(); // Cierra la actividad actual y regresa
-        });
-
-        binding.btnHome.setOnClickListener(v -> {
-            Intent home = new Intent(this, SuperadminMainActivity.class);
-            startActivity(home);
-        });
+        initializeComponents();
+        setupListeners();
 
         // Crear instancia de UsuarioRepository
         usuarioRepository = new UsuarioRepository();
 
         //Obtiene los usuarios de BD y los carga al Recicler View
         obtenerUsuarios();
+    }
+
+    /**
+     * Inicializa los componentes principales de la actividad
+     */
+    private void initializeComponents() {
+        binding = ActivitySuperAdminGestionRepartidorBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        EdgeToEdge.enable(this);
+        setupWindowInsets();
+    }
+
+    /**
+     * Configura los insets de la ventana
+     */
+    private void setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+    }
+
+    /**
+     * Configura los listeners de los botones
+     */
+    private void setupListeners() {
+        binding.btnBack.setOnClickListener(v -> finish());
+        binding.btnHome.setOnClickListener(v-> {
+            Intent home = new Intent(this, SuperadminMainActivity.class);
+            home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(home);
+            finish();
+        });
+        binding.btnSolicitudes.setOnClickListener(v -> {
+            Intent solicitudes = new Intent(this, SuperAdminSolicitudesRepartidorActivity.class);
+            startActivity(solicitudes);
+        });
     }
 
     // Método que devuelve una lista de usuarios de ejemplo

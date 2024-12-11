@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_color"
+    tools:context=".activity.cliente.ClienteEditarPerfilActivity">
+
+    <!-- Header -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <Button
+            android:id="@+id/btnBack"
+            style="?attr/materialIconButtonFilledTonalStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/baseline_arrow_back_ios_new_24"
+            android:contentDescription="@string/btnBack"
+            android:backgroundTint="@color/bg_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Editar perfil"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:fontFamily="@font/sen_font"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        android:paddingHorizontal="24dp">
+
+        <!-- Foto de perfil -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingBottom="16dp">
+
+            <!-- Contenedor circular con imagen de perfil e ícono de cámara -->
+            <FrameLayout
+                android:layout_width="140dp"
+                android:layout_height="140dp">
+
+                <!-- Imagen de perfil circular -->
+                <ImageView
+                    android:id="@+id/imgProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/circular_background"/>
+
+                <!-- Ícono de cámara sobre la imagen de perfil -->
+                <ImageView
+                    android:id="@+id/iconCamera"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="bottom|end"
+                    android:src="@drawable/ic_camara"
+                    android:background="@drawable/circular_icon_background"
+                    android:padding="8dp" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <!-- Telefono -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etTelefonoLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Teléfono"
+            android:layout_marginBottom="16dp"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/ic_call"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/border_light"
+            app:hintTextColor="@color/border_light"
+            app:cursorColor="@color/border_light">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etTelefono"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:maxLength="9" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Campo de dirección -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etDireccionLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Domicilio (Calle, número, distrito)"
+            android:layout_marginBottom="16dp"
+            app:startIconDrawable="@drawable/round_search_24"
+            app:endIconMode="clear_text"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/border_light"
+            app:hintTextColor="@color/border_light"
+            app:helperText="Busca una dirección o selecciona en el mapa"
+            app:helperTextEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDireccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress"
+                android:imeOptions="actionSearch"
+                android:maxLength="100"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Mapa en CardView para consistencia -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/border_light">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <fragment
+                    android:id="@+id/mapView"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <!-- Botones flotantes -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|bottom"
+                    android:layout_margin="16dp"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/btnMyLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:src="@drawable/ic_location_search"
+                        app:fabSize="mini"
+                        app:backgroundTint="@color/white"
+                        app:tint="@color/black"
+                        app:borderWidth="0dp"
+                        android:contentDescription="Mi ubicación"/>
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/btnAdjustMap"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_center_map"
+                        app:fabSize="mini"
+                        app:backgroundTint="@color/white"
+                        app:tint="@color/black"
+                        app:borderWidth="0dp"
+                        android:contentDescription="Centrar mapa"/>
+                </LinearLayout>
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Coordenadas -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilLatitud"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:hint="Latitud"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/border_light"
+                app:hintTextColor="@color/border_light">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtLatitud"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:textSize="14sp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilLongitud"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:hint="Longitud"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/border_light"
+                app:hintTextColor="@color/border_light">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtLongitud"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:textSize="14sp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <!-- Botón de guardar -->
+        <Button
+            android:id="@+id/btnGuardar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Guardar"
+            android:textAllCaps="true"
+            android:textSize="18sp"
+            android:backgroundTint="@color/btn_medium"
+            android:textColor="@android:color/white"
+            android:padding="12dp"
+            android:layout_margin="12dp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+</LinearLayout>

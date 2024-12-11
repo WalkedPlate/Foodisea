@@ -46,9 +46,9 @@ public class SuperAdminPerfilActivity extends AppCompatActivity {
 
         // Obtener al administrador de restaurante logueado
         superadminActual = sessionManager.getSuperadminActual();
-        updateUIWithUserData();
 
-        // Actualizar la UI con los datos del administrador
+        // Actualizar la UI con los datos del super administrador
+        updateUIWithUserData();
 
         EdgeToEdge.enable(this);
         setupWindowInsets();
@@ -61,10 +61,6 @@ public class SuperAdminPerfilActivity extends AppCompatActivity {
         if (superadminActual != null) {
             // Actualizar datos del superadmin
             binding.tvUserName.setText(superadminActual.obtenerNombreCompleto());
-            binding.tvUserDNI.setText(superadminActual.getDocumentoId());
-            binding.tvUserBirthdate.setText(superadminActual.getFechaNacimiento());
-            binding.tvUserMail.setText(superadminActual.getCorreo());
-            binding.tvUserAddress.setText(superadminActual.getDireccion());
 
             // Cargar imagen de perfil
             if (superadminActual.getFoto() != null && !superadminActual.getFoto().isEmpty()) {
@@ -99,6 +95,11 @@ public class SuperAdminPerfilActivity extends AppCompatActivity {
      */
     private void setupListeners() {
         binding.btnBack.setOnClickListener(v -> finish());
+
+        binding.llPersonalInfo.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SuperAdminInfoPerfilActivity.class);
+            startActivity(intent);
+        });
 
         binding.llLogout.setOnClickListener(v -> showLogoutConfirmationDialog());
     }

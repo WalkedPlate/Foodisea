@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_color"
+    tools:context=".activity.superadmin.SuperAdminDetalleRestauranteActivity">
+
+    <!-- Header -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <Button
+            android:id="@+id/btnBack"
+            style="?attr/materialIconButtonFilledTonalStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/baseline_arrow_back_ios_new_24"
+            android:contentDescription="@string/btnBack"
+            android:backgroundTint="@color/bg_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre del restaurante"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:fontFamily="@font/sen_font"/>
+
+        <Button
+            android:id="@+id/btnEdit"
+            style="?attr/materialIconButtonFilledStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Editar"
+            app:icon="@drawable/ic_edit"
+            android:backgroundTint="@color/btn_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Imagen -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivRestaurantImage"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:contentDescription="@string/imgRest"
+                android:scaleType="centerCrop"
+                android:layout_margin="16dp"
+                android:src="@drawable/restaurant_image"
+                app:shapeAppearanceOverlay="@style/RoundedCorners"/>
+
+            <!-- Contenido del producto -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Descripción  -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Descripción:"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/sen_font"
+                    android:paddingHorizontal="18dp"/>
+
+                <!-- Descripción del restaurante -->
+                <TextView
+                    android:id="@+id/descripcionRestaurant"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    android:text="@string/descripcionRest"
+                    android:textSize="14sp"
+                    android:textAlignment="viewStart"
+                    android:layout_marginBottom="8dp"/>
+
+                <!-- Contenedor del admin -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="18dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Administrador:"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sen_font"/>
+
+                    <TextView
+                        android:id="@+id/productDetailPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Juan Perez"
+                        android:textColor="@android:color/black"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:paddingStart="10dp"/>
+                </LinearLayout>
+
+
+
+                <!--Reporte de ventas-->
+                <Button
+                    android:id="@+id/btnReporte"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:background="@drawable/search_view_bg"
+                    android:paddingHorizontal="40dp"
+                    app:backgroundTint="@color/bg_gray_light"
+                    android:text="@string/btnReporte"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/sen_font"
+                    app:icon="@drawable/report"
+                    app:iconSize="35dp"
+                    app:iconTint="#000000"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progressIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+</LinearLayout>

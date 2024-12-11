@@ -17,7 +17,7 @@ import com.example.foodisea.R;
 import com.example.foodisea.activity.cliente.ClienteMainActivity;
 import com.example.foodisea.activity.cliente.ClienteRestauranteActivity;
 import com.example.foodisea.activity.superadmin.SuperAdminGestionRestauranteActivity;
-import com.example.foodisea.activity.superadmin.SuperAdminRestaurantesReportesActivity;
+import com.example.foodisea.activity.superadmin.SuperAdminDetalleRestauranteActivity;
 import com.example.foodisea.databinding.ItemRestaurantBinding;
 import com.example.foodisea.model.Restaurante;
 import com.google.firebase.storage.FirebaseStorage;
@@ -85,7 +85,7 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
             if (context instanceof ClienteMainActivity) {
                 intent = new Intent(context, ClienteRestauranteActivity.class);
             } else if (context instanceof SuperAdminGestionRestauranteActivity) {
-                intent = new Intent(context, SuperAdminRestaurantesReportesActivity.class);
+                intent = new Intent(context, SuperAdminDetalleRestauranteActivity.class);
             } else {
                 return;
             }
