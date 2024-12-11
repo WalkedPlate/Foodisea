@@ -260,6 +260,7 @@ public class AdminResPedidosActivity extends AppCompatActivity {
             intent.putExtra("metodoPago", pedidoConCliente.getPedido().getPagoId());
             intent.putExtra("estadoPago", pedidoConCliente.getPedido().getEstado());
             intent.putExtra("montoPedido",pedidoConCliente.getPedido().getMontoTotal());
+            intent.putExtra("listaIdProductosCantidad",new ArrayList<>(pedidoConCliente.getPedido().getProductos()));
             startActivity(intent);
         });
 

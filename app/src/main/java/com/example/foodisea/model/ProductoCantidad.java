@@ -1,6 +1,8 @@
 package com.example.foodisea.model;
 
-public class ProductoCantidad {
+import java.io.Serializable;
+
+public class ProductoCantidad implements Serializable {
     private String productoId;  // ID del producto
     private int cantidad;     // Cantidad del producto solicitada
 

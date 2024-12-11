@@ -180,7 +180,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="BURGER BISTRO"
+                                android:text="PRODUCTOS"
                                 android:textColor="@android:color/darker_gray"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
@@ -195,121 +195,11 @@
                             android:orientation="vertical"
                             android:padding="8dp">
 
-                            <!-- Primer producto -->
-                            <LinearLayout
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvProductos"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal"
-                                android:padding="6dp">
-
-                                <!-- Imagen del producto -->
-                                <ImageView
-                                    android:id="@+id/productImage1"
-                                    android:layout_width="60dp"
-                                    android:layout_height="60dp"
-                                    android:scaleType="centerCrop"
-                                    android:src="@drawable/burger" />
-
-                                <!-- Información del producto -->
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical"
-                                    android:paddingStart="8dp">
-
-                                    <!-- Nombre del producto -->
-                                    <TextView
-                                        android:id="@+id/productName1"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Pizza Calzone European"
-                                        android:textColor="@android:color/black"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
-
-                                    <!-- Precio del producto -->
-                                    <TextView
-                                        android:id="@+id/productDetails1"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="S/. 64"
-                                        android:textColor="@android:color/darker_gray"
-                                        android:textSize="14sp" />
-                                </LinearLayout>
-
-                                <!-- Cantidad del producto -->
-                                <TextView
-                                    android:id="@+id/productQuantity1"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginEnd="8dp"
-                                    android:background="@drawable/rounded_circle"
-                                    android:paddingHorizontal="8dp"
-                                    android:paddingVertical="2dp"
-                                    android:text="2"
-                                    android:textColor="@android:color/white"
-                                    android:textSize="16sp" />
-                            </LinearLayout>
-
-                            <!-- Segundo producto (estructura similar al primer producto) -->
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal"
-                                android:padding="6dp">
-
-                                <!-- Imagen del producto -->
-                                <ImageView
-                                    android:id="@+id/productImage2"
-                                    android:layout_width="60dp"
-                                    android:layout_height="60dp"
-                                    android:scaleType="centerCrop"
-                                    android:src="@drawable/burger" />
-
-                                <!-- Información del producto -->
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical"
-                                    android:paddingStart="8dp">
-
-                                    <!-- Nombre del producto -->
-                                    <TextView
-                                        android:id="@+id/productName2"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Pizza Calzone European"
-                                        android:textColor="@android:color/black"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
-
-                                    <!-- Precio del producto -->
-                                    <TextView
-                                        android:id="@+id/productDetails2"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="S/. 32"
-                                        android:textColor="@android:color/darker_gray"
-                                        android:textSize="14sp" />
-                                </LinearLayout>
-
-                                <!-- Cantidad del producto -->
-                                <TextView
-                                    android:id="@+id/productQuantity2"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginEnd="8dp"
-                                    android:background="@drawable/rounded_circle"
-                                    android:paddingHorizontal="8dp"
-                                    android:paddingVertical="2dp"
-                                    android:text="1"
-                                    android:textColor="@android:color/white"
-                                    android:textSize="16sp" />
-                            </LinearLayout>
+                                android:layout_height="match_parent" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
