@@ -15,6 +15,7 @@ public class Usuario {
     protected String direccion;
     protected Double latitudDireccion;
     protected Double longitudDireccion;
+    protected String tipoDocumentoId;
     protected String documentoId; //DNI
     protected String fechaNacimiento;
     protected String foto;
@@ -25,13 +26,14 @@ public class Usuario {
     }
 
     // Constructor con todos los parámetros
-    public Usuario(String id, String nombre, String apellido, String email, String telefono, String direccion, String documentoId, String fechaNacimiento, String foto, String estado, String tipoUsuario) {
+    public Usuario(String id, String nombre, String apellido, String email, String telefono, String direccion, String tipoDocumentoId, String documentoId, String fechaNacimiento, String foto, String estado, String tipoUsuario) {
         this.id = id;
         this.nombres = nombre;
         this.apellidos = apellido;
         this.correo = email;
         this.telefono = telefono;
         this.direccion = direccion;
+        this.tipoDocumentoId = tipoDocumentoId;
         this.documentoId = documentoId;
         this.fechaNacimiento = fechaNacimiento;
         this.foto = foto;
@@ -114,6 +116,14 @@ public class Usuario {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public String getTipoDocumentoId() {
+        return tipoDocumentoId;
+    }
+
+    public void setTipoDocumentoId(String tipoDocumentoId) {
+        this.tipoDocumentoId= tipoDocumentoId;
     }
 
     public String getDocumentoId() {

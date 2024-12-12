@@ -78,6 +78,13 @@
     <string name="error_telefono_formato">El teléfono debe comenzar con 9 y tener 9 dígitos</string>
     <string name="error_dni_formato">El DNI debe tener 8 dígitos</string>
     <string name="error_dni_solo_numeros">El DNI solo debe contener números</string>
+    <string name="error_ingresa_pasaporte">Ingresa tu pasasporte</string>
+    <string name="error_pasaporte_formato">El pasaporte debe tener 8 dígitos</string>
+    <string name="error_pasaporte_solo_numeros">El pasaporte solo debe contener números</string>
+    <string name="error_ingresa_carnet">Ingresa tu carnet de extranjería</string>
+    <string name="error_carnet_formato">El carnet de extranjería debe tener 9 dígitos</string>
+    <string name="error_carnet_solo_numeros">El carnet de extranjería solo debe contener números</string>
+    <string name="error_seleccione_doc_id">Seleccione un documento de identidad</string>
     <string name="error_ingresa_password">Ingresa una contraseña</string>
     <string name="error_confirma_password">Confirma tu contraseña</string>
     <string name="error_passwords_no_coinciden">Las contraseñas no coinciden</string>

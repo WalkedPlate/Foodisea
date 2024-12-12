@@ -77,10 +77,10 @@ public class RepartidorRestauranteActivity extends AppCompatActivity {
         List<Pedido> pedidos = new ArrayList<>();
 
         // Crear instancias de Cliente
-        Cliente cliente1 = new Cliente("1", "John", "Gomez", "john@example.com", "1234567890", "2118 Thornridge Cir. Syracuse", "12345678", "1990-01-01", null, "Activo", "Cliente");
-        Cliente cliente2 = new Cliente("2", "David", "Fernandez", "david@example.com", "0987654321", "2118 Thornridge Cir. Syracuse", "87654321", "1992-05-10", null, "Activo", "Cliente");
-        Cliente cliente3 = new Cliente("3", "Juan", "Perez", "juan@example.com", "1122334455", "2118 Thornridge Cir. Syracuse", "23456789", "1988-09-20", null, "Activo", "Cliente");
-        Cliente cliente4 = new Cliente("4", "Maria", "Diaz", "maria@example.com", "2233445566", "2118 Thornridge Cir. Syracuse", "34567890", "1995-11-30", null, "Activo", "Cliente");
+        Cliente cliente1 = new Cliente("1", "John", "Gomez", "john@example.com", "1234567890", "2118 Thornridge Cir. Syracuse", "DNI", "12345678", "1990-01-01", null, "Activo", "Cliente");
+        Cliente cliente2 = new Cliente("2", "David", "Fernandez", "david@example.com", "0987654321", "2118 Thornridge Cir. Syracuse","DNI",  "87654321", "1992-05-10", null, "Activo", "Cliente");
+        Cliente cliente3 = new Cliente("3", "Juan", "Perez", "juan@example.com", "1122334455", "2118 Thornridge Cir. Syracuse","DNI",  "23456789", "1988-09-20", null, "Activo", "Cliente");
+        Cliente cliente4 = new Cliente("4", "Maria", "Diaz", "maria@example.com", "2233445566", "2118 Thornridge Cir. Syracuse","DNI",  "34567890", "1995-11-30", null, "Activo", "Cliente");
 
         clientesMap.put(cliente1.getId(), cliente1);
         clientesMap.put(cliente2.getId(), cliente2);

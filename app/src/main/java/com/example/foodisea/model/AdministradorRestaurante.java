@@ -11,9 +11,9 @@ public class AdministradorRestaurante extends Usuario {
 
     // Constructor que llama a la clase Usuario
     public AdministradorRestaurante(String id, String nombres, String apellidos, String correo, String telefono,
-                                    String direccion, String documentoId, String fechaNacimiento, String foto,
+                                    String direccion, String tipoDocumentoId, String documentoId, String fechaNacimiento, String foto,
                                     String estado, String tipoUsuario, String restauranteId) {
-        super(id, nombres, apellidos, correo, telefono, direccion, documentoId, fechaNacimiento, foto, estado, tipoUsuario);
+        super(id, nombres, apellidos, correo, telefono, direccion, tipoDocumentoId,  documentoId, fechaNacimiento, foto, estado, tipoUsuario);
         this.restauranteId = restauranteId;
     }
 

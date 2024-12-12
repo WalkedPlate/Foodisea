@@ -9,10 +9,10 @@ public class Repartidor extends Usuario {
     }
 
     // Constructor que llama a la clase Usuario
-    public Repartidor(String id, String nombres, String apellidos, String correo, String telefono, String direccion,
+    public Repartidor(String id, String nombres, String apellidos, String correo, String telefono, String direccion, String tipoDocumentoId,
                       String documentoId, String fechaNacimiento, String foto, String estadoUsuario, String tipoUsuario,
                       double latitud, double longitud, String disposicion) {
-        super(id, nombres, apellidos, correo, telefono, direccion, documentoId, fechaNacimiento, foto, estadoUsuario, tipoUsuario);
+        super(id, nombres, apellidos, correo, telefono, direccion, tipoDocumentoId, documentoId, fechaNacimiento, foto, estadoUsuario, tipoUsuario);
         this.latitud = latitud;
         this.longitud = longitud;
         this.disposicion = disposicion;

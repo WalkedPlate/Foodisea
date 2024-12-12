@@ -484,6 +484,8 @@ public class RegisterActivity extends AppCompatActivity implements OnMapReadyCal
         setupTextWatcher(binding.etCorreo, this::validateEmail);
         setupTextWatcher(binding.etTelefono, this::validateTelefono);
         setupTextWatcher(binding.etDni, this::validateDni);
+        setupTextWatcher(binding.etPassport, this::validatePasaporte);
+        setupTextWatcher(binding.etExtranjeria, this::validateCarnetExt);
 
         TextWatcher passwordWatcher = new TextWatcher() {
             @Override
@@ -666,7 +668,7 @@ public class RegisterActivity extends AppCompatActivity implements OnMapReadyCal
                 photoUri  // será null si no hay foto
         ).addOnSuccessListener(usuario -> {
             loadingDialog.dismiss();
-            showSuccess(getString(R.string.mensaje_registro_exitoso));
+            //showSuccess(getString(R.string.mensaje_registro_exitoso));
             finish();
             startActivity(new Intent(this, ConfirmRegisterActivity.class));
         }).addOnFailureListener(e -> {
@@ -682,13 +684,14 @@ public class RegisterActivity extends AppCompatActivity implements OnMapReadyCal
         Usuario nuevoUsuario;
         if (tipoUsuario.equals(SelectRolActivity.TIPO_REPARTIDOR)) {
             Repartidor repartidor = new Repartidor();
-            repartidor.setEstado("Activo");
+            repartidor.setEstado("Pendiente");
             repartidor.setDisposicion("Disponible");
             repartidor.setLatitud(0.0);
             repartidor.setLongitud(0.0);
             nuevoUsuario = repartidor;
         } else {
             nuevoUsuario = new Cliente();
+            nuevoUsuario.setEstado("Activo");
         }
 
         nuevoUsuario.setNombres(binding.etNombres.getText().toString().trim());
@@ -696,9 +699,19 @@ public class RegisterActivity extends AppCompatActivity implements OnMapReadyCal
         nuevoUsuario.setCorreo(binding.etCorreo.getText().toString().trim());
         nuevoUsuario.setTelefono(binding.etTelefono.getText().toString().trim());
         nuevoUsuario.setDireccion(binding.etDireccion.getText().toString().trim());
-        nuevoUsuario.setDocumentoId(binding.etDni.getText().toString().trim());
+        // Ingresar documento de identiddad de acuerdo a su tipo
+        if(getSelectedDocumentType().equals("DNI")){
+            nuevoUsuario.setTipoDocumentoId("DNI");
+            nuevoUsuario.setDocumentoId(binding.etDni.getText().toString().trim());
+        } else if (getSelectedDocumentType().equals("Pasaporte")) {
+            nuevoUsuario.setDocumentoId(binding.etPassport.getText().toString().trim());
+            nuevoUsuario.setTipoDocumentoId("Pasaporte");
+        } else if (getSelectedDocumentType().equals("Carnet de extranjería")) {
+            nuevoUsuario.setDocumentoId(binding.etExtranjeria.getText().toString().trim());
+            nuevoUsuario.setTipoDocumentoId("Carnet de extranjería");
+
+        }
         nuevoUsuario.setFechaNacimiento(fechaNacimiento);
-        nuevoUsuario.setEstado("Activo");
         nuevoUsuario.setTipoUsuario(tipoUsuario);
 
         // Agregar coordenadas
@@ -721,8 +734,9 @@ public class RegisterActivity extends AppCompatActivity implements OnMapReadyCal
         isValid &= validateApellidos(binding.etApellidos.getText().toString());
         isValid &= validateEmail(binding.etCorreo.getText().toString());
         isValid &= validateTelefono(binding.etTelefono.getText().toString());
-        isValid &= validateDni(binding.etDni.getText().toString());
         isValid &= validateDireccion(binding.etDireccion.getText().toString());
+        isValid &= validateDocumentType();
+        isValid &= validateDocId();
         isValid &= validateFechaNacimiento();
         isValid &= validatePasswords();
         isValid &= validateLocation();
@@ -1013,5 +1027,49 @@ public class RegisterActivity extends AppCompatActivity implements OnMapReadyCal
         binding.etDniLayout.setVisibility(View.GONE);
         binding.etPassportLayout.setVisibility(View.GONE);
         binding.etExtranjeriaLayout.setVisibility(View.GONE);
+    }
+
+    private boolean validateDocumentType(){
+        if(getSelectedDocumentType().isEmpty()){
+            binding.etTipoDocLayout.setError(getString(R.string.error_seleccione_doc_id));
+            return false;
+        }
+        binding.etTipoDocLayout.setError(null);
+        return true;
+    }
+
+    private boolean validatePasaporte(String pasaporte) {
+        if (pasaporte.trim().isEmpty()) {
+            binding.etPassportLayout.setError(getString(R.string.error_ingresa_pasaporte));
+            return false;
+        } else if (pasaporte.length() != 8) {
+            binding.etPassportLayout.setError(getString(R.string.error_pasaporte_formato));
+            return false;
+        } else if (!pasaporte.matches("\\d{8}")) {
+            binding.etPassportLayout.setError(getString(R.string.error_pasaporte_solo_numeros));
+            return false;
+        }
+        binding.etPassportLayout.setError(null);
+        return true;
+    }
+
+    private boolean validateCarnetExt(String carnet) {
+        if (carnet.trim().isEmpty()) {
+            binding.etExtranjeriaLayout.setError(getString(R.string.error_ingresa_carnet));
+            return false;
+        } else if (carnet.length() != 9) {
+            binding.etExtranjeriaLayout.setError(getString(R.string.error_carnet_formato));
+            return false;
+        } else if (!carnet.matches("\\d{9}")) {
+            binding.etExtranjeriaLayout.setError(getString(R.string.error_carnet_solo_numeros));
+            return false;
+        }
+        binding.etExtranjeriaLayout.setError(null);
+        return true;
+    }
+
+    private boolean validateDocId(){
+        return validateDni(binding.etDni.getText().toString()) || validatePasaporte(binding.etPassport.getText().toString()) ||
+                validateCarnetExt(binding.etExtranjeria.getText().toString());
     }
 }
