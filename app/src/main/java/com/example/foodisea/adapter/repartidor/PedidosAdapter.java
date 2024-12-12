@@ -27,8 +27,8 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoVi
 
     private List<PedidoConCliente> pedidosConCliente;
     private Context context;
-    //private Map<String, Cliente> clientesMap;
-    //private Map<String, Pago> pagosMap;
+//    private Map<String, Cliente> clientesMap;
+//    private Map<String, Pago> pagosMap;
 
 
     public PedidosAdapter(List<PedidoConCliente> pedidosConCliente, Context context) {
@@ -46,23 +46,28 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoVi
     @Override
     public void onBindViewHolder(@NonNull PedidoViewHolder holder, int position) {
         PedidoConCliente pedidoConCliente = pedidosConCliente.get(position);
-        holder.bind(pedidoConCliente);
+        holder.tvOrderNumber.setText(String.format("#%s", pedidoConCliente.getPedido().getId()));
+        holder.tvCustomerName.setText(pedidoConCliente.getCliente().obtenerNombreCompleto());
+        holder.tvAddress.setText(pedidoConCliente.getPedido().getDireccionEntrega());
+        holder.tvPrice.setText("S/. 15,00");
 
-        holder.itemView.setOnClickListener(v -> {
-            if (context instanceof RepartidorRestauranteActivity) {
-                Intent intent = new Intent(context, RepartidorVerOrdenActivity.class);
-                intent.putExtra("pedidoId", pedidoConCliente.getPedido().getId());
-                //Cliente cliente = clientesMap.get(pedido.getClienteId());
-                intent.putExtra("clienteNombre", pedidoConCliente.getCliente().obtenerNombreCompleto());
-                intent.putExtra("direccionEntrega", pedidoConCliente.getPedido().getDireccionEntrega());
-                //Pago pago = pagosMap.get(pedido.getPagoId());
-                intent.putExtra("precio", pedidoConCliente.getPedido().getMontoTotal());
-                context.startActivity(intent);
-            } else if (context instanceof AdminResPedidosActivity) {
-                //((AdminResPedidosActivity) context).mostrarBottonSheet(pedidoConCliente.getPedido());
-                ((AdminResPedidosActivity) context).mostrarBottonSheet(pedidoConCliente);
-            }
-        });
+//        holder.bind(pedidoConCliente);
+//
+//        holder.itemView.setOnClickListener(v -> {
+//            if (context instanceof RepartidorRestauranteActivity) {
+//                Intent intent = new Intent(context, RepartidorVerOrdenActivity.class);
+//                intent.putExtra("pedidoId", pedidoConCliente.getPedido().getId());
+//                //Cliente cliente = clientesMap.get(pedido.getClienteId());
+//                intent.putExtra("clienteNombre", pedidoConCliente.getCliente().obtenerNombreCompleto());
+//                intent.putExtra("direccionEntrega", pedidoConCliente.getPedido().getDireccionEntrega());
+//                //Pago pago = pagosMap.get(pedido.getPagoId());
+//                intent.putExtra("precio", pedidoConCliente.getPedido().getMontoTotal());
+//                context.startActivity(intent);
+//            } else if (context instanceof AdminResPedidosActivity) {
+//                //((AdminResPedidosActivity) context).mostrarBottonSheet(pedidoConCliente.getPedido());
+//                ((AdminResPedidosActivity) context).mostrarBottonSheet(pedidoConCliente);
+//            }
+//        });
     }
 
     @Override
@@ -83,34 +88,34 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoVi
             ivDelivery = itemView.findViewById(R.id.ivDelivery);
         }
 
-        void bind(PedidoConCliente pedidoConCliente) {
-            tvOrderNumber.setText(pedidoConCliente.getPedido().getId());
-            tvCustomerName.setText(pedidoConCliente.getCliente().obtenerNombreCompleto());
-            tvAddress.setText(pedidoConCliente.getPedido().getDireccionEntrega());
-            tvPrice.setText(String.format("S/. %.2f", pedidoConCliente.getPedido().getMontoTotal()));
-
-
-            // Actualizar el ícono basado en el estado del pedido
-            /*
-            switch (pedido.getEstado()) {
-                case "Recibido":
-                    ivDelivery.setImageResource(R.drawable.ic_order_received);
-                    break;
-                case "En preparación":
-                    ivDelivery.setImageResource(R.drawable.ic_order_preparing);
-                    break;
-                case "En camino":
-                    ivDelivery.setImageResource(R.drawable.ic_order_on_way);
-                    break;
-                case "Entregado":
-                    ivDelivery.setImageResource(R.drawable.ic_order_delivered);
-                    break;
-                default:
-                    ivDelivery.setImageResource(R.drawable.ic_order_default);
-                    break;
-            }
-
-             */
-        }
+//        void bind(PedidoConCliente pedidoConCliente) {
+//            tvOrderNumber.setText(pedidoConCliente.getPedido().getId());
+//            tvCustomerName.setText(pedidoConCliente.getCliente().obtenerNombreCompleto());
+//            tvAddress.setText(pedidoConCliente.getPedido().getDireccionEntrega());
+//            tvPrice.setText(String.format("S/. %.2f", pedidoConCliente.getPedido().getMontoTotal()));
+//
+//
+//            // Actualizar el ícono basado en el estado del pedido
+//            /*
+//            switch (pedido.getEstado()) {
+//                case "Recibido":
+//                    ivDelivery.setImageResource(R.drawable.ic_order_received);
+//                    break;
+//                case "En preparación":
+//                    ivDelivery.setImageResource(R.drawable.ic_order_preparing);
+//                    break;
+//                case "En camino":
+//                    ivDelivery.setImageResource(R.drawable.ic_order_on_way);
+//                    break;
+//                case "Entregado":
+//                    ivDelivery.setImageResource(R.drawable.ic_order_delivered);
+//                    break;
+//                default:
+//                    ivDelivery.setImageResource(R.drawable.ic_order_default);
+//                    break;
+//            }
+//
+//             */
+//        }
     }
 }

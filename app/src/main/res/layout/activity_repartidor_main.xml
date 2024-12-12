@@ -73,50 +73,55 @@
                     android:textSize="16sp"
                     android:fontFamily="@font/sen_font" />
 
-                <!-- Barra de búsqueda -->
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/svRestaurants"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp"
-                    android:layout_marginHorizontal="16dp"
-                    app:queryHint="Buscar restaurante"
-                    app:iconifiedByDefault="false"
-                    android:background="@drawable/search_view_bg"/>
 
                 <TextView
-                    android:id="@+id/tvRestaurantes"
+                    android:id="@+id/tvPedidosTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:text="@string/restaurantes"
-                    android:textSize="20sp"
-                    android:layout_marginVertical="10dp"
+                    android:paddingHorizontal="16dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Pedidos (X)"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:fontFamily="@font/sen_font" />
 
-
-                <!-- RecyclerView para mostrar los restaurantes -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewRestaurantes"
+                <!-- Contenedor para RecyclerView, ProgressBar y mensaje de no pedidos -->
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scrollbars="vertical" />
+                    android:minHeight="200dp">
 
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvPedidos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:padding="16dp"/>
 
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/tvNoPedidos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="No hay pedidos por el momento"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/sen_font"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
 
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
 
-
-
     </LinearLayout>
-
-
-
-
-
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
