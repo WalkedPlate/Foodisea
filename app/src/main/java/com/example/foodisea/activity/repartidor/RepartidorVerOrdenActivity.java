@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.repartidor.OrderItemAdapter;
+import com.example.foodisea.databinding.ActivityRepartidorMainBinding;
 import com.example.foodisea.databinding.ActivityRepartidorVerOrdenBinding;
 import com.example.foodisea.item.OrderItem;
 
@@ -28,18 +29,6 @@ public class RepartidorVerOrdenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-
-        // binding
-        binding = ActivityRepartidorVerOrdenBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        // Configurar insets del sistema para la ventana
-        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         // Obtén los datos pasados desde el intent
         Intent intent = getIntent();
@@ -53,13 +42,10 @@ public class RepartidorVerOrdenActivity extends AppCompatActivity {
         binding.orderNumberText.setText(orderNumber);
         binding.customerName.setText(customerName);
         binding.customerAddress.setText(address);
-
-
-
         // Configurar el RecyclerView con el adaptador de items de la orden
-        OrderItemAdapter orderItemsAdapter = new OrderItemAdapter(getOrderItemList());
-        binding.orderItemsRecyclerView.setAdapter(orderItemsAdapter);
-        binding.orderItemsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        OrderItemAdapter orderItemsAdapter = new OrderItemAdapter(getOrderItemList());
+//        binding.orderItemsRecyclerView.setAdapter(orderItemsAdapter);
+//        binding.orderItemsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Botón para empezar el delivery
         binding.startDeliveryBtn.setOnClickListener(v -> {
@@ -70,29 +56,25 @@ public class RepartidorVerOrdenActivity extends AppCompatActivity {
 
         // Inicializar botones generales
         setupButtonListeners();
+        initializeComponents();
     }
 
+    private void initializeComponents() {
+        binding = ActivityRepartidorVerOrdenBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        EdgeToEdge.enable(this);
+        setupWindowInsets();
+    }
 
-    private List<OrderItem> getOrderItemList() {
-        List<OrderItem> orderItemList = new ArrayList<>();
-
-        // Datos basados en la imagen
-        orderItemList.add(new OrderItem("Pizza Calzone European", "P", 2, R.drawable.burger_image));
-        orderItemList.add(new OrderItem("Pizza Calzone European", "M", 1, R.drawable.burger_image));
-        orderItemList.add(new OrderItem("Pizza Calzone European", "P", 4, R.drawable.burger_image));
-        orderItemList.add(new OrderItem("Pizza Calzone European", "P", 5, R.drawable.burger_image));
-        orderItemList.add(new OrderItem("Pizza Calzone European", "P", 6, R.drawable.burger_image));
-        orderItemList.add(new OrderItem("Pizza Calzone European", "P", 7, R.drawable.burger_image));
-
-        return orderItemList;
+    private void setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
     }
 
     private void setupButtonListeners() {
-
-        //Botón para regresar
-        binding.btnBack.setOnClickListener(v -> {
-            finish(); // Cierra la actividad actual y regresa
-        });
-
+        binding.btnBack.setOnClickListener(v -> {finish();});
     }
 }
