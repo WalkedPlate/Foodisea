@@ -60,11 +60,6 @@ public class RepartidorPerfilActivity extends AppCompatActivity {
         if (repartidorActual != null) {
             // Actualizar los datos del repartidor
             binding.tvUserName.setText(repartidorActual.obtenerNombreCompleto());
-            binding.tvUserDNI.setText(repartidorActual.getDocumentoId());
-            binding.tvUserBirthdate.setText(repartidorActual.getFechaNacimiento());
-            binding.tvUserMail.setText(repartidorActual.getCorreo());
-            binding.tvUserCell.setText(repartidorActual.getTelefono());
-            binding.tvUserAddress.setText(repartidorActual.getDireccion());
 
 
             // Cargar imagen de perfil
@@ -103,7 +98,10 @@ public class RepartidorPerfilActivity extends AppCompatActivity {
      */
     private void setupListeners() {
         binding.btnBack.setOnClickListener(v -> finish());
-
+        binding.llPersonalInfo.setOnClickListener(v -> {
+            Intent intent = new Intent(this, RepartidorInfoPerfilActivity.class);
+            startActivity(intent);
+        });
         binding.llLogout.setOnClickListener(v -> showLogoutConfirmationDialog());
     }
 

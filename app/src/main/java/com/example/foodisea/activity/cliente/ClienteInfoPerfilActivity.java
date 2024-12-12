@@ -78,8 +78,9 @@ public class ClienteInfoPerfilActivity extends AppCompatActivity {
     private void updateUIWithUserData() {
         if (clienteActual != null) {
             // Actualizar datos del cliente
+            binding.tvTipoDocId.setText(clienteActual.getTipoDocumentoId());
             binding.tvUserName.setText(clienteActual.obtenerNombreCompleto());
-            binding.tvUserDNI.setText(clienteActual.getDocumentoId());
+            binding.tvUserDocId.setText(clienteActual.getDocumentoId());
             binding.tvUserBirthdate.setText(clienteActual.getFechaNacimiento());
             binding.tvUserMail.setText(clienteActual.getCorreo());
             binding.tvUserCell.setText(clienteActual.getTelefono());

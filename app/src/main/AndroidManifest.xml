@@ -36,6 +36,9 @@
         android:theme="@style/Theme.Foodisea"
         tools:targetApi="31">
         <activity
+            android:name=".activity.repartidor.RepartidorInfoPerfilActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.superadmin.SuperAdminEditRestauranteActivity"
             android:exported="false" />
         <activity
