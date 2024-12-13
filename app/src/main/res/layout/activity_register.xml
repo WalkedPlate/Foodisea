@@ -14,7 +14,7 @@
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="12dp">
 
         <Button
             android:id="@+id/btnBack"
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:paddingBottom="20dp">
+                android:paddingBottom="28dp">
 
                 <!-- Contenedor circular con imagen de perfil e ícono de cámara -->
                 <FrameLayout
@@ -93,8 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Información personal"
-                android:padding="8dp"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 android:fontFamily="@font/sen_font"
                 android:layout_marginBottom="8dp"/>
@@ -235,7 +234,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Fecha de nacimiento"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="28dp"
                 app:endIconMode="custom"
                 app:endIconDrawable="@drawable/ic_calendar"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -251,8 +250,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Datos del domicilio"
-                android:padding="8dp"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 android:fontFamily="@font/sen_font"
                 android:layout_marginBottom="10dp"/>
@@ -340,7 +338,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="28dp">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilLatitud"
@@ -388,8 +386,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Información de contacto"
-                android:padding="8dp"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 android:fontFamily="@font/sen_font"
                 android:layout_marginBottom="8dp"/>
@@ -463,7 +460,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Confirmar contraseña"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="24dp"
                 app:endIconMode="password_toggle"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:boxStrokeColor="@color/border_light"
