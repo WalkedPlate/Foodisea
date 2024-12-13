@@ -25,7 +25,7 @@ public class SuperAdminAgregarRestauranteActivity extends AppCompatActivity {
         // Configura el botón de guardar restaurante
         binding.btnCrearRestaurante.setOnClickListener(v -> {
             String nombre = binding.etNombreRes.getText().toString(); // Ajustado a etNombre
-            String ruc = binding.etRuc.getText().toString();
+            //String ruc = binding.etRuc.getText().toString();
             String telefono = binding.etTelefono.getText().toString();
            // String categoria = binding.etCategoria.getText().toString();
             //String direccion = binding.etDireccion.getText().toString();
