@@ -9,37 +9,39 @@
     tools:context=".activity.cliente.ClienteCarritoActivity">
 
 
-    <LinearLayout
+    <!-- Header -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
         android:padding="12dp">
 
-        <!-- Botón de regresar (flecha) -->
         <Button
-            style="?attr/materialIconButtonFilledTonalStyle"
             android:id="@+id/btnBack"
+            style="?attr/materialIconButtonFilledTonalStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:icon="@drawable/baseline_arrow_back_ios_new_24"
             android:contentDescription="@string/btnBack"
-            app:iconTint="@color/black"
-            android:backgroundTint="@color/bg_color"/>
+            android:backgroundTint="#121223"
+            app:iconTint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-        <!-- Texto "carrito" -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Carrito"
-            android:textSize="20sp"
-            android:fontFamily="@font/sen_font"
-            android:padding="8dp"
-            android:textColor="@android:color/white">
-        </TextView>
-    </LinearLayout>
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:fontFamily="@font/sen_font"/>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Contenido desplazable -->
     <androidx.recyclerview.widget.RecyclerView

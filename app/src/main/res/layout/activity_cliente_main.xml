@@ -42,15 +42,15 @@
                 app:srcCompat="@drawable/foodisea" />
 
 
-            <!-- Icono de notificaciones -->
+            <!-- Icono de historial de pedidos -->
             <Button
-                android:id="@+id/btnNotifications"
+                android:id="@+id/btnHistorialPedidos"
                 style="?attr/materialIconButtonFilledStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/btn_medium"
-                android:contentDescription="Notificaciones"
-                app:icon="@drawable/ic_notifications" />
+                android:contentDescription="Historial de pedidos"
+                app:icon="@drawable/rounded_orders_24" />
         </LinearLayout>
 
         <!-- Parte scrolleable -->
@@ -103,7 +103,8 @@
                     android:layout_height="wrap_content"
                     android:padding="16dp"
                     android:text="@string/restaurantes"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:fontFamily="@font/sen_font"/>
 

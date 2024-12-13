@@ -1,12 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/bg_color"
     tools:context=".activity.cliente.ClienteRestauranteActivity">
+
+    <!-- Header -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <Button
+            android:id="@+id/btnBack"
+            style="?attr/materialIconButtonFilledTonalStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/btnBack"
+            app:icon="@drawable/baseline_arrow_back_ios_new_24"
+            android:backgroundTint="@color/bg_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
+        <Button
+            android:id="@+id/btnCart"
+            style="?attr/materialIconButtonFilledTonalStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Boton de carrito"
+            app:icon="@drawable/outline_shopping"
+            android:backgroundTint="@color/bg_gray_light"
+            app:iconTint="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/tvCartItemCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/circle_bg"
+            android:text="@string/cantProducts"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:paddingHorizontal="4dp"
+            android:minWidth="16dp"
+            android:minHeight="16dp"
+            app:layout_constraintEnd_toEndOf="@id/btnCart"
+            app:layout_constraintTop_toTopOf="@id/btnCart"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintVertical_bias="0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -16,116 +69,112 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp">
 
-            <!-- Botones con imagen del restaurante -->
-            <RelativeLayout
+            <!-- Imagen android:alpha="0.95" -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivRestaurantImage"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="200dp"
+                android:contentDescription="@string/imgRest"
+                android:scaleType="centerCrop"
+                android:src="@drawable/restaurant_image"
+                app:shapeAppearanceOverlay="@style/RoundedCorners"/>
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/ivRestaurantImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:contentDescription="@string/imgRest"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/restaurant_image"
-                    app:shapeAppearanceOverlay="@style/RoundedBottomCornersShape"
-                    android:alpha="0.95"/>
-
-                <Button
-                    android:id="@+id/btnBack"
-                    style="?attr/materialIconButtonFilledTonalStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_margin="12dp"
-                    android:contentDescription="@string/btnBack"
-                    app:icon="@drawable/baseline_arrow_back_ios_new_24"
-                    app:iconTint="@color/black"
-                    android:backgroundTint="@color/bg_color"/>
-
-                <Button
-                    android:id="@+id/btnCart"
-                    style="?attr/materialIconButtonFilledStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_margin="12dp"
-                    android:contentDescription="@string/btnCarrito"
-                    app:icon="@drawable/outline_shopping"
-                    android:backgroundTint="@color/black"/>
-
-                <TextView
-                    android:id="@+id/tvCartItemCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/btnCart"
-                    android:layout_alignEnd="@id/btnCart"
-                    android:background="@drawable/circle_bg"
-                    android:text="@string/cantProducts"
-                    android:textColor="@android:color/white"
-                    android:textSize="12sp"
-                    android:gravity="center"
-                    android:paddingHorizontal="4dp"
-                    android:minWidth="16dp"
-                    android:minHeight="16dp"/>
-
-            </RelativeLayout>
-
-            <!-- Encabezado del restaurante -->
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvRestaurantName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="16dp"
-                android:layout_marginTop="8dp">
+                android:text="@string/nameRest"
+                android:fontFamily="@font/sen_font"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginVertical="18dp"/>
 
-                <TextView
-                    android:id="@+id/tvRestaurantName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/nameRest"
-                    android:fontFamily="@font/sen_font"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/tvRestaurantRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rateRest"
-                    android:gravity="center"
-                    android:fontFamily="@font/sen_font"
-                    android:drawablePadding="4dp"
-                    android:textSize="16sp"
-                    app:drawableStartCompat="@drawable/ic_star"
-                    android:textColor="@color/gray" />
-
-                <Button
-                    android:id="@+id/btnFavorite"
-                    style="?attr/materialIconButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:contentDescription="@string/btnFavorite"
-                    app:icon="@drawable/ic_favorite_border"
-                    app:iconTint="@color/btn_medium"/>
-
-            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Descripción:"
+                android:fontFamily="@font/sen_font"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginBottom="4dp"/>
 
             <TextView
                 android:id="@+id/tvDescripcionRest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
                 android:textSize="14sp"
                 android:text="@string/descripcionRest"
                 android:textAlignment="viewStart"
-                android:layout_marginVertical="8dp"/>
+                android:layout_marginBottom="18dp"/>
+
+            <!-- Información de contacto  -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Contacto:"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:fontFamily="@font/sen_font"
+                android:layout_marginBottom="4dp"/>
+
+            <!-- locacion -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_location"
+                    app:tint="@color/btn_dark"/>
+
+                <TextView
+                    android:id="@+id/tvRestaurantAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2118 Thornridge Cir. Syracuse"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <!-- numero -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="18dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_call"
+                    app:tint="@color/btn_dark"/>
+
+                <TextView
+                    android:id="@+id/tvRestaurantTelef"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="990857621"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Carta:"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:fontFamily="@font/sen_font"
+                android:layout_marginBottom="4dp"/>
 
             <!-- Categorías de productos -->
             <HorizontalScrollView
@@ -140,7 +189,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingHorizontal="16dp"
-                    android:layout_marginTop="16dp"
                     android:gravity="center_horizontal">
 
                     <Button
@@ -190,7 +238,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
-                    android:padding="16dp"/>
+                    android:padding="12dp"/>
 
                 <ProgressBar
                     android:id="@+id/progressBar"
@@ -215,4 +263,4 @@
 
     </androidx.core.widget.NestedScrollView>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

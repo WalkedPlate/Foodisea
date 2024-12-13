@@ -28,16 +28,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nombre del restaurante"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:fontFamily="@font/sen_font"/>
 
         <Button
             android:id="@+id/btnEdit"
@@ -62,8 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="4dp">
+            android:paddingHorizontal="16dp">
 
             <!-- Imagen -->
             <com.google.android.material.imageview.ShapeableImageView
@@ -81,6 +70,18 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginVertical="18dp">
+
+                <!--Nombre del restaurante -->
+                <TextView
+                    android:id="@+id/nombreRestaurant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre del restaurante"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/sen_font"
+                    android:layout_marginBottom="18dp"/>
 
                 <!-- Descripción del restaurante -->
                 <TextView
@@ -126,7 +127,7 @@
                         app:tint="@color/btn_dark"/>
 
                     <TextView
-                        android:id="@+id/productDetailPrice"
+                        android:id="@+id/nombreAdministrador"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Juan Perez"
@@ -165,6 +166,7 @@
                         android:layout_marginStart="8dp" />
                 </LinearLayout>
 
+                <!-- numero -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -191,7 +193,7 @@
             <Button
                 android:id="@+id/btnReporte"
                 android:layout_width="match_parent"
-                android:layout_height="75dp"
+                android:layout_height="70dp"
                 android:background="@drawable/search_view_bg"
                 android:paddingHorizontal="40dp"
                 app:backgroundTint="@color/bg_gray_light"
@@ -200,7 +202,7 @@
                 android:textSize="18sp"
                 android:fontFamily="@font/sen_font"
                 app:icon="@drawable/report"
-                app:iconSize="35dp"
+                app:iconSize="34dp"
                 app:iconTint="#000000"
                 android:layout_marginVertical="8dp"/>
 

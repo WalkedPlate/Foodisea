@@ -2,6 +2,7 @@ package com.example.foodisea.activity.repartidor;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
@@ -12,11 +13,16 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.foodisea.R;
+import com.example.foodisea.activity.login.LoginActivity;
 import com.example.foodisea.adapter.repartidor.PedidosAdapter;
+import com.example.foodisea.data.SessionManager;
 import com.example.foodisea.databinding.ActivityRepartidorMainBinding;
+import com.example.foodisea.dialog.LoadingDialog;
 import com.example.foodisea.dto.PedidoConCliente;
 import com.example.foodisea.model.Cliente;
 import com.example.foodisea.model.Pedido;
+import com.example.foodisea.model.Repartidor;
+import com.example.foodisea.model.Usuario;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -28,6 +34,9 @@ public class RepartidorMainActivity extends AppCompatActivity {
     ActivityRepartidorMainBinding binding;
     private PedidosAdapter pedidosAdapter;
     private FirebaseFirestore db;
+    private SessionManager sessionManager;
+    private Repartidor repartidorActual;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +44,30 @@ public class RepartidorMainActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         initializeComponents();
-        setupButtonListeners();
         setupRecyclerView();
+        validateSession();
+    }
+
+    /**
+     * Verifica la existencia de una sesión válida
+     */
+    private void validateSession() {
+        //loadingDialog.show("Verificando sesión...");
+
+        sessionManager.checkExistingSession(this, new SessionManager.SessionCallback() {
+            @Override
+            public void onSessionValid(Usuario usuario) {
+                repartidorActual = sessionManager.getRepartidorActual();
+                //loadingDialog.dismiss();
+
+                initializeUI();
+            }
+
+            @Override
+            public void onSessionError() {
+                handleSessionError();
+            }
+        });
     }
 
     private void initializeComponents() {
@@ -44,6 +75,9 @@ public class RepartidorMainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         EdgeToEdge.enable(this);
         setupWindowInsets();
+
+        sessionManager = SessionManager.getInstance(this);
+        loadingDialog = new LoadingDialog(this);
     }
 
     private void setupWindowInsets() {
@@ -54,7 +88,30 @@ public class RepartidorMainActivity extends AppCompatActivity {
         });
     }
 
-    private void setupButtonListeners() {
+    /**
+     * Inicializa la UI una vez que la sesión está validada
+     */
+    private void initializeUI() {
+        setupUI();
+        setupClickListeners();
+    }
+
+    /**
+     * Configura la UI con los datos del usuario
+     */
+    private void setupUI() {
+        try {
+            String welcomeMessage = String.format("¡Hola %s!, ¿listo para repartir?",
+                    repartidorActual.getNombres().split(" ")[0]);
+            binding.tvWelcome.setText(welcomeMessage);
+        } catch (Exception e) {
+            // En caso de algún error con el nombre, usar mensaje genérico
+            binding.tvWelcome.setText("¡Hola!, ¿listo para repartir?");
+            Log.e("RepartidorMainActivity", "Error al configurar mensaje de bienvenida", e);
+        }
+    }
+
+    private void setupClickListeners() {
         //Botón del perfil
         binding.btnProfile.setOnClickListener(v -> {
             Intent intent = new Intent(this, RepartidorPerfilActivity.class);
@@ -109,5 +166,18 @@ public class RepartidorMainActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Maneja errores de sesión
+     */
+    private void handleSessionError() {
+        if (!isFinishing()) {
+            loadingDialog.dismiss();
+            sessionManager.logout();
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
+    }
 
 }

@@ -48,118 +48,178 @@
             app:icon="@drawable/ic_notifications" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvWelcome"
+    <!-- Parte scrolleable -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="@string/welcome"
-        android:textColor="@android:color/black"
-        android:textSize="16sp"
-        android:fontFamily="@font/sen_font"/>
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:contentDescription="@string/imgRest"
-        android:scaleType="centerCrop"
-        app:srcCompat="@drawable/placeholder_image" />
-
-    <LinearLayout
-        android:id="@+id/nombreRestaurantLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp">
-
-        <TextView
-            android:id="@+id/nombreRestaurant"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/nameRest"
-            android:fontFamily="@font/sen_font"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp">
 
-        <TextView
-            android:id="@+id/tvRestaurantRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/rateRest"
-            android:gravity="center"
-            android:fontFamily="@font/sen_font"
-            android:drawablePadding="4dp"
-            android:textSize="16sp"
-            app:drawableStartCompat="@drawable/ic_star"
-            android:textColor="@color/gray" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tvWelcome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="16dp"
+                android:text="@string/welcome"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:fontFamily="@font/sen_font"/>
 
-    <TextView
-        android:id="@+id/descripcionRestaurant"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:text="@string/descripcionRest"
-        android:textSize="14sp"
-        android:textAlignment="viewStart"
-        android:layout_marginBottom="8dp"/>
+            <!-- Imagen  -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imageView2"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:contentDescription="@string/imgRest"
+                android:scaleType="centerCrop"
+                android:src="@drawable/placeholder_image"
+                app:shapeAppearanceOverlay="@style/RoundedCorners"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingVertical="16dp"
-        android:paddingHorizontal="24dp">
+            <TextView
+                android:id="@+id/nombreRestaurant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nameRest"
+                android:fontFamily="@font/sen_font"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginVertical="18dp"/>
 
-        <Button
-            android:id="@+id/btnCarta"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/search_view_bg"
-            android:paddingHorizontal="40dp"
-            app:backgroundTint="@color/bg_gray_light"
-            android:text="@string/btnCarta"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:fontFamily="@font/sen_font"
-            app:icon="@drawable/menu"
-            app:iconTint="#000000"
-            app:iconSize="35dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Descripción:"
+                android:fontFamily="@font/sen_font"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginBottom="4dp"/>
 
-        <Button
-            android:id="@+id/btnPedidos"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/search_view_bg"
-            android:paddingHorizontal="40dp"
-            app:backgroundTint="@color/bg_gray_light"
-            android:text="@string/btnPedidos"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:fontFamily="@font/sen_font"
-            app:icon="@drawable/list"
-            app:iconTint="#000000"
-            app:iconSize="35dp" />
+            <TextView
+                android:id="@+id/descripcionRestaurant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/descripcionRest"
+                android:textSize="14sp"
+                android:textAlignment="viewStart"
+                android:layout_marginBottom="18dp"/>
 
-        <Button
-            android:id="@+id/btnReporte"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:background="@drawable/search_view_bg"
-            android:paddingHorizontal="40dp"
-            app:backgroundTint="@color/bg_gray_light"
-            android:text="@string/btnReporte"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:fontFamily="@font/sen_font"
-            app:icon="@drawable/report"
-            app:iconSize="35dp"
-            app:iconTint="#000000"/>
-    </LinearLayout>
+            <!-- Información de contacto  -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Contacto:"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:fontFamily="@font/sen_font"
+                android:layout_marginBottom="4dp"/>
+
+            <!-- locacion -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_location"
+                    app:tint="@color/btn_dark"/>
+
+                <TextView
+                    android:id="@+id/tvRestaurantAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2118 Thornridge Cir. Syracuse"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <!-- numero -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="18dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_call"
+                    app:tint="@color/btn_dark"/>
+
+                <TextView
+                    android:id="@+id/tvRestaurantTelef"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="990857621"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <!-- opciones -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginVertical="16dp">
+
+                <Button
+                    android:id="@+id/btnCarta"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/search_view_bg"
+                    android:paddingHorizontal="40dp"
+                    app:backgroundTint="@color/bg_gray_light"
+                    android:text="@string/btnCarta"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/sen_font"
+                    app:icon="@drawable/menu"
+                    app:iconTint="#000000"
+                    app:iconSize="35dp"/>
+
+                <Button
+                    android:id="@+id/btnPedidos"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/search_view_bg"
+                    android:paddingHorizontal="40dp"
+                    app:backgroundTint="@color/bg_gray_light"
+                    android:text="@string/btnPedidos"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/sen_font"
+                    app:icon="@drawable/list"
+                    app:iconTint="#000000"
+                    app:iconSize="35dp" />
+
+                <Button
+                    android:id="@+id/btnReporte"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:background="@drawable/search_view_bg"
+                    android:paddingHorizontal="40dp"
+                    app:backgroundTint="@color/bg_gray_light"
+                    android:text="@string/btnReporte"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/sen_font"
+                    app:icon="@drawable/report"
+                    app:iconSize="35dp"
+                    app:iconTint="#000000"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

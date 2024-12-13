@@ -56,7 +56,7 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
         holder.binding.restCategories.setText(categorias);
 
         // Mostrar la calificación del restaurante
-        holder.binding.restaurantRating.setText(String.valueOf(restaurante.getRating()));
+        //holder.binding.restaurantRating.setText(String.valueOf(restaurante.getRating()));
 
         // Cargar la imagen desde Firebase Storage
         if (!restaurante.getImagenes().isEmpty()) {
@@ -97,6 +97,10 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
             if (!restaurante.getImagenes().isEmpty()) {
                 intent.putExtra("image", restaurante.getImagenes().get(0));
             }
+
+            intent.putExtra("administradorId",restaurante.getAdministradorId());
+            intent.putExtra("direccion",restaurante.getDireccion());
+            intent.putExtra("telefono",restaurante.getTelefono());
             context.startActivity(intent);
         });
     }

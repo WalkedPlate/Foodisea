@@ -36,14 +36,14 @@
             android:fontFamily="@font/sen_font"/>
 
         <!-- Calificación del restaurante -->
-        <TextView
-            android:id="@+id/restaurantRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawablePadding="4dp"
-            android:textSize="14sp"
-            android:textColor="@color/gray"
-            app:drawableStartCompat="@drawable/ic_star" />
+<!--        <TextView-->
+<!--            android:id="@+id/restaurantRating"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:drawablePadding="4dp"-->
+<!--            android:textSize="14sp"-->
+<!--            android:textColor="@color/gray"-->
+<!--            app:drawableStartCompat="@drawable/ic_star" />-->
     </LinearLayout>
 
     <!-- Categorías del restaurante -->

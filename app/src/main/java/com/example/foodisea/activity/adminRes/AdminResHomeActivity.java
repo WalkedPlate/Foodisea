@@ -292,7 +292,7 @@ public class AdminResHomeActivity extends AppCompatActivity {
         binding.nombreRestaurant.setText(restaurante.getNombre());
         binding.descripcionRestaurant.setText(restaurante.getDescripcion());
         String ratingText = String.format("%.1f", restaurante.getRating());
-        binding.tvRestaurantRating.setText(ratingText);
+        //binding.tvRestaurantRating.setText(ratingText);
     }
 
     private void createNotificationChannel() {

@@ -84,7 +84,7 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
         // Configurar la vista con los datos recibidos
         loadRestaurantImage(imageRef);
         binding.tvRestaurantName.setText(restaurantName);
-        binding.tvRestaurantRating.setText(String.valueOf(restaurantRating));
+        //binding.tvRestaurantRating.setText(String.valueOf(restaurantRating));
         binding.tvDescripcionRest.setText(restaurantDesc);
 
         setupRecyclerView();

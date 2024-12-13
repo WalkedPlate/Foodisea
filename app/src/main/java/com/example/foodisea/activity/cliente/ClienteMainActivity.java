@@ -117,7 +117,7 @@ public class ClienteMainActivity extends AppCompatActivity {
      */
     private void setupUI() {
         try {
-            String welcomeMessage = String.format("¡Hola %s, qué te gustaría comer hoy?",
+            String welcomeMessage = String.format("¡Hola %s!, ¿qué te gustaría comer hoy?",
                     clienteActual.getNombres().split(" ")[0]);
             binding.tvWelcome.setText(welcomeMessage);
         } catch (Exception e) {
@@ -136,8 +136,8 @@ public class ClienteMainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        binding.btnNotifications.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ClienteNotificacionesActivity.class);
+        binding.btnHistorialPedidos.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ClienteHistorialPedidosActivity.class);
             startActivity(intent);
         });
 
