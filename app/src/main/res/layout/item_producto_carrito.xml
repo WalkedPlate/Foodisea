@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="16dp"
+        android:gravity="center">
 
         <!-- Imagen del producto -->
         <com.google.android.material.imageview.ShapeableImageView
@@ -27,7 +28,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:paddingStart="8dp">
+            android:padding="8dp">
 
             <!-- Nombre del producto -->
             <TextView
@@ -35,6 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hamburguesa casera"
+                android:fontFamily="@font/sen_font"
                 android:textSize="16sp"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
@@ -42,7 +44,7 @@
 
             <!-- Precio del producto y botones de cantidad -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
@@ -50,19 +52,21 @@
                 <!-- Precio del producto -->
                 <TextView
                     android:id="@+id/productPrice"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="S/. 64"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textColor="@android:color/white"
                     android:textStyle="bold" />
 
                 <!-- Botones de cantidad -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
                     android:orientation="horizontal"
-                    android:paddingStart="8dp">
+                    android:gravity="center">
 
                     <!-- Botón de menos -->
                     <Button
@@ -72,8 +76,11 @@
                         android:layout_height="wrap_content"
                         android:contentDescription="Decrementar cantidad"
                         app:icon="@drawable/baseline_remove_24"
-                        android:scaleX="0.7"
-                        android:scaleY="0.7"/>
+                        app:iconTint="@color/white"
+                        app:cornerRadius="8dp"
+                        android:backgroundTint="@color/crimson"
+                        android:scaleX="0.6"
+                        android:scaleY="0.6"/>
 
                     <!-- Cantidad -->
                     <TextView
@@ -81,8 +88,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="2"
+                        android:fontFamily="@font/sen_font"
                         android:paddingHorizontal="8dp"
-                        android:textSize="16sp"
+                        android:textSize="15sp"
                         android:textColor="@android:color/white" />
 
                     <!-- Botón de más -->
@@ -92,24 +100,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:icon="@drawable/baseline_add_24"
+                        app:iconTint="@color/white"
+                        app:cornerRadius="8dp"
+                        android:backgroundTint="@color/crimson"
                         android:contentDescription="Incrementar cantidad"
-                        android:scaleX="0.7"
-                        android:scaleY="0.7"/>
+                        android:scaleX="0.6"
+                        android:scaleY="0.6"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
         <!-- Botón de eliminar -->
         <Button
-            style="?attr/materialIconButtonFilledStyle"
+            style="?attr/materialIconButtonStyle"
             android:id="@+id/btnDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:icon="@drawable/baseline_close_24"
-            android:backgroundTint="@color/btn_dark"
-            android:contentDescription="Eliminar producto"
-            android:scaleX="0.7"
-            android:scaleY="0.7"/>
+            app:icon="@drawable/ic_delete"
+            app:iconTint="@color/white"
+            android:contentDescription="Eliminar producto"/>
 
 
     </LinearLayout>

@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:paddingHorizontal="16dp"
+    android:paddingHorizontal="10dp"
     android:layout_marginBottom="36dp">
 
     <!-- Imagen del restaurante con bordes curvados -->
@@ -14,7 +14,8 @@
         android:scaleType="centerCrop"
         android:contentDescription="@string/imgRest"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.RoundedCorners16dp"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"
+        android:alpha="0.95"/>
 
     <!-- Nombre del restaurante y calificación -->
     <LinearLayout

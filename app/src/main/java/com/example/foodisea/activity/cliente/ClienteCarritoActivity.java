@@ -7,6 +7,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
@@ -49,7 +50,6 @@ public class ClienteCarritoActivity extends AppCompatActivity implements Carrito
         super.onCreate(savedInstanceState);
         binding = ActivityClienteCarritoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         // Inicializar
         carritoRepository = new CarritoRepository();
         productoRepository = new ProductoRepository();
@@ -62,10 +62,23 @@ public class ClienteCarritoActivity extends AppCompatActivity implements Carrito
             return;
         }
 
+        setupWindowInsets();
         setupRecyclerView();
         setupListeners();
         cargarCarrito();
     }
+    /**
+     * Configura los insets de la ventana
+     */
+    private void setupWindowInsets() {
+        EdgeToEdge.enable(this);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+    }
+
 
     private void setupRecyclerView() {
         adapter = new CarritoAdapter(this, cartItems, false, this);

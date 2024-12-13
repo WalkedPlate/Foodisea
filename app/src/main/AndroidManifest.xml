@@ -110,9 +110,7 @@
         <activity
             android:name=".activity.login.LoginActivity"
             android:exported="false" /> <!-- SERVICIOS -->
-        <activity
-            android:name=".activity.cliente.ClienteNotificacionesActivity"
-            android:exported="false" />
+
         <activity
             android:name=".activity.cliente.ClienteInfoPerfilActivity"
             android:exported="false" />

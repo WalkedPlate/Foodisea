@@ -70,13 +70,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingHorizontal="16dp">
+            android:paddingHorizontal="10dp">
 
             <!-- Imagen android:alpha="0.95" -->
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivRestaurantImage"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="220dp"
                 android:contentDescription="@string/imgRest"
                 android:scaleType="centerCrop"
                 android:src="@drawable/restaurant_image"
@@ -88,176 +88,184 @@
                 android:layout_height="wrap_content"
                 android:text="@string/nameRest"
                 android:fontFamily="@font/sen_font"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:layout_marginVertical="18dp"/>
+                android:layout_marginVertical="20dp"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Descripción:"
-                android:fontFamily="@font/sen_font"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:layout_marginBottom="4dp"/>
-
-            <TextView
-                android:id="@+id/tvDescripcionRest"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:text="@string/descripcionRest"
-                android:textAlignment="viewStart"
-                android:layout_marginBottom="18dp"/>
-
-            <!-- Información de contacto  -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Contacto:"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:fontFamily="@font/sen_font"
-                android:layout_marginBottom="4dp"/>
-
-            <!-- locacion -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/ic_location"
-                    app:tint="@color/btn_dark"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingHorizontal="6dp">
 
                 <TextView
-                    android:id="@+id/tvRestaurantAddress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="2118 Thornridge Cir. Syracuse"
-                    android:layout_marginStart="8dp" />
-            </LinearLayout>
-
-            <!-- numero -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="18dp">
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/ic_call"
-                    app:tint="@color/btn_dark"/>
-
-                <TextView
-                    android:id="@+id/tvRestaurantTelef"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="990857621"
-                    android:layout_marginStart="8dp" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Carta:"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:fontFamily="@font/sen_font"
-                android:layout_marginBottom="4dp"/>
-
-            <!-- Categorías de productos -->
-            <HorizontalScrollView
-                android:id="@+id/hsvCategories"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"
-                android:fillViewport="true">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="16dp"
-                    android:gravity="center_horizontal">
-
-                    <Button
-                        android:id="@+id/btnTodos"
-                        style="?attr/materialIconButtonFilledTonalStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="20dp"
-                        android:layout_marginHorizontal="4dp"
-                        android:text="@string/todas"
-                        android:fontFamily="@font/sen_font"
-                        android:textStyle="bold"
-                        android:backgroundTint="@color/btn_light"/>
-
-                    <Button
-                        android:id="@+id/btnPlatos"
-                        style="?attr/materialIconButtonFilledTonalStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="20dp"
-                        android:layout_marginHorizontal="4dp"
-                        android:text="@string/catPlatos"
-                        android:fontFamily="@font/sen_font"
-                        android:backgroundTint="@color/btn_light"/>
-
-                    <Button
-                        android:id="@+id/btnBebidas"
-                        style="?attr/materialIconButtonFilledTonalStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="20dp"
-                        android:layout_marginHorizontal="4dp"
-                        android:text="@string/catBebidas"
-                        android:fontFamily="@font/sen_font"
-                        android:backgroundTint="@color/btn_light"/>
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <!-- Contenedor para RecyclerView, ProgressBar y mensaje de no productos -->
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="200dp">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvProducts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    android:padding="12dp"/>
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:visibility="gone"/>
+                    android:text="Descripción:"
+                    android:fontFamily="@font/sen_font"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="4dp"/>
 
                 <TextView
-                    android:id="@+id/tvNoProducts"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvDescripcionRest"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="No hay productos disponibles"
-                    android:textSize="16sp"
-                    android:fontFamily="@font/sen_font"
-                    android:visibility="gone"/>
+                    android:textSize="14sp"
+                    android:text="@string/descripcionRest"
+                    android:textAlignment="viewStart"
+                    android:layout_marginBottom="18dp"/>
 
-            </FrameLayout>
+                <!-- Información de contacto  -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Contacto:"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/sen_font"
+                    android:layout_marginBottom="4dp"/>
+
+                <!-- locacion -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/ic_location"
+                        app:tint="@color/btn_dark"/>
+
+                    <TextView
+                        android:id="@+id/tvRestaurantAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2118 Thornridge Cir. Syracuse"
+                        android:layout_marginStart="8dp" />
+                </LinearLayout>
+
+                <!-- numero -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="18dp">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/ic_call"
+                        app:tint="@color/btn_dark"/>
+
+                    <TextView
+                        android:id="@+id/tvRestaurantTelef"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="990857621"
+                        android:layout_marginStart="8dp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Carta:"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/sen_font"
+                    android:layout_marginBottom="8dp"/>
+
+                <!-- Categorías de productos -->
+                <HorizontalScrollView
+                    android:id="@+id/hsvCategories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:fillViewport="true">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp"
+                        android:gravity="center_horizontal">
+
+                        <Button
+                            android:id="@+id/btnTodos"
+                            style="?attr/materialIconButtonFilledTonalStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="20dp"
+                            android:layout_marginHorizontal="4dp"
+                            android:text="@string/todas"
+                            android:fontFamily="@font/sen_font"
+                            android:textStyle="bold"
+                            android:backgroundTint="@color/btn_light"/>
+
+                        <Button
+                            android:id="@+id/btnPlatos"
+                            style="?attr/materialIconButtonFilledTonalStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="20dp"
+                            android:layout_marginHorizontal="4dp"
+                            android:text="@string/catPlatos"
+                            android:fontFamily="@font/sen_font"
+                            android:backgroundTint="@color/btn_light"/>
+
+                        <Button
+                            android:id="@+id/btnBebidas"
+                            style="?attr/materialIconButtonFilledTonalStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="20dp"
+                            android:layout_marginHorizontal="4dp"
+                            android:text="@string/catBebidas"
+                            android:fontFamily="@font/sen_font"
+                            android:backgroundTint="@color/btn_light"/>
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <!-- Contenedor para RecyclerView, ProgressBar y mensaje de no productos -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="200dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvProducts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:padding="10dp"/>
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/tvNoProducts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="No hay productos disponibles"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/sen_font"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+            </LinearLayout>
+
 
         </LinearLayout>
 
