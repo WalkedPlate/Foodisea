@@ -97,6 +97,10 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
             if (!restaurante.getImagenes().isEmpty()) {
                 intent.putExtra("image", restaurante.getImagenes().get(0));
             }
+
+            intent.putExtra("administradorId",restaurante.getAdministradorId());
+            intent.putExtra("direccion",restaurante.getDireccion());
+            intent.putExtra("telefono",restaurante.getTelefono());
             context.startActivity(intent);
         });
     }

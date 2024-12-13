@@ -303,4 +303,23 @@ public class UsuarioRepository {
                    return usuarios;
                 });
     }
+
+    public Task<List<AdministradorRestaurante>> getAdministradoresRestaurantes(){
+        return db.collection(COLLECTION_USUARIOS)
+                .whereEqualTo("tipoUsuario","AdministradorRestaurante")
+                .get()
+                .continueWith(task -> {
+                    List<AdministradorRestaurante> listaAdministradores = new ArrayList<>();
+                    if(task.isSuccessful() && task.getResult() != null){
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            AdministradorRestaurante administradorRestaurante = doc.toObject(AdministradorRestaurante.class);
+                            if (administradorRestaurante != null) {
+                                administradorRestaurante.setId(doc.getId()); // Establecer ID del documento
+                                listaAdministradores.add(administradorRestaurante);
+                            }
+                        }
+                    }
+                    return listaAdministradores;
+                });
+    }
 }

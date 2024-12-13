@@ -29,6 +29,7 @@
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <TextView
+            android:id="@+id/nombreRestaurant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nombre del restaurante"
@@ -126,7 +127,7 @@
                         app:tint="@color/btn_dark"/>
 
                     <TextView
-                        android:id="@+id/productDetailPrice"
+                        android:id="@+id/nombreAdministrador"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Juan Perez"
