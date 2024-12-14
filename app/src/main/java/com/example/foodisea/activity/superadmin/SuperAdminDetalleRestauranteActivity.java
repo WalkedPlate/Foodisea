@@ -37,15 +37,18 @@ public class SuperAdminDetalleRestauranteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeComponents();
-        setupListeners();
+
 
         Intent intent = getIntent();
+        String restauranteId = intent.getStringExtra("restauranteId");
         String nombreRestaurante = intent.getStringExtra("name");
         String descripcion = intent.getStringExtra("descripcion");
         String administradorId = intent.getStringExtra("administradorId");
         String direccion = intent.getStringExtra("direccion");
         String telefono = intent.getStringExtra("telefono");
         String imagen = intent.getStringExtra("image");
+
+        setupListeners(restauranteId);
 
         usuarioRepository = new UsuarioRepository();
         cargarListaAdministradores(administradorId);
@@ -99,7 +102,7 @@ public class SuperAdminDetalleRestauranteActivity extends AppCompatActivity {
     /**
      * Configura los listeners de los botones
      */
-    private void setupListeners() {
+    private void setupListeners(String restauranteId) {
         binding.btnBack.setOnClickListener(v -> finish());
         binding.btnEdit.setOnClickListener(v-> {
             Intent editRest = new Intent(this, SuperAdminEditRestauranteActivity.class);
@@ -107,6 +110,7 @@ public class SuperAdminDetalleRestauranteActivity extends AppCompatActivity {
         });
         binding.btnReporte.setOnClickListener(v -> {
             Intent reporteRest = new Intent(this, SuperAdminRestaurantesReportesActivity.class);
+            reporteRest.putExtra("restauranteId",restauranteId);
             startActivity(reporteRest);
         });
     }
