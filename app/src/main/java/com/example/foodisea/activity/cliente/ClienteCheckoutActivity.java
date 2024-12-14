@@ -60,6 +60,8 @@ public class ClienteCheckoutActivity extends AppCompatActivity {
     private double latitudEntrega;
     private double longitudEntrega;
 
+    private String restauranteId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +76,14 @@ public class ClienteCheckoutActivity extends AppCompatActivity {
 
         if (clienteActual == null) {
             Toast.makeText(this, "Error de sesión", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        // Obtener restauranteId del intent
+        restauranteId = getIntent().getStringExtra("restauranteId");
+        if (restauranteId == null) {
+            Toast.makeText(this, "Error: ID de restaurante no encontrado", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -106,6 +116,7 @@ public class ClienteCheckoutActivity extends AppCompatActivity {
 
         binding.btnEditOrder.setOnClickListener(v -> {
             Intent intent = new Intent(this, ClienteCarritoActivity.class);
+            intent.putExtra("restauranteId", restauranteId);
             startActivity(intent);
         });
 
@@ -148,7 +159,7 @@ public class ClienteCheckoutActivity extends AppCompatActivity {
     private void cargarCarrito() {
         loadingDialog.show("Cargando resumen...");
 
-        carritoRepository.obtenerCarritoActivo(clienteActual.getId())
+        carritoRepository.obtenerCarritoActivo(clienteActual.getId(),restauranteId)
                 .addOnSuccessListener(documentSnapshot -> {
                     if (!documentSnapshot.exists()) {
                         loadingDialog.dismiss();
@@ -236,7 +247,7 @@ public class ClienteCheckoutActivity extends AppCompatActivity {
     private void crearPedido() {
         loadingDialog.show("Procesando pedido...");
 
-        carritoRepository.obtenerCarritoActivo(clienteActual.getId())
+        carritoRepository.obtenerCarritoActivo(clienteActual.getId(),restauranteId)
                 .addOnSuccessListener(documentSnapshot -> {
                     if (!documentSnapshot.exists()) {
                         loadingDialog.dismiss();
@@ -274,7 +285,7 @@ public class ClienteCheckoutActivity extends AppCompatActivity {
                                 String pedidoId = documentReference.getId();
 
                                 // Limpiar carrito
-                                carritoRepository.limpiarCarrito(clienteActual.getId())
+                                carritoRepository.limpiarCarrito(clienteActual.getId(), restauranteId)
                                         .addOnSuccessListener(aVoid -> {
                                             loadingDialog.dismiss();
                                             // Pasar a la pantalla de confirmación con el ID del pedido

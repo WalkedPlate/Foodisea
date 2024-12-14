@@ -206,7 +206,7 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
 
     private void actualizarContadorCarrito() {
 
-        carritoRepository.obtenerCarritoActivo(clienteActual.getId())
+        carritoRepository.obtenerCarritoActivo(clienteActual.getId(),restauranteId)
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         Carrito carrito = documentSnapshot.toObject(Carrito.class);

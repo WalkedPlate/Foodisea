@@ -120,6 +120,7 @@ public class ClienteProductoActivity extends AppCompatActivity {
         // Botón carrito
         binding.btnCart.setOnClickListener(v -> {
             Intent intent = new Intent(this, ClienteCarritoActivity.class);
+            intent.putExtra("restauranteId",restauranteId);
             startActivity(intent);
         });
 
@@ -193,7 +194,7 @@ public class ClienteProductoActivity extends AppCompatActivity {
 
         loadingDialog.show("Limpiando carrito...");
 
-        carritoRepository.limpiarCarrito(clienteActual.getId())
+        carritoRepository.limpiarCarrito(clienteActual.getId(), restauranteId)
                 .addOnSuccessListener(aVoid -> agregarAlCarrito())
                 .addOnFailureListener(e -> {
                     loadingDialog.dismiss();
@@ -206,7 +207,7 @@ public class ClienteProductoActivity extends AppCompatActivity {
         clienteActual = sessionManager.getClienteActual();
         if (clienteActual == null) return;
 
-        carritoRepository.obtenerCarritoActivo(clienteActual.getId())
+        carritoRepository.obtenerCarritoActivo(clienteActual.getId(),restauranteId)
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         Carrito carrito = documentSnapshot.toObject(Carrito.class);

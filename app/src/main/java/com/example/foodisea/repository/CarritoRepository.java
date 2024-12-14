@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,27 +21,30 @@ public class CarritoRepository {
     }
 
     // Obtener el carrito activo del cliente
-    public Task<DocumentSnapshot> obtenerCarritoActivo(String clienteId) {
+    public Task<DocumentSnapshot> obtenerCarritoActivo(String clienteId, String restauranteId) {
         return db.collection(CARRITOS_COLLECTION)
-                .document(clienteId)
+                .document(clienteId + "_" + restauranteId)
                 .get();
     }
+
+    // Obtener todos los carritos activos del cliente
+    public Task<QuerySnapshot> obtenerTodosLosCarritos(String clienteId) {
+        return db.collection(CARRITOS_COLLECTION)
+                .whereEqualTo("clienteId", clienteId)
+                .get();
+    }
+
 
     // Agregar o actualizar producto en el carrito
     public Task<Void> agregarProductoAlCarrito(String clienteId, String restauranteId,
                                                Producto producto, int cantidad) {
-        return obtenerCarritoActivo(clienteId).continueWithTask(task -> {
+        String carritoId = clienteId + "_" + restauranteId;
+
+        return obtenerCarritoActivo(clienteId, restauranteId).continueWithTask(task -> {
             DocumentSnapshot document = task.getResult();
 
             if (document.exists()) {
                 Carrito carrito = document.toObject(Carrito.class);
-
-                // Verificar si el producto es del mismo restaurante
-                if (!carrito.getRestauranteId().equals(restauranteId)) {
-                    return Tasks.forException(
-                            new Exception("No puedes agregar productos de diferentes restaurantes al carrito")
-                    );
-                }
 
                 // Actualizar producto existente o agregar nuevo
                 List<ProductoCantidad> productos = carrito.getProductos();
@@ -64,7 +68,7 @@ public class CarritoRepository {
                 carrito.setTotal(carrito.getTotal() + (producto.getPrecio() * cantidad));
 
                 return db.collection(CARRITOS_COLLECTION)
-                        .document(clienteId)
+                        .document(carritoId)
                         .set(carrito);
 
             } else {
@@ -83,16 +87,18 @@ public class CarritoRepository {
                 nuevoCarrito.setTotal(producto.getPrecio() * cantidad);
 
                 return db.collection(CARRITOS_COLLECTION)
-                        .document(clienteId)
+                        .document(carritoId)
                         .set(nuevoCarrito);
             }
         });
     }
 
     // Actualizar la cantidad de un producto en el carrito
-    public Task<Void> actualizarCantidadProducto(String clienteId, String productoId,
-                                                 int nuevaCantidad, double precioProducto) {
-        return obtenerCarritoActivo(clienteId).continueWithTask(task -> {
+    public Task<Void> actualizarCantidadProducto(String clienteId, String restauranteId,
+                                                 String productoId, int nuevaCantidad,
+                                                 double precioProducto) {
+        String carritoId = clienteId + "_" + restauranteId;
+        return obtenerCarritoActivo(clienteId,restauranteId).continueWithTask(task -> {
             DocumentSnapshot document = task.getResult();
             if (!document.exists()) {
                 return Tasks.forException(new Exception("Carrito no encontrado"));
@@ -121,19 +127,21 @@ public class CarritoRepository {
             // Si no quedan productos, eliminar el carrito
             if (productos.isEmpty()) {
                 return db.collection(CARRITOS_COLLECTION)
-                        .document(clienteId)
+                        .document(carritoId)
                         .delete();
             }
 
             return db.collection(CARRITOS_COLLECTION)
-                    .document(clienteId)
+                    .document(carritoId)
                     .set(carrito);
         });
     }
 
     // Eliminar un producto del carrito
-    public Task<Void> eliminarProductoDelCarrito(String clienteId, String productoId) {
-        return obtenerCarritoActivo(clienteId).continueWithTask(task -> {
+    public Task<Void> eliminarProductoDelCarrito(String clienteId, String restauranteId,
+                                                 String productoId) {
+        String carritoId = clienteId + "_" + restauranteId;
+        return obtenerCarritoActivo(clienteId,restauranteId).continueWithTask(task -> {
             DocumentSnapshot document = task.getResult();
             if (!document.exists()) {
                 return Tasks.forException(new Exception("Carrito no encontrado"));
@@ -142,14 +150,8 @@ public class CarritoRepository {
             Carrito carrito = document.toObject(Carrito.class);
             List<ProductoCantidad> productos = carrito.getProductos();
 
-            // Encontrar y eliminar el producto
-            ProductoCantidad productoAEliminar = null;
-            for (ProductoCantidad pc : productos) {
-                if (pc.getProductoId().equals(productoId)) {
-                    productoAEliminar = pc;
-                    break;
-                }
-            }
+            // Encontrar el producto y su posición
+            ProductoCantidad productoAEliminar = productos.stream().filter(pc -> pc.getProductoId().equals(productoId)).findFirst().orElse(null);
 
             if (productoAEliminar != null) {
                 productos.remove(productoAEliminar);
@@ -157,12 +159,33 @@ public class CarritoRepository {
                 // Si no quedan productos, eliminar el carrito
                 if (productos.isEmpty()) {
                     return db.collection(CARRITOS_COLLECTION)
-                            .document(clienteId)
+                            .document(carritoId)
                             .delete();
                 }
 
-                // Recalcular el total
-                return recalcularTotal(clienteId);
+                // Obtener el precio del producto eliminado
+                return db.collection("productos")
+                        .document(productoId)
+                        .get()
+                        .continueWithTask(productoTask -> {
+                            if (productoTask.isSuccessful()) {
+                                Producto producto = productoTask.getResult().toObject(Producto.class);
+                                if (producto != null) {
+                                    // Actualizar el total restando el producto eliminado
+                                    double nuevoTotal = carrito.getTotal() -
+                                            (producto.getPrecio() * productoAEliminar.getCantidad());
+                                    carrito.setTotal(nuevoTotal);
+
+                                    // Actualizar el carrito con la nueva lista y total
+                                    return db.collection(CARRITOS_COLLECTION)
+                                            .document(carritoId)
+                                            .set(carrito);
+                                }
+                            }
+                            return Tasks.forException(
+                                    new Exception("Error al obtener información del producto")
+                            );
+                        });
             }
 
             return Tasks.forException(new Exception("Producto no encontrado en el carrito"));
@@ -170,8 +193,9 @@ public class CarritoRepository {
     }
 
     // Método auxiliar para recalcular el total del carrito
-    private Task<Void> recalcularTotal(String clienteId) {
-        return obtenerCarritoActivo(clienteId).continueWithTask(task -> {
+    private Task<Void> recalcularTotal(String clienteId, String restauranteId) {
+        String carritoId = clienteId + "_" + restauranteId;
+        return obtenerCarritoActivo(clienteId,restauranteId).continueWithTask(task -> {
             DocumentSnapshot document = task.getResult();
             Carrito carrito = document.toObject(Carrito.class);
 
@@ -210,16 +234,17 @@ public class CarritoRepository {
                 carrito.setTotal(nuevoTotal);
 
                 return db.collection(CARRITOS_COLLECTION)
-                        .document(clienteId)
+                        .document(carritoId)
                         .set(carrito);
             });
         });
     }
 
-    // Limpiar el carrito completamente
-    public Task<Void> limpiarCarrito(String clienteId) {
+    // Limpiar un carrito específico
+    public Task<Void> limpiarCarrito(String clienteId, String restauranteId) {
+        String carritoId = clienteId + "_" + restauranteId;
         return db.collection(CARRITOS_COLLECTION)
-                .document(clienteId)
+                .document(carritoId)
                 .delete();
     }
 }

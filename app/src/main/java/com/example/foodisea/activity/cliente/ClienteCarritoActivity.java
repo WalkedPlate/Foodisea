@@ -44,12 +44,22 @@ public class ClienteCarritoActivity extends AppCompatActivity implements Carrito
     private LoadingDialog loadingDialog;
     private List<CarritoAdapter.CarritoItem> cartItems = new ArrayList<>();
     private double totalCarrito = 0.0;
+    private String restauranteId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityClienteCarritoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Obtener restauranteId del intent
+        restauranteId = getIntent().getStringExtra("restauranteId");
+        if (restauranteId == null) {
+            Toast.makeText(this, "Error: ID de restaurante no encontrado", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         // Inicializar
         carritoRepository = new CarritoRepository();
         productoRepository = new ProductoRepository();
@@ -95,6 +105,7 @@ public class ClienteCarritoActivity extends AppCompatActivity implements Carrito
                 return;
             }
             Intent checkout = new Intent(this, ClienteCheckoutActivity.class);
+            checkout.putExtra("restauranteId", restauranteId); // Pasar el restauranteId
             startActivity(checkout);
         });
     }
@@ -102,7 +113,10 @@ public class ClienteCarritoActivity extends AppCompatActivity implements Carrito
     private void cargarCarrito() {
         loadingDialog.show("Cargando carrito...");
 
-        carritoRepository.obtenerCarritoActivo(clienteActual.getId())
+        // Obtener restauranteId del intent
+        String restauranteId = getIntent().getStringExtra("restauranteId");
+
+        carritoRepository.obtenerCarritoActivo(clienteActual.getId(),restauranteId)
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         Carrito carrito = documentSnapshot.toObject(Carrito.class);
@@ -181,8 +195,8 @@ public class ClienteCarritoActivity extends AppCompatActivity implements Carrito
             }
         }
 
-        carritoRepository.actualizarCantidadProducto(clienteActual.getId(), productoId,
-                        newQuantity, precioProducto)
+        carritoRepository.actualizarCantidadProducto(clienteActual.getId(),
+                        restauranteId, productoId, newQuantity, precioProducto)
                 .addOnSuccessListener(aVoid -> cargarCarrito())
                 .addOnFailureListener(e -> {
                     loadingDialog.dismiss();
@@ -198,7 +212,8 @@ public class ClienteCarritoActivity extends AppCompatActivity implements Carrito
                 .setMessage("¿Estás seguro de que quieres eliminar este producto del carrito?")
                 .setPositiveButton("Eliminar", (dialog, which) -> {
                     loadingDialog.show("Eliminando producto...");
-                    carritoRepository.eliminarProductoDelCarrito(clienteActual.getId(), productoId)
+                    carritoRepository.eliminarProductoDelCarrito(clienteActual.getId(),
+                                    restauranteId, productoId)
                             .addOnSuccessListener(aVoid -> cargarCarrito())
                             .addOnFailureListener(e -> {
                                 loadingDialog.dismiss();
