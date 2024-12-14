@@ -388,7 +388,7 @@ public class RegisterActivity extends AppCompatActivity implements OnMapReadyCal
                     updateLocationOnMap(latLng);
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
                 } else {
-                    showError("No se pudo obtener tu ubicación actual");
+                    showError("No se pudo obtener tu ubicación actual, verifique si su ubicación está activa.");
                 }
             });
         } catch (SecurityException e) {

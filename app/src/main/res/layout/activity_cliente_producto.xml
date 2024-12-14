@@ -1,187 +1,233 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.cliente.ClienteProductoActivity"
-    android:background="@color/bg_color">
+    android:background="@color/bg_color"
+    tools:context=".activity.cliente.ClienteProductoActivity">
 
+    <!-- Header -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/btnBack"
+            style="?attr/materialIconButtonFilledTonalStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/btnBack"
+            app:icon="@drawable/baseline_arrow_back_ios_new_24"
+            android:backgroundTint="@color/bg_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <Button
+            android:id="@+id/btnCart"
+            style="?attr/materialIconButtonFilledTonalStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Boton de carrito"
+            app:icon="@drawable/outline_shopping"
+            android:backgroundTint="@color/bg_gray_light"
+            app:iconTint="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/tvCartItemCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/circle_bg"
+            android:text="@string/cantProducts"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:paddingHorizontal="4dp"
+            android:minWidth="16dp"
+            android:minHeight="16dp"
+            app:layout_constraintEnd_toEndOf="@id/btnCart"
+            app:layout_constraintTop_toTopOf="@id/btnCart"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintVertical_bias="0" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Contenido desplazable -->
-
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollViewContent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"
+        app:layout_constraintBottom_toTopOf="@id/btnAddToCart">
 
-        <!-- Botones con imagen del prodcuto-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <!-- Carrusel de imágenes del producto -->
-            <org.imaginativeworld.whynotimagecarousel.ImageCarousel
-                android:id="@+id/carousel"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                app:showCaption="false"
-                app:showNavigationButtons="false"
-                app:showIndicator="true"
-                app:autoPlay="true"
-                app:autoPlayDelay="3000"
-                app:imageScaleType="centerCrop"/>
-
-            <!-- Botón de regresar (flecha) -->
-            <Button
-                style="?attr/materialIconButtonFilledTonalStyle"
-                android:id="@+id/btnBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_margin="12dp"
-                app:icon="@drawable/baseline_arrow_back_ios_new_24"
-                android:contentDescription="@string/btnBack"
-                app:iconTint="@color/black"
-                android:backgroundTint="@color/bg_color"/>
-
-            <!-- Botón de carrito de compras -->
-            <Button
-                style="?attr/materialIconButtonFilledStyle"
-                android:id="@+id/btnCart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="12dp"
-                app:icon="@drawable/outline_shopping"
-                android:backgroundTint="@color/black"
-                android:contentDescription="@string/btnCarrito"/>
-
-            <!-- Indicador de cantidad en el carrito -->
-            <TextView
-                android:id="@+id/tvCartItemCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/btnCart"
-                android:layout_alignEnd="@id/btnCart"
-                android:background="@drawable/circle_bg"
-                android:text="@string/cantProducts"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:gravity="center"
-                android:paddingHorizontal="4dp"
-                android:minWidth="16dp"
-                android:minHeight="16dp"/>
-        </RelativeLayout>
-
-        <!-- Nombre del producto   -->
-        <TextView
-            android:id="@+id/productDetailName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/sen_font"
-            android:padding="16dp"
-            android:textColor="@color/black" />
-
-        <!-- Descripción del producto   -->
-        <TextView
-            android:id="@+id/tvDescripcionProduct"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:textSize="14sp"
-            android:text="La Classic Burger es una jugosa hamburguesa de res a la parrilla, servida en un pan brioche suave, con queso cheddar derretido, lechuga fresca, tomate, cebolla caramelizada y una salsa especial de la casa."
-            android:textAlignment="viewStart"/>
-    </LinearLayout>
-
-
-
-
-    <!-- Contenedor del precio, botones de cantidad y "Añadir al carrito", ubicado en la parte inferior -->
-    <LinearLayout
-        android:id="@+id/containerBottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@drawable/rounded_top">
-
-        <!-- Contenedor del precio y botones de cantidad -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            android:gravity="center_vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="12dp"
+            android:paddingBottom="8dp">
 
-            <!-- Precio -->
+            <!-- Carrusel de imágenes del producto -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <org.imaginativeworld.whynotimagecarousel.ImageCarousel
+                    android:id="@+id/carousel"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:showCaption="false"
+                    app:showNavigationButtons="false"
+                    app:showIndicator="true"
+                    app:autoPlay="true"
+                    app:autoPlayDelay="3000"
+                    app:imageScaleType="centerCrop"
+                    android:clipToOutline="true" />
+            </androidx.cardview.widget.CardView>
+
+
+            <!-- Nombre del producto -->
             <TextView
-                android:id="@+id/productDetailPrice"
-                android:layout_width="0dp"
+                android:id="@+id/productDetailName"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="S/. 32"
-                android:textSize="24sp"
+                android:text="Nombre del producto"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:layout_weight="1"/>
+                android:fontFamily="@font/sen_font"
+                android:textColor="@color/black"
+                android:layout_marginVertical="20dp" />
 
-            <!-- Botones de menos, cantidad y más -->
+            <!-- Descripción del producto -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Descripción:"
+                android:fontFamily="@font/sen_font"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginBottom="8dp"
+                android:paddingHorizontal="6dp"/>
+            <TextView
+                android:id="@+id/tvDescripcionProduct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="6dp"
+                android:textSize="14sp"
+                android:text="La Classic Burger es una jugosa hamburguesa de res a la parrilla..."
+                android:textAlignment="viewStart"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Precio y cantidad -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="@drawable/rounded_box"
-                android:padding="4dp">
+                android:layout_marginBottom="16dp"
+                android:paddingHorizontal="6dp">
 
-                <!-- Botón de menos -->
-                <Button
-                    style="?attr/materialIconButtonFilledTonalStyle"
-                    android:id="@+id/btnMinus"
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Precio unitario:"
+                        android:fontFamily="@font/sen_font"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="4dp" />
+                    <TextView
+                        android:id="@+id/productDetailPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:textSize="16sp"
+                        android:text="S/. 32" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:icon="@drawable/baseline_remove_24"
-                    android:contentDescription="Disminuir cantidad" />
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cantidad:"
+                        android:fontFamily="@font/sen_font"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                <!-- Texto para mostrar la cantidad -->
-                <TextView
-                    android:id="@+id/tvQuantity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:paddingHorizontal="16dp"
-                    android:textSize="18sp"
-                    android:gravity="center_vertical"
-                    android:textColor="@android:color/black" />
-
-                <!-- Botón de más -->
-                <Button
-                    style="?attr/materialIconButtonFilledTonalStyle"
-                    android:id="@+id/btnPlus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:icon="@drawable/baseline_add_24"
-                    android:contentDescription="Incrementar cantidad" />
+                        <Button
+                            style="?attr/materialIconButtonFilledTonalStyle"
+                            android:id="@+id/btnMinus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:icon="@drawable/baseline_remove_24"
+                            android:contentDescription="Decrementar cantidad"
+                            android:backgroundTint="@color/crimson"
+                            app:iconTint="@color/white"
+                            app:cornerRadius="8dp"
+                            android:scaleX="0.8"
+                            android:scaleY="0.8" />
+                        <TextView
+                            android:id="@+id/tvQuantity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:paddingHorizontal="16dp"
+                            android:textSize="16sp"
+                            android:gravity="center_vertical" />
+                        <Button
+                            style="?attr/materialIconButtonFilledTonalStyle"
+                            android:id="@+id/btnPlus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:icon="@drawable/baseline_add_24"
+                            android:backgroundTint="@color/crimson"
+                            android:contentDescription="Incrementar cantidad"
+                            app:iconTint="@color/white"
+                            app:cornerRadius="8dp"
+                            android:scaleX="0.8"
+                            android:scaleY="0.8" />
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-        <!-- Botón de "Añadir al carrito" dentro del mismo contenedor -->
-        <Button
-            android:id="@+id/btnAddToCart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="AÑADIR AL CARRITO"
-            android:textSize="18sp"
-            android:backgroundTint="@color/btn_medium"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="14dp"
-            android:padding="16dp"
-            android:textStyle="bold"/>
-    </LinearLayout>
-
-
-</RelativeLayout>
+    <!-- Botón en la parte inferior -->
+    <Button
+        android:id="@+id/btnAddToCart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="AÑADIR AL CARRITO"
+        android:textSize="16sp"
+        android:backgroundTint="@color/btn_medium"
+        android:textColor="@android:color/white"
+        android:fontFamily="@font/sen_font"
+        android:layout_margin="24dp"
+        android:padding="14dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

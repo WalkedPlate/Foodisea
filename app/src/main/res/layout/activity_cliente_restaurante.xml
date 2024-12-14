@@ -76,7 +76,7 @@
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivRestaurantImage"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
+                android:layout_height="250dp"
                 android:contentDescription="@string/imgRest"
                 android:scaleType="centerCrop"
                 android:src="@drawable/restaurant_image"

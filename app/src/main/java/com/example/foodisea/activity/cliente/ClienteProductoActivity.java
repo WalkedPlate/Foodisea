@@ -49,6 +49,7 @@ public class ClienteProductoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityClienteProductoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        EdgeToEdge.enable(this);
 
         // Inicializar repositories y managers
         carritoRepository = new CarritoRepository();
@@ -71,12 +72,21 @@ public class ClienteProductoActivity extends AppCompatActivity {
 
         // Configurar botones y listeners
         setupListeners();
+        setupWindowInsets();
 
         // Cargar datos del producto
         cargarProducto(productoId);
 
         // Actualizar contador del carrito
         actualizarContadorCarrito();
+    }
+
+    private void setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
     }
 
     private void cargarProducto(String productoId) {
