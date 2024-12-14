@@ -198,7 +198,6 @@ public class AdminResPedidosActivity extends AppCompatActivity {
             intent.putExtra("direccionDestino", pedidoConCliente.getCliente().getDireccion());
             intent.putExtra("nombreCliente", pedidoConCliente.getCliente().getNombres() + " " + pedidoConCliente.getCliente().getApellidos());
             intent.putExtra("telefono", pedidoConCliente.getCliente().getTelefono());
-            intent.putExtra("metodoPago", pedidoConCliente.getPedido().getPagoId());
             intent.putExtra("estadoPago", pedidoConCliente.getPedido().getEstado());
             intent.putExtra("montoPedido",pedidoConCliente.getPedido().getMontoTotal());
             intent.putExtra("listaIdProductosCantidad",new ArrayList<>(pedidoConCliente.getPedido().getProductos()));

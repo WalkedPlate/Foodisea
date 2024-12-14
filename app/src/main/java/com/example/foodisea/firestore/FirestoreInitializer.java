@@ -43,7 +43,6 @@ public class FirestoreInitializer {
         initializeRestaurante();
         initializeProducto();
         initializeCarrito();
-        initializePedido();
         initializePago();
         initializeReporte();
     }
@@ -176,25 +175,6 @@ public class FirestoreInitializer {
         db.collection("carritos").document(carrito.getId()).set(carrito);
     }
 
-    private void initializePedido() {
-        List<ProductoCantidad> productos = new ArrayList<>();
-        productos.add(new ProductoCantidad("PROD001", 2));
-
-        Pedido pedido = new Pedido(
-                "PED001",
-                "CL001",
-                "REST001",
-                productos,
-                "RP001",
-                "Recibido",
-                new Date(),
-                "Calle Las Flores 456",
-                "QR001",
-                "PAG001"
-        );
-
-        db.collection("pedidos").document(pedido.getId()).set(pedido);
-    }
 
     private void initializePago() {
         Pago pago = new Pago(

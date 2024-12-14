@@ -262,8 +262,6 @@ public class ClienteCheckoutActivity extends AppCompatActivity {
                     pedido.setLongitudEntrega(longitudEntrega);
                     pedido.setMontoTotal(totalConsumption + DELIVERY_FEE);
                     pedido.setRepartidorId(null);
-                    pedido.setCodigoQrId(null);
-                    pedido.setPagoId(null);
 
                     // Guardar pedido y limpiar carrito
                     PedidoRepository pedidoRepository = new PedidoRepository(this);
