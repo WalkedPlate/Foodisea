@@ -1,6 +1,5 @@
 package com.example.foodisea.activity.cliente;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -10,9 +9,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
-import com.example.foodisea.data.SessionManager;
 import com.example.foodisea.databinding.ActivityClienteEditarPerfilBinding;
-import com.example.foodisea.databinding.ActivityClienteInfoPerfilBinding;
 
 public class ClienteEditarPerfilActivity extends AppCompatActivity {
 

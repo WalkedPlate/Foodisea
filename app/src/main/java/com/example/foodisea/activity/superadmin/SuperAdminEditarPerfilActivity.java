@@ -1,6 +1,5 @@
 package com.example.foodisea.activity.superadmin;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -10,10 +9,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
-import com.example.foodisea.activity.cliente.ClienteEditarPerfilActivity;
-import com.example.foodisea.data.SessionManager;
+import com.example.foodisea.manager.SessionManager;
 import com.example.foodisea.databinding.ActivitySuperAdminEditarPerfilBinding;
-import com.example.foodisea.databinding.ActivitySuperAdminInfoPerfilBinding;
 import com.example.foodisea.model.Superadmin;
 
 public class SuperAdminEditarPerfilActivity extends AppCompatActivity {

@@ -11,9 +11,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
-import com.example.foodisea.data.SessionManager;
+import com.example.foodisea.manager.SessionManager;
 import com.example.foodisea.databinding.ActivityClienteInfoPerfilBinding;
-import com.example.foodisea.databinding.ActivityClientePerfilBinding;
 import com.example.foodisea.model.Cliente;
 
 public class ClienteInfoPerfilActivity extends AppCompatActivity {

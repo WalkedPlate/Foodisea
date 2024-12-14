@@ -21,12 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.foodisea.R;
-import com.example.foodisea.activity.cliente.ClienteHistorialPedidosActivity;
-import com.example.foodisea.activity.cliente.ClientePerfilActivity;
-import com.example.foodisea.activity.cliente.ClienteTrackingActivity;
 import com.example.foodisea.activity.login.LoginActivity;
 import com.example.foodisea.adapter.cliente.RestauranteAdapter;
-import com.example.foodisea.data.SessionManager;
+import com.example.foodisea.manager.SessionManager;
 import com.example.foodisea.databinding.ActivityClienteMainBinding;
 import com.example.foodisea.dialog.LoadingDialog;
 import com.example.foodisea.model.Cliente;

@@ -22,7 +22,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.cliente.PlatoAdapter;
-import com.example.foodisea.data.SessionManager;
+import com.example.foodisea.manager.SessionManager;
 import com.example.foodisea.databinding.ActivityClienteRestauranteBinding;
 import com.example.foodisea.model.Carrito;
 import com.example.foodisea.model.Cliente;
@@ -34,9 +34,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class ClienteRestauranteActivity extends AppCompatActivity {

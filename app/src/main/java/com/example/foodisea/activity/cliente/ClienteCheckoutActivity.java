@@ -1,26 +1,15 @@
 package com.example.foodisea.activity.cliente;
 
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.foodisea.R;
 import com.example.foodisea.adapter.cliente.CarritoAdapter;
-import com.example.foodisea.data.SessionManager;
+import com.example.foodisea.manager.SessionManager;
 import com.example.foodisea.databinding.ActivityClienteCheckoutBinding;
 import com.example.foodisea.dialog.LoadingDialog;
 import com.example.foodisea.model.Carrito;
@@ -37,7 +26,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

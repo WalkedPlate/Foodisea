@@ -3,37 +3,28 @@ package com.example.foodisea.activity.adminRes;
 import static android.Manifest.permission.POST_NOTIFICATIONS;
 
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
-import com.example.foodisea.activity.cliente.ClientePerfilActivity;
 import com.example.foodisea.activity.login.LoginActivity;
-import com.example.foodisea.data.SessionManager;
+import com.example.foodisea.manager.SessionManager;
 import com.example.foodisea.databinding.ActivityAdminResHomeBinding;
 import com.example.foodisea.model.AdministradorRestaurante;
-import com.example.foodisea.model.Cliente;
-import com.example.foodisea.model.Pedido;
 import com.example.foodisea.model.Restaurante;
 import com.example.foodisea.model.Usuario;
 import com.example.foodisea.notification.NotificationHelper;

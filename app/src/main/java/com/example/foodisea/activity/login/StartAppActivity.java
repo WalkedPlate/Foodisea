@@ -1,7 +1,6 @@
 package com.example.foodisea.activity.login;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -11,13 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.example.foodisea.R;
-import com.example.foodisea.data.SessionManager;
+import com.example.foodisea.manager.SessionManager;
 import com.example.foodisea.databinding.ActivityStartAppBinding;
 import com.example.foodisea.dialog.LoadingDialog;
-import com.example.foodisea.model.AdministradorRestaurante;
-import com.example.foodisea.model.Repartidor;
 import com.example.foodisea.model.Usuario;
-import com.example.foodisea.repository.UsuarioRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

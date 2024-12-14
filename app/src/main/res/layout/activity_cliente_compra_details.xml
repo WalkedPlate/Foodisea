@@ -177,11 +177,12 @@
                         android:layout_weight="1" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="S/. 281.20"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/black" />
+                        android:id="@+id/tvTotalConsumo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S/. 281.20"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black" />
 
                 </LinearLayout>
 
@@ -202,11 +203,12 @@
                         android:layout_weight="1" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="S/. 15.00"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/black" />
+                        android:id="@+id/tvDelivery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S/. 15.00"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black" />
                 </LinearLayout>
 
                 <!-- Total pago -->
@@ -226,11 +228,12 @@
                         android:layout_weight="1" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="S/. 296.20"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/black" />
+                        android:id="@+id/tvTotalPago"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S/. 296.20"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

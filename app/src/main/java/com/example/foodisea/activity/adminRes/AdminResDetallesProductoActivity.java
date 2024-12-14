@@ -2,10 +2,8 @@ package com.example.foodisea.activity.adminRes;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -20,15 +18,9 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.adminRes.ImageAdapter;
-import com.example.foodisea.data.SessionManager;
 import com.example.foodisea.databinding.ActivityAdminResDetallesProductoBinding;
-import com.example.foodisea.notification.NotificationHelper;
-import com.example.foodisea.repository.PedidoRepository;
 import com.example.foodisea.repository.ProductoRepository;
-import com.example.foodisea.repository.RestauranteRepository;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.Locale;
 

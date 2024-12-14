@@ -1,7 +1,6 @@
 package com.example.foodisea.activity.cliente;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -14,10 +13,9 @@ import androidx.core.view.WindowInsetsCompat;
 import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
 import com.example.foodisea.activity.login.LoginActivity;
-import com.example.foodisea.data.SessionManager;
+import com.example.foodisea.manager.SessionManager;
 import com.example.foodisea.databinding.ActivityClientePerfilBinding;
 import com.example.foodisea.model.Cliente;
-import com.example.foodisea.repository.UsuarioRepository;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 /**

@@ -1,31 +1,21 @@
 package com.example.foodisea.activity.login;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.Patterns;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
-import com.example.foodisea.activity.adminRes.AdminResHomeActivity;
-import com.example.foodisea.activity.cliente.ClienteMainActivity;
-import com.example.foodisea.data.SessionManager;
+import com.example.foodisea.manager.SessionManager;
 import com.example.foodisea.dialog.LoadingDialog;
-import com.example.foodisea.activity.repartidor.RepartidorMainActivity;
-import com.example.foodisea.activity.superadmin.SuperadminMainActivity;
 import com.example.foodisea.databinding.ActivityLoginBinding;
-import com.example.foodisea.model.AdministradorRestaurante;
-import com.example.foodisea.model.Repartidor;
 import com.example.foodisea.model.Usuario;
 import com.example.foodisea.repository.UsuarioRepository;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -34,7 +24,6 @@ import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Activity que maneja el proceso de inicio de sesión de usuarios.

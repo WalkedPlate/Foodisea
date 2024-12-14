@@ -22,8 +22,8 @@ public class Pedido {
     private String direccionEntrega;
     private Double latitudEntrega;
     private Double longitudEntrega;
-    private String codigoQrId;  // Referencia al Código QR (ID)
-    private String pagoId;  // Referencia al Pago (ID)
+    private String verificacionEntregaId;  // Reemplaza codigoQrId y pagoId
+    private String estadoVerificacion;     // "PENDIENTE", "ENTREGA_CONFIRMADA", "PAGO_CONFIRMADO", "COMPLETADO"
     private Double montoTotal;
 
 
@@ -31,9 +31,9 @@ public class Pedido {
     //Constructor, getter y setter
 
     // Constructor
-    public Pedido(String id, String clienteId, String restauranteId, List<ProductoCantidad> productos,
-                  String repartidorId, String estado, Date fechaPedido, String direccionEntrega,
-                  String codigoQrId, String pagoId) {
+
+
+    public Pedido(String id, String clienteId, String restauranteId, List<ProductoCantidad> productos, String repartidorId, String estado, Date fechaPedido, String direccionEntrega, Double latitudEntrega, Double longitudEntrega, String verificacionEntregaId, String estadoVerificacion, Double montoTotal) {
         this.id = id;
         this.clienteId = clienteId;
         this.restauranteId = restauranteId;
@@ -42,12 +42,21 @@ public class Pedido {
         this.estado = estado;
         this.fechaPedido = fechaPedido;
         this.direccionEntrega = direccionEntrega;
-        this.codigoQrId = codigoQrId;
-        this.pagoId = pagoId;
+        this.latitudEntrega = latitudEntrega;
+        this.longitudEntrega = longitudEntrega;
+        this.verificacionEntregaId = verificacionEntregaId;
+        this.estadoVerificacion = estadoVerificacion;
+        this.montoTotal = montoTotal;
     }
 
     public Pedido() {
+    }
 
+    public void iniciarVerificacion() {
+        if (!"En camino".equals(this.estado)) {
+            throw new IllegalStateException("Solo se puede iniciar verificación cuando el pedido está en camino");
+        }
+        this.estadoVerificacion = "PENDIENTE";
     }
 
 
@@ -147,21 +156,6 @@ public class Pedido {
         this.latitudEntrega = latitudEntrega;
     }
 
-    public String getCodigoQrId() {
-        return codigoQrId;
-    }
-
-    public void setCodigoQrId(String codigoQrId) {
-        this.codigoQrId = codigoQrId;
-    }
-
-    public String getPagoId() {
-        return pagoId;
-    }
-
-    public void setPagoId(String pagoId) {
-        this.pagoId = pagoId;
-    }
 
     public Double getMontoTotal() {
         return montoTotal;

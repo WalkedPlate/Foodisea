@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.example.foodisea.R;
 import com.example.foodisea.activity.login.LoginActivity;
 import com.example.foodisea.adapter.repartidor.PedidosAdapter;
-import com.example.foodisea.data.SessionManager;
+import com.example.foodisea.manager.SessionManager;
 import com.example.foodisea.databinding.ActivityRepartidorMainBinding;
 import com.example.foodisea.dialog.LoadingDialog;
 import com.example.foodisea.dto.PedidoConCliente;

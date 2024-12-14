@@ -12,7 +12,6 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.foodisea.R;
-import com.example.foodisea.adapter.repartidor.OrderItemAdapter;
 import com.example.foodisea.databinding.ActivityRepartidorMainBinding;
 import com.example.foodisea.databinding.ActivityRepartidorVerOrdenBinding;
 import com.example.foodisea.item.OrderItem;

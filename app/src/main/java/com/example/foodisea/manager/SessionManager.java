@@ -1,4 +1,4 @@
-package com.example.foodisea.data;
+package com.example.foodisea.manager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,9 +19,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-
-import java.util.Map;
 
 /**
  * Gestor de sesión que maneja el estado del usuario actual en la aplicación.

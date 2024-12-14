@@ -10,8 +10,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
-import com.example.foodisea.data.SessionManager;
-import com.example.foodisea.databinding.ActivitySuperAdminInfoPerfilBinding;
 import com.example.foodisea.databinding.ActivitySuperAdminSolicitudesRepartidorBinding;
 
 public class SuperAdminSolicitudesRepartidorActivity extends AppCompatActivity {

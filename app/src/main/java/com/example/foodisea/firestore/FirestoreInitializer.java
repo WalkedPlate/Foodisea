@@ -45,7 +45,6 @@ public class FirestoreInitializer {
         initializeCarrito();
         initializePedido();
         initializePago();
-        initializeCodigoQR();
         initializeReporte();
     }
 
@@ -210,17 +209,6 @@ public class FirestoreInitializer {
         db.collection("pagos").document(pago.getId()).set(pago);
     }
 
-    private void initializeCodigoQR() {
-        CodigoQR codigoQR = new CodigoQR(
-                "QR001",
-                "PED001",
-                "QR123456789",
-                "Generado",
-                new Date()
-        );
-
-        db.collection("codigosQR").document(codigoQR.getId()).set(codigoQR);
-    }
 
     private void initializeReporte() {
         Map<String, Integer> ventasPorProducto = new HashMap<>();

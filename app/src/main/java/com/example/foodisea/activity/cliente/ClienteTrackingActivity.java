@@ -193,7 +193,7 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
     private void setupClickListeners() {
         btnOrderDetails.setOnClickListener(v -> {
             Intent intent = new Intent(this, ClienteCompraDetailsActivity.class);
-            intent.putExtra("pedido_id", pedidoId);
+            intent.putExtra("pedidoId", pedidoId);
             startActivity(intent);
         });
 

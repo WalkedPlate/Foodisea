@@ -4,25 +4,53 @@ import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 import java.util.Date;
+import java.util.Random;
 
 @IgnoreExtraProperties
 public class CodigoQR {
     @Exclude
     private String id;
-    private String pedidoId;  // ID del pedido asociado
-    private String codigo;
-    private String estado;  // "Generado", "Escaneado"
+    private String verificacionId;  // ID de la verificación asociada
+    private String tipo;           // "ENTREGA" o "PAGO"
+    private String codigo;         // Código QR generado
+    private String estado;         // "GENERADO", "ESCANEADO"
     private Date fechaGeneracion;
+    private Date fechaEscaneo;
 
-    //Constructor, getter y setter
+    public CodigoQR() {
+    }
 
-    // Constructor de la clase CodigoQR
-    public CodigoQR(String id, String pedidoId, String codigo, String estado, Date fechaGeneracion) {
-        this.id = id;
-        this.pedidoId = pedidoId;
-        this.codigo = codigo;
-        this.estado = estado;
-        this.fechaGeneracion = fechaGeneracion;
+
+    public CodigoQR(String verificacionId, String tipo) {
+        this.verificacionId = verificacionId;
+        this.tipo = tipo;
+        this.estado = "GENERADO";
+        this.fechaGeneracion = new Date();
+        this.codigo = generarCodigoUnico();
+    }
+
+
+    private String generarCodigoUnico() {
+        // Generamos un código de 12 caracteres que incluye:
+        // - Prefijo según tipo (E para entrega, P para pago)
+        // - Timestamp actual en hexadecimal (8 caracteres)
+        // - 3 caracteres aleatorios
+        String prefijo = this.tipo.equals("ENTREGA") ? "E" : "P";
+
+        // Obtener timestamp y convertirlo a hexadecimal
+        String timestamp = Long.toHexString(System.currentTimeMillis()).toUpperCase();
+        // Nos quedamos con los últimos 8 caracteres
+        timestamp = timestamp.substring(Math.max(0, timestamp.length() - 8));
+
+        // Generar 3 caracteres aleatorios (letras y números)
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder random = new StringBuilder();
+        Random rnd = new Random();
+        for (int i = 0; i < 3; i++) {
+            random.append(chars.charAt(rnd.nextInt(chars.length())));
+        }
+
+        return prefijo + timestamp + random.toString();
     }
 
 
@@ -36,12 +64,20 @@ public class CodigoQR {
         this.id = id;
     }
 
-    public String getPedidoId() {
-        return pedidoId;
+    public String getVerificacionId() {
+        return verificacionId;
     }
 
-    public void setPedidoId(String pedidoId) {
-        this.pedidoId = pedidoId;
+    public void setVerificacionId(String verificacionId) {
+        this.verificacionId = verificacionId;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public String getCodigo() {
@@ -66,6 +102,14 @@ public class CodigoQR {
 
     public void setFechaGeneracion(Date fechaGeneracion) {
         this.fechaGeneracion = fechaGeneracion;
+    }
+
+    public Date getFechaEscaneo() {
+        return fechaEscaneo;
+    }
+
+    public void setFechaEscaneo(Date fechaEscaneo) {
+        this.fechaEscaneo = fechaEscaneo;
     }
 }
 
