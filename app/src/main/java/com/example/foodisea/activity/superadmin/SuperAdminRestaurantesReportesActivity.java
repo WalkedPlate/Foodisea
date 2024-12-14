@@ -39,6 +39,7 @@ public class SuperAdminRestaurantesReportesActivity extends AppCompatActivity {
     private ProductoRepository productoRepository;
     private List<PedidoConCliente> listaPedidosConCliente = new ArrayList<>();
     private HashMap<String, String> mapaProductoIdANombre = new HashMap<>();
+    private Double promedio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +53,6 @@ public class SuperAdminRestaurantesReportesActivity extends AppCompatActivity {
         pedidoRepository=new PedidoRepository(this);
         productoRepository=new ProductoRepository();
         cargarMapaProductos(restauranteId);
-
-
     }
 
     /**
@@ -116,7 +115,6 @@ public class SuperAdminRestaurantesReportesActivity extends AppCompatActivity {
     // Obtiene la lista de pedidos y genera el resumen con nombres de productos
     public void obtenerListaPedidos(String restauranteId) {
         BarChart barChartPlatos = findViewById(R.id.barChartPlatos);
-        BarChart barChartUsuarios = findViewById(R.id.barChartUsuarios);
         pedidoRepository.getPedidosActivosRestaurante(restauranteId)
                 .addOnSuccessListener(pedidos -> {
                     // Guardar la lista completa
@@ -125,9 +123,15 @@ public class SuperAdminRestaurantesReportesActivity extends AppCompatActivity {
                     // Sumar cantidades y usar nombres de productos
                     HashMap<String, Integer> listaProductoConCantidadTotal = sumaCantidadProductosConNombres(listaPedidosConCliente);
 
+                    //Obtiene promedio:
+                    promedio=obtenerGananciaPromedioPorOrden();
+
 
                     // Configurar el gráfico de barras con los nombres en lugar de IDs
                     setupBarChart(barChartPlatos, listaProductoConCantidadTotal, "Ventas por Plato");
+
+                    binding.nroOrdenesTotales.setText(String.valueOf(listaPedidosConCliente.size()));
+                    binding.gananciaPromedio.setText( "S/ "+ promedio);
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error al cargar pedidos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -171,4 +175,18 @@ public class SuperAdminRestaurantesReportesActivity extends AppCompatActivity {
 
         return listaProductoConCantidadTotal;
     }
+
+    public double obtenerGananciaPromedioPorOrden() {
+        double promedio = 0.0;
+        for (PedidoConCliente pedidoConCliente : listaPedidosConCliente) {
+            promedio += pedidoConCliente.getPedido().getMontoTotal();
+        }
+        promedio = promedio / listaPedidosConCliente.size();
+
+        // Redondear a dos decimales
+        promedio = Math.round(promedio * 100.0) / 100.0;
+
+        return promedio;
+    }
+
 }

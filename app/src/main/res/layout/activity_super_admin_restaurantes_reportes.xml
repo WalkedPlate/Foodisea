@@ -64,31 +64,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="VENTAS TOTALES"
-                android:textSize="16sp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="100"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -128,6 +103,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/nroOrdenesTotales"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="450"
@@ -155,6 +131,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/gananciaPromedio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="$10.50"
