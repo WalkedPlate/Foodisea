@@ -128,6 +128,7 @@ public class AdminResDetallesProductoActivity extends AppCompatActivity {
                     binding.nombreProducto.setText(producto.getNombre());
                     binding.tvDescripcionProduct.setText(producto.getDescripcion());
                     binding.productDetailPrice.setText(String.format("S/. %.2f", producto.getPrecio()));
+                    binding.productCategory.setText(producto.getCategoria());
 
                     // Cargar imágenes en el ViewPager
                     if (producto.getImagenes() != null && !producto.getImagenes().isEmpty()) {
@@ -184,7 +185,7 @@ public class AdminResDetallesProductoActivity extends AppCompatActivity {
     }
 
     private void showLoading(boolean show) {
-        binding.progressIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
+        //binding.progressIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
         binding.btnEditar.setEnabled(!show);
         binding.btnEliminar.setEnabled(!show);
     }

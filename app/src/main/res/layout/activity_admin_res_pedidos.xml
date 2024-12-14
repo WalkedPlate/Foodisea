@@ -17,13 +17,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Header con titulo y boton de regreso -->
-        <LinearLayout
+        <!-- Header -->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/headerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
             android:padding="12dp">
 
             <Button
@@ -31,20 +29,26 @@
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/bg_color"
                 android:contentDescription="@string/btnBack"
-                app:icon="@drawable/baseline_arrow_back_ios_new_24" />
+                app:icon="@drawable/baseline_arrow_back_ios_new_24"
+                android:backgroundTint="@color/bg_color"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
             <TextView
-                android:id="@+id/tvTitulo"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Pedidos"
+                android:textSize="18sp"
                 android:fontFamily="@font/sen_font"
-                android:padding="8dp"
-                android:text="Pedidos del día"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
-        </LinearLayout>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvPedidos"

@@ -74,6 +74,7 @@ public class AdminResHomeActivity extends AppCompatActivity {
         pedidoRepository = new PedidoRepository(this);
         storage = FirebaseStorage.getInstance();
         sessionManager = SessionManager.getInstance(this);
+        administradorRestauranteActual = sessionManager.getAdminRestauranteActual();
         notificationHelper = new NotificationHelper(this);
 
 
@@ -95,12 +96,12 @@ public class AdminResHomeActivity extends AppCompatActivity {
         setupButtons();
         setupNotificationButton();
         try {
-            String welcomeMessage = String.format("¡Hola %s, administra tu restaurant",
+            String welcomeMessage = String.format("¡Hola %s!, empecemos a administrar",
                     administradorRestauranteActual.getNombres().split(" ")[0]);
             binding.tvWelcome.setText(welcomeMessage);
         } catch (Exception e) {
             // En caso de algún error con el nombre, usar mensaje genérico
-            binding.tvWelcome.setText("¡Hola, administra tu restaurant");
+            binding.tvWelcome.setText("¡Hola, empecemos a administrar");
             Log.e("AdminResHomeActivity", "Error al configurar mensaje de bienvenida", e);
         }
 
@@ -129,48 +130,48 @@ public class AdminResHomeActivity extends AppCompatActivity {
     }
 
     private void setupNotificationButton() {
-        binding.btnNotifications.setOnClickListener(view -> {
-            if (administradorRestauranteActual == null) {
-                Toast.makeText(this,
-                        "Error: Administrador no inicializado",
-                        Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            if (administradorRestauranteActual.getRestauranteId() == null) {
-                Toast.makeText(this,
-                        "Error: ID del restaurante no disponible",
-                        Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            // Mostrar progreso
-            ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("Enviando notificación de prueba...");
-            progressDialog.show();
-
-            // Crear pedido de prueba
-            Pedido pedidoPrueba = new Pedido();
-            String pedidoId = "test-" + System.currentTimeMillis();
-            pedidoPrueba.setId(pedidoId);
-            pedidoPrueba.setRestauranteId(administradorRestauranteActual.getRestauranteId());
-
-            Log.d(TAG, "Enviando notificación de prueba para restaurante: " +
-                    administradorRestauranteActual.getRestauranteId());
-
-            // Primero verificar/actualizar el token FCM
-            getFCMToken(() -> {
-                // Callback después de actualizar el token
-                notificationHelper.sendNewOrderNotification(pedidoPrueba);
-
-                new Handler().postDelayed(() -> {
-                    progressDialog.dismiss();
-                    Toast.makeText(this,
-                            "Notificación de prueba enviada para pedido: " + pedidoId,
-                            Toast.LENGTH_LONG).show();
-                }, 2000);
-            });
-        });
+//        binding.btnNotifications.setOnClickListener(view -> {
+//            if (administradorRestauranteActual == null) {
+//                Toast.makeText(this,
+//                        "Error: Administrador no inicializado",
+//                        Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//
+//            if (administradorRestauranteActual.getRestauranteId() == null) {
+//                Toast.makeText(this,
+//                        "Error: ID del restaurante no disponible",
+//                        Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//
+//            // Mostrar progreso
+//            ProgressDialog progressDialog = new ProgressDialog(this);
+//            progressDialog.setMessage("Enviando notificación de prueba...");
+//            progressDialog.show();
+//
+//            // Crear pedido de prueba
+//            Pedido pedidoPrueba = new Pedido();
+//            String pedidoId = "test-" + System.currentTimeMillis();
+//            pedidoPrueba.setId(pedidoId);
+//            pedidoPrueba.setRestauranteId(administradorRestauranteActual.getRestauranteId());
+//
+//            Log.d(TAG, "Enviando notificación de prueba para restaurante: " +
+//                    administradorRestauranteActual.getRestauranteId());
+//
+//            // Primero verificar/actualizar el token FCM
+//            getFCMToken(() -> {
+//                // Callback después de actualizar el token
+//                notificationHelper.sendNewOrderNotification(pedidoPrueba);
+//
+//                new Handler().postDelayed(() -> {
+//                    progressDialog.dismiss();
+//                    Toast.makeText(this,
+//                            "Notificación de prueba enviada para pedido: " + pedidoId,
+//                            Toast.LENGTH_LONG).show();
+//                }, 2000);
+//            });
+//        });
     }
 
     private void getFCMToken(Runnable onComplete) {
@@ -291,6 +292,8 @@ public class AdminResHomeActivity extends AppCompatActivity {
     private void updateUI(Restaurante restaurante) {
         binding.nombreRestaurant.setText(restaurante.getNombre());
         binding.descripcionRestaurant.setText(restaurante.getDescripcion());
+        binding.tvRestaurantAddress.setText(restaurante.getDireccion());
+        binding.tvRestaurantTelef.setText(restaurante.getTelefono());
         String ratingText = String.format("%.1f", restaurante.getRating());
         //binding.tvRestaurantRating.setText(ratingText);
     }

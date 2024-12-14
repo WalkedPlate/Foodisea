@@ -61,11 +61,6 @@ public class AdminResPerfilActivity extends AppCompatActivity {
         if (administradorRestauranteActual != null) {
             // Actualizar datos del administrador del restaurante
             binding.tvUserName.setText(administradorRestauranteActual.obtenerNombreCompleto());
-            binding.tvUserDNI.setText(administradorRestauranteActual.getDocumentoId());
-            binding.tvUserBirthdate.setText(administradorRestauranteActual.getFechaNacimiento());
-            binding.tvUserMail.setText(administradorRestauranteActual.getCorreo());
-            binding.tvUserCell.setText(administradorRestauranteActual.getTelefono());
-            binding.tvUserAddress.setText(administradorRestauranteActual.getDireccion());
 
             // Cargar imagen de perfil
             if (administradorRestauranteActual.getFoto() != null && !administradorRestauranteActual.getFoto().isEmpty()) {
@@ -83,7 +78,7 @@ public class AdminResPerfilActivity extends AppCompatActivity {
             }
 
             // Mostrar tipo de usuario
-            binding.tvTypeUser.setText("Administrador de Restaurante");
+            binding.tvTypeUser.setText("Administrador de restaurante");
         }
     }
 
@@ -104,6 +99,12 @@ public class AdminResPerfilActivity extends AppCompatActivity {
      */
     private void setupListeners() {
         binding.btnBack.setOnClickListener(v -> finish());
+
+        binding.llPersonalInfo.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminResInfoPerfilActivity.class);
+            startActivity(intent);
+        });
+
 
         binding.llLogout.setOnClickListener(v -> showLogoutConfirmationDialog());
     }

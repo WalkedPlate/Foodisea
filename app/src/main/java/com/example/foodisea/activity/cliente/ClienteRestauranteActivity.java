@@ -77,14 +77,16 @@ public class ClienteRestauranteActivity extends AppCompatActivity {
         Intent intent = getIntent();
         restauranteId = intent.getStringExtra("restauranteId");
         String restaurantName = intent.getStringExtra("name");
-        double restaurantRating = intent.getDoubleExtra("rating", 0);
+        String restauranteAddress = intent.getStringExtra("direccion");
+        String restauranteTelef = intent.getStringExtra("telefono");
         String imageRef = intent.getStringExtra("image");
         String restaurantDesc = intent.getStringExtra("descripcion");
 
         // Configurar la vista con los datos recibidos
         loadRestaurantImage(imageRef);
         binding.tvRestaurantName.setText(restaurantName);
-        //binding.tvRestaurantRating.setText(String.valueOf(restaurantRating));
+        binding.tvRestaurantAddress.setText(String.valueOf(restauranteAddress));
+        binding.tvRestaurantTelef.setText(String.valueOf(restauranteTelef));
         binding.tvDescripcionRest.setText(restaurantDesc);
 
         setupRecyclerView();

@@ -66,7 +66,7 @@ public class CartaAdapter extends RecyclerView.Adapter<CartaAdapter.PlatoViewHol
 
         public void bind(Producto producto) {
             textViewNombreProducto.setText(producto.getNombre());
-            textViewPrecio.setText(String.format("$%.2f", producto.getPrecio()));
+            textViewPrecio.setText(String.format("S/. %.2f", producto.getPrecio()));
 
             // Cargar imagen con Glide
             if (producto.getImagenes() != null && !producto.getImagenes().isEmpty()) {

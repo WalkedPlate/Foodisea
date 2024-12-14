@@ -11,10 +11,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
-import com.example.foodisea.activity.cliente.ClienteEditarPerfilActivity;
 import com.example.foodisea.data.SessionManager;
 import com.example.foodisea.databinding.ActivityRepartidorInfoPerfilBinding;
-import com.example.foodisea.databinding.ActivityRepartidorPerfilBinding;
 import com.example.foodisea.model.Repartidor;
 
 public class RepartidorInfoPerfilActivity extends AppCompatActivity {
@@ -102,7 +100,7 @@ public class RepartidorInfoPerfilActivity extends AppCompatActivity {
     private void setupListeners() {
         binding.btnBack.setOnClickListener(v -> finish());
         binding.btnEdit.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ClienteEditarPerfilActivity.class);
+            Intent intent = new Intent(this, RepartidorEditarPerfilActivity.class);
             startActivity(intent);
         });
     }

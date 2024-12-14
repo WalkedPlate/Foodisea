@@ -14,34 +14,36 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Header con logo y opciones -->
-        <LinearLayout
-            android:id="@+id/headerLayout"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
-            android:gravity="center_vertical">
+            android:padding="12dp">
 
             <Button
                 android:id="@+id/btnBack"
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/btnBack"
                 app:icon="@drawable/baseline_arrow_back_ios_new_24"
-                android:backgroundTint="@color/bg_color"/>
+                android:contentDescription="@string/btnBack"
+                android:backgroundTint="@color/bg_color"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
             <TextView
-                android:id="@+id/tvWelcome"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/sen_font"
-                android:padding="8dp"
-                android:text="Platos y bebidas"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
-        </LinearLayout>
+                android:text="Carta"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:fontFamily="@font/sen_font"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Barra de búsqueda -->
         <androidx.appcompat.widget.SearchView

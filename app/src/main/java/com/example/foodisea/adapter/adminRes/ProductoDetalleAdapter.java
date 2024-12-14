@@ -54,7 +54,7 @@ public class ProductoDetalleAdapter extends RecyclerView.Adapter<ProductoDetalle
         textViewProductoName.setText(p.getProducto().getNombre());
 
         TextView textViewProductoPrecio = holder.itemView.findViewById(R.id.productPrice);
-        textViewProductoPrecio.setText("s/. " + p.getProducto().getPrecio());
+        textViewProductoPrecio.setText("S/. " + p.getProducto().getPrecio());
 
         TextView textViewCantidad = holder.itemView.findViewById(R.id.productQuantity1);
         textViewCantidad.setText(String.valueOf(p.getCantidad()));

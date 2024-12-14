@@ -1,6 +1,5 @@
-package com.example.foodisea.activity.cliente;
+package com.example.foodisea.activity.repartidor;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -10,36 +9,27 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
-import com.example.foodisea.data.SessionManager;
-import com.example.foodisea.databinding.ActivityClienteEditarPerfilBinding;
-import com.example.foodisea.databinding.ActivityClienteInfoPerfilBinding;
+import com.example.foodisea.databinding.ActivityRepartidorEditarPerfilBinding;
 
-public class ClienteEditarPerfilActivity extends AppCompatActivity {
+public class RepartidorEditarPerfilActivity extends AppCompatActivity {
 
-    ActivityClienteEditarPerfilBinding binding;
+    ActivityRepartidorEditarPerfilBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeComponents();
         setupListeners();
-
     }
 
-    /**
-     * Inicializa los componentes principales de la actividad
-     */
     private void initializeComponents() {
-        binding = ActivityClienteEditarPerfilBinding.inflate(getLayoutInflater());
+        binding = ActivityRepartidorEditarPerfilBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         EdgeToEdge.enable(this);
         setupWindowInsets();
     }
 
-    /**
-     * Configura los insets de la ventana
-     */
     private void setupWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -48,11 +38,7 @@ public class ClienteEditarPerfilActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Configura los listeners de los botones
-     */
     private void setupListeners() {
         binding.btnBack.setOnClickListener(v -> finish());
     }
-
 }

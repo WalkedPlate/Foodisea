@@ -36,6 +36,15 @@
         android:theme="@style/Theme.Foodisea"
         tools:targetApi="31">
         <activity
+            android:name=".activity.repartidor.RepartidorEditarPerfilActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.adminRes.AdminResEditPerfilActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.adminRes.AdminResInfoPerfilActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.repartidor.RepartidorInfoPerfilActivity"
             android:exported="false" />
         <activity
@@ -110,7 +119,6 @@
         <activity
             android:name=".activity.login.LoginActivity"
             android:exported="false" /> <!-- SERVICIOS -->
-
         <activity
             android:name=".activity.cliente.ClienteInfoPerfilActivity"
             android:exported="false" />

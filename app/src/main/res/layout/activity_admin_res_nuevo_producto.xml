@@ -1,198 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/bg_color"
-    android:fitsSystemWindows="true"
     tools:context=".activity.adminRes.AdminResNuevoProductoActivity">
 
-    <!-- Top Bar -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <!-- Header -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@color/bg_color"
-        android:elevation="0dp">
+        android:padding="12dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btnBack"
+            style="?attr/materialIconButtonFilledTonalStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            app:icon="@drawable/baseline_arrow_back_ios_new_24"
+            android:contentDescription="@string/btnBack"
+            android:backgroundTint="@color/bg_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-            <Button
-                android:id="@+id/btnBack"
-                style="?attr/materialIconButtonFilledTonalStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/btnBack"
-                android:backgroundTint="@color/bg_color"
-                app:icon="@drawable/baseline_arrow_back_ios_new_24"/>
-
-            <TextView
-                android:id="@+id/tvNewProduct"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nuevo Producto"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/sen_font"/>
-        </LinearLayout>
-
-    </com.google.android.material.appbar.MaterialToolbar>
-
-    <!-- Bottom Button Container -->
-    <LinearLayout
-        android:id="@+id/bottomContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white"
-        android:elevation="8dp"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <!-- Container para el progreso -->
-        <LinearLayout
-            android:id="@+id/layoutProgress"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:text="Nuevo producto"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:fontFamily="@font/sen_font"/>
 
-            <TextView
-                android:id="@+id/tvProgressStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Subiendo imágenes..."
-                android:textAlignment="center"
-                android:layout_marginBottom="8dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/progressBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:progress="0"
-                app:trackThickness="8dp"/>
-
-            <TextView
-                android:id="@+id/tvProgressPercentage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="0%"
-                android:textAlignment="center"
-                android:layout_marginBottom="8dp"/>
-        </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnCrearProducto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="CREAR PRODUCTO"
-            android:textSize="16sp"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:backgroundTint="@color/btn_medium"/>
-
-    </LinearLayout>
-
-    <!-- ScrollView para el contenido -->
+    <!-- Contenido -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottomContainer"
-        android:layout_below="@id/toolbar"
-        android:fillViewport="true"
-        android:clipToPadding="false"
-        android:paddingBottom="16dp">
-
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- Nombre del Producto -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:hint="Nombre del Producto"
-                app:startIconDrawable="@drawable/ic_fastfood"
-                app:startIconTint="@color/gray_300"
-                style="@style/CustomTextInputLayout">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etNombre"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:maxLines="1"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Categoría -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:hint="Categoría"
-                app:startIconDrawable="@drawable/ic_category"
-                app:startIconTint="@color/gray_300"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
-                <AutoCompleteTextView
-                    android:id="@+id/spinnerCategoria"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none"/>
-            </com.google.android.material.textfield.TextInputLayout>
+            android:paddingHorizontal="24dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="28dp">
 
             <!-- Sección de Imágenes -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="@color/gray_300"
-                app:cardCornerRadius="12dp">
+                app:strokeColor="@color/light_gray"
+                app:cardCornerRadius="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Fotos del producto"
-                        android:textSize="16sp"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/sen_font"/>
+                    android:padding="16dp"
+                    android:background="@color/btn_light">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSelectImages"
                         android:layout_width="match_parent"
-                        android:layout_height="120dp"
+                        android:layout_height="wrap_content"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
-                        android:text="Seleccionar Imágenes\nMínimo 2 fotos"
+                        android:text="Seleccionar mínimo 2 fotos"
                         android:textColor="@color/gray_500"
                         android:textAlignment="center"
                         android:gravity="center"
                         app:icon="@drawable/ic_add_photo"
                         app:iconGravity="textTop"
-                        app:iconSize="32dp"
+                        app:iconSize="30dp"
                         app:iconTint="@color/gray_500"
                         app:iconPadding="8dp"
                         android:backgroundTint="@android:color/transparent"
-                        android:background="@drawable/button_dashed_border"
                         style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
                     <TextView
@@ -216,34 +109,82 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+
+            <!-- Nombre del Producto -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Nombre del producto"
+                app:startIconDrawable="@drawable/ic_fastfood"
+                app:startIconTint="@color/gray_300"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/border_light"
+                app:hintTextColor="@color/border_light"
+                app:cursorColor="@color/border_light">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="50"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Categoría -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Categoría"
+                app:startIconDrawable="@drawable/ic_category"
+                app:startIconTint="@color/gray_300"
+                app:boxStrokeColor="@color/border_light"
+                app:hintTextColor="@color/border_light"
+                app:cursorColor="@color/border_light"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerCategoria"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:backgroundTint="@color/bg_color"
+                    app:simpleItems="@array/document_types"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
             <!-- Precio -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:hint="Precio del producto"
-                app:startIconDrawable="@drawable/ic_attach_money"
-                app:startIconTint="@color/gray_300"
                 app:prefixText="S/. "
-                style="@style/CustomTextInputLayout">
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/border_light"
+                app:hintTextColor="@color/border_light"
+                app:cursorColor="@color/border_light">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPrecio"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:maxLines="1"/>
+                    android:inputType="numberDecimal"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Descripción -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="24dp"
                 android:hint="Descripción del producto"
                 app:startIconDrawable="@drawable/ic_description"
                 app:startIconTint="@color/gray_300"
-                style="@style/CustomTextInputLayout">
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/border_light"
+                app:hintTextColor="@color/border_light"
+                app:cursorColor="@color/border_light">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDescripcion"
@@ -254,8 +195,55 @@
                     android:gravity="top"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-        </LinearLayout>
 
+            <!-- Container para el progreso -->
+            <LinearLayout
+                android:id="@+id/layoutProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvProgressStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Subiendo imágenes..."
+                    android:textAlignment="center"
+                    android:layout_marginBottom="8dp"/>
+
+                <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:id="@+id/progressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    app:indicatorColor="@color/btn_dark"
+                    app:trackColor="@color/gray"
+                    android:progress="0"
+                    app:trackThickness="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvProgressPercentage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0%"
+                    android:textAlignment="center"
+                    android:layout_marginBottom="8dp"/>
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCrearProducto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CREAR PRODUCTO"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:padding="14dp"
+                android:backgroundTint="@color/btn_medium"
+                android:fontFamily="@font/sen_font"/>
+
+        </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-</RelativeLayout>
+
+</LinearLayout>

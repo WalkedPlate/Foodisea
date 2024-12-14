@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
+import com.example.foodisea.databinding.ActivityAdminResReportesBinding;
 import com.example.foodisea.dto.PedidoConCliente;
 import com.example.foodisea.model.Pedido;
 import com.example.foodisea.model.Producto;
@@ -39,11 +40,19 @@ public class AdminResReportesActivity extends AppCompatActivity {
     private List<PedidoConCliente> listaPedidosConCliente = new ArrayList<>();
     private HashMap<String, String> mapaProductoIdANombre = new HashMap<>();
 
+    ActivityAdminResReportesBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        binding = ActivityAdminResReportesBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        // boton
+        binding.btnBack.setOnClickListener(view -> finish());
+
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_admin_res_reportes);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
