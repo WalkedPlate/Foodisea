@@ -25,15 +25,19 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
+import java.util.ArrayList; // Import necesario para la lista filtrada
+
 public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.RestaurantViewHolder> {
 
-    private List<Restaurante> restaurantes;
+    private List<Restaurante> restaurantes; // Lista original
+    private List<Restaurante> restaurantesFiltrados; // Lista filtrada
     private Context context;
     private FirebaseStorage storage;
 
     public RestauranteAdapter(Context context, List<Restaurante> restaurantes) {
         this.context = context;
         this.restaurantes = restaurantes;
+        this.restaurantesFiltrados = new ArrayList<>(restaurantes); // Inicializar con la lista original
         this.storage = FirebaseStorage.getInstance();
     }
 
@@ -47,7 +51,7 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position) {
-        Restaurante restaurante = restaurantes.get(position);
+        Restaurante restaurante = restaurantesFiltrados.get(position); // Usar la lista filtrada
 
         holder.binding.restaurantName.setText(restaurante.getNombre());
 
@@ -55,23 +59,17 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
         String categorias = String.join(" - ", restaurante.getCategorias());
         holder.binding.restCategories.setText(categorias);
 
-        // Mostrar la calificación del restaurante
-        //holder.binding.restaurantRating.setText(String.valueOf(restaurante.getRating()));
-
         // Cargar la imagen desde Firebase Storage
         if (!restaurante.getImagenes().isEmpty()) {
             String imageUrl = restaurante.getImagenes().get(0);
 
-            // Si la URL ya es una URL completa de descarga
             if (imageUrl.startsWith("https://")) {
                 loadImageWithGlide(imageUrl, holder.binding.restaurantImage);
             } else {
-                // Si es una ruta de Storage, obtener la URL de descarga
                 StorageReference imageRef = storage.getReference().child(imageUrl);
                 imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                     loadImageWithGlide(uri.toString(), holder.binding.restaurantImage);
                 }).addOnFailureListener(e -> {
-                    // En caso de error, cargar imagen por defecto
                     holder.binding.restaurantImage.setImageResource(R.drawable.restaurant_image);
                 });
             }
@@ -79,7 +77,7 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
             holder.binding.restaurantImage.setImageResource(R.drawable.restaurant_image);
         }
 
-        // Añadir el onClickListener para abrir la actividad de detalles
+        // Configurar el onClickListener
         holder.itemView.setOnClickListener(v -> {
             Intent intent;
             if (context instanceof ClienteMainActivity) {
@@ -97,10 +95,9 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
             if (!restaurante.getImagenes().isEmpty()) {
                 intent.putExtra("image", restaurante.getImagenes().get(0));
             }
-
-            intent.putExtra("administradorId",restaurante.getAdministradorId());
-            intent.putExtra("direccion",restaurante.getDireccion());
-            intent.putExtra("telefono",restaurante.getTelefono());
+            intent.putExtra("administradorId", restaurante.getAdministradorId());
+            intent.putExtra("direccion", restaurante.getDireccion());
+            intent.putExtra("telefono", restaurante.getTelefono());
             context.startActivity(intent);
         });
     }
@@ -120,7 +117,23 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
 
     @Override
     public int getItemCount() {
-        return restaurantes.size();
+        return restaurantesFiltrados.size(); // Usar la lista filtrada
+    }
+
+    // Método para filtrar la lista
+    public void filter(String query) {
+        restaurantesFiltrados.clear();
+        if (query.isEmpty()) {
+            restaurantesFiltrados.addAll(restaurantes); // Mostrar todos si el texto está vacío
+        } else {
+            String lowerCaseQuery = query.toLowerCase();
+            for (Restaurante restaurante : restaurantes) {
+                if (restaurante.getNombre().toLowerCase().contains(lowerCaseQuery)) {
+                    restaurantesFiltrados.add(restaurante);
+                }
+            }
+        }
+        notifyDataSetChanged(); // Notificar cambios al adaptador
     }
 
     public static class RestaurantViewHolder extends RecyclerView.ViewHolder {
@@ -132,3 +145,4 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
         }
     }
 }
+
