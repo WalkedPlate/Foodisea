@@ -84,7 +84,7 @@
                     app:strokeWidth="1dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:backgroundTint="@color/btn_light">
+                    android:backgroundTint="@color/bg_color">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -124,7 +124,7 @@
                     android:layout_margin="10dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:backgroundTint="@color/btn_light">
+                    android:backgroundTint="@color/bg_color">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -166,7 +166,7 @@
                     android:layout_margin="10dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:backgroundTint="@color/btn_light"
+                    android:backgroundTint="@color/bg_color"
                     app:strokeColor="@color/gray_medium">
 
                     <LinearLayout
@@ -206,7 +206,7 @@
                     android:layout_margin="10dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:backgroundTint="@color/btn_light"
+                    android:backgroundTint="@color/bg_color"
                     app:strokeColor="@color/gray_medium">
 
                     <LinearLayout
