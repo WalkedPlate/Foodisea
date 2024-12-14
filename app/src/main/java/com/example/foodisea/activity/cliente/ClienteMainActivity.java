@@ -1,16 +1,5 @@
 package com.example.foodisea.activity.cliente;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -20,7 +9,21 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.foodisea.R;
+import com.example.foodisea.activity.cliente.ClienteHistorialPedidosActivity;
+import com.example.foodisea.activity.cliente.ClientePerfilActivity;
+import com.example.foodisea.activity.cliente.ClienteTrackingActivity;
 import com.example.foodisea.activity.login.LoginActivity;
 import com.example.foodisea.adapter.cliente.RestauranteAdapter;
 import com.example.foodisea.data.SessionManager;
@@ -32,15 +35,9 @@ import com.example.foodisea.model.Usuario;
 import com.example.foodisea.repository.RestauranteRepository;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Activity principal para usuarios de tipo Cliente.
@@ -52,6 +49,8 @@ public class ClienteMainActivity extends AppCompatActivity {
     private Cliente clienteActual;
     private LinearLayout emptyStateLayout;
     private LoadingDialog loadingDialog;
+    private RestauranteAdapter restauranteAdapter;
+    private List<Restaurante> listaRestaurantes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,36 +61,12 @@ public class ClienteMainActivity extends AppCompatActivity {
     }
 
     /**
-     * Verifica la existencia de una sesión válida
-     */
-    private void validateSession() {
-        //loadingDialog.show("Verificando sesión...");
-
-        sessionManager.checkExistingSession(this, new SessionManager.SessionCallback() {
-            @Override
-            public void onSessionValid(Usuario usuario) {
-                clienteActual = sessionManager.getClienteActual();
-                //loadingDialog.dismiss();
-
-                initializeUI();
-            }
-
-            @Override
-            public void onSessionError() {
-                handleSessionError();
-            }
-        });
-    }
-
-
-    /**
      * Inicializa los componentes principales
      */
     private void initializeComponents() {
         binding = ActivityClienteMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Configurar EdgeToEdge
         EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -104,12 +79,45 @@ public class ClienteMainActivity extends AppCompatActivity {
     }
 
     /**
+     * Verifica la existencia de una sesión válida
+     */
+    private void validateSession() {
+        sessionManager.checkExistingSession(this, new SessionManager.SessionCallback() {
+            @Override
+            public void onSessionValid(Usuario usuario) {
+                clienteActual = sessionManager.getClienteActual();
+                initializeUI();
+            }
+
+            @Override
+            public void onSessionError() {
+                handleSessionError();
+            }
+        });
+    }
+
+    /**
      * Inicializa la UI una vez que la sesión está validada
      */
     private void initializeUI() {
         setupUI();
         setupClickListeners();
         loadRestaurants();
+
+        // Implementación de la barra de búsqueda
+        binding.svRestaurants.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filterRestaurants(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterRestaurants(newText);
+                return true;
+            }
+        });
     }
 
     /**
@@ -121,7 +129,6 @@ public class ClienteMainActivity extends AppCompatActivity {
                     clienteActual.getNombres().split(" ")[0]);
             binding.tvWelcome.setText(welcomeMessage);
         } catch (Exception e) {
-            // En caso de algún error con el nombre, usar mensaje genérico
             binding.tvWelcome.setText("¡Hola, qué te gustaría comer hoy?");
             Log.e("ClienteMainActivity", "Error al configurar mensaje de bienvenida", e);
         }
@@ -152,8 +159,6 @@ public class ClienteMainActivity extends AppCompatActivity {
      */
     private void loadRestaurants() {
         RestauranteRepository restauranteRepository = new RestauranteRepository();
-        LoadingDialog loadingDialog = new LoadingDialog(this);
-
         loadingDialog.show("Cargando restaurantes...");
 
         restauranteRepository.getRestaurantesActivos()
@@ -163,7 +168,8 @@ public class ClienteMainActivity extends AppCompatActivity {
                     if (restaurantes.isEmpty()) {
                         showEmptyState();
                     } else {
-                        showRestaurants(restaurantes);
+                        listaRestaurantes = restaurantes;
+                        showRestaurants(listaRestaurantes);
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -183,9 +189,17 @@ public class ClienteMainActivity extends AppCompatActivity {
             emptyStateLayout.setVisibility(View.GONE);
         }
 
-        RestauranteAdapter adapter = new RestauranteAdapter(this, restaurantes);
+        restauranteAdapter = new RestauranteAdapter(this, restaurantes);
         binding.rvRestaurants.setLayoutManager(new LinearLayoutManager(this));
-        binding.rvRestaurants.setAdapter(adapter);
+        binding.rvRestaurants.setAdapter(restauranteAdapter);
+    }
+
+    private void filterRestaurants(String query) {
+        if (restauranteAdapter != null) {
+            restauranteAdapter.filter(query);
+        } else {
+            Toast.makeText(this, "No hay restaurantes para filtrar.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -291,7 +305,6 @@ public class ClienteMainActivity extends AppCompatActivity {
             finish();
         }
     }
-
 
     @Override
     protected void onDestroy() {
