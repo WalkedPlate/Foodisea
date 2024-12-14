@@ -81,7 +81,7 @@ public class ClienteCheckoutActivity extends AppCompatActivity {
         // Inicializar dirección con la del cliente
         direccionEntrega = clienteActual.getDireccion();
         latitudEntrega = clienteActual.getLatitudDireccion();
-        longitudEntrega = clienteActual.getLatitudDireccion();
+        longitudEntrega = clienteActual.getLongitudDireccion();
 
         // Configurar vistas y listeners
         setupRecyclerView();
