@@ -322,4 +322,25 @@ public class UsuarioRepository {
                     return listaAdministradores;
                 });
     }
+
+    public Task<List<AdministradorRestaurante>> getAdministradoresLibres(){
+        return db.collection(COLLECTION_USUARIOS)
+                .whereEqualTo("tipoUsuario","AdministradorRestaurante")
+                .whereEqualTo("restauranteId",null)
+                .get()
+                .continueWith(task -> {
+                    List<AdministradorRestaurante> listaAdministradores = new ArrayList<>();
+                    if(task.isSuccessful() && task.getResult() != null){
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            AdministradorRestaurante administradorRestaurante = doc.toObject(AdministradorRestaurante.class);
+                            if (administradorRestaurante != null) {
+                                administradorRestaurante.setId(doc.getId()); // Establecer ID del documento
+                                listaAdministradores.add(administradorRestaurante);
+                            }
+                        }
+                    }
+                    return listaAdministradores;
+                });
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.example.foodisea.repository;
 
+import android.util.Log;
+
 import com.example.foodisea.model.Pedido;
 import com.example.foodisea.model.Restaurante;
 import com.google.android.gms.tasks.Task;
@@ -124,7 +126,12 @@ public class RestauranteRepository {
      * @return Task con el ID del restaurante creado
      */
     public Task<DocumentReference> createRestaurante(Restaurante restaurante) {
-        return db.collection(COLLECTION_RESTAURANTES).add(restaurante);
+        try {
+            return db.collection(COLLECTION_RESTAURANTES).add(restaurante);
+        } catch (Exception e) {
+            Log.e("FirestoreError", "Error al guardar el restaurante", e);
+            throw e;
+        }
     }
 
     /**

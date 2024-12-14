@@ -65,8 +65,6 @@ public class AdminResDetallesPedidosActivity extends AppCompatActivity {
         binding.tvAddress.setText(direccionDestino);
         binding.idNombreCliente.setText(nombreCliente);
         binding.idTelefono.setText(telefono);
-        binding.metodoPago.setText(metodoPago);
-        binding.estadoPago.setText(estadoPago);
         binding.montoPedido.setText("s/. " + montoPedido);
         Double precioDelivery = 4.0;
         Double montoTotal = montoPedido + precioDelivery;
