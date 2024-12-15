@@ -161,32 +161,44 @@ public class AdminResPedidosActivity extends AppCompatActivity {
         TextView textViewOrdenEntregada = bottomSheetView.findViewById(R.id.step4_text);
         ImageView imageViewOrdenEntregada = bottomSheetView.findViewById(R.id.step4_icon);
 
+        // Lineas
+        View primeraLinea = bottomSheetView.findViewById(R.id.linea1);
+        View segundaLinea = bottomSheetView.findViewById(R.id.linea2);
+        View terceraLinea = bottomSheetView.findViewById(R.id.linea3);
+
+
         if(Objects.equals(pedidoConCliente.getPedido().getEstado(), "Recibido")){
-            imageViewOrdenRecibida.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
-            textViewOrdenRecibida.setTextColor(ContextCompat.getColor(this, R.color.orange));
+            imageViewOrdenRecibida.setImageTintList(ContextCompat.getColorStateList(this,R.color.btn_medium));
+            textViewOrdenRecibida.setTextColor(ContextCompat.getColor(this, R.color.btn_medium));
         } else{
             if(Objects.equals(pedidoConCliente.getPedido().getEstado(),"Preparando")){
-                imageViewOrdenRecibida.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
-                textViewOrdenRecibida.setTextColor(ContextCompat.getColor(this, R.color.orange));
-                imageViewOrdenPreparando.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
-                textViewOrdenPreparando.setTextColor(ContextCompat.getColor(this, R.color.orange));
+                imageViewOrdenRecibida.setImageTintList(ContextCompat.getColorStateList(this,R.color.btn_medium));
+                textViewOrdenRecibida.setTextColor(ContextCompat.getColor(this, R.color.btn_medium));
+                imageViewOrdenPreparando.setImageTintList(ContextCompat.getColorStateList(this,R.color.btn_medium));
+                textViewOrdenPreparando.setTextColor(ContextCompat.getColor(this, R.color.btn_medium));
+                primeraLinea.setBackgroundColor(ContextCompat.getColor(this, R.color.btn_medium));
             } else{
                 if(Objects.equals(pedidoConCliente.getPedido().getEstado(),"En camino")){
-                    imageViewOrdenRecibida.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
-                    textViewOrdenRecibida.setTextColor(ContextCompat.getColor(this, R.color.orange));
-                    imageViewOrdenPreparando.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
-                    textViewOrdenPreparando.setTextColor(ContextCompat.getColor(this, R.color.orange));
-                    imageViewOrdenEnCamino.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
-                    textViewOrdenEnCamino.setTextColor(ContextCompat.getColor(this, R.color.orange));
+                    imageViewOrdenRecibida.setImageTintList(ContextCompat.getColorStateList(this,R.color.btn_medium));
+                    textViewOrdenRecibida.setTextColor(ContextCompat.getColor(this, R.color.btn_medium));
+                    imageViewOrdenPreparando.setImageTintList(ContextCompat.getColorStateList(this,R.color.btn_medium));
+                    textViewOrdenPreparando.setTextColor(ContextCompat.getColor(this, R.color.btn_medium));
+                    imageViewOrdenEnCamino.setImageTintList(ContextCompat.getColorStateList(this,R.color.btn_medium));
+                    textViewOrdenEnCamino.setTextColor(ContextCompat.getColor(this, R.color.btn_medium));
+                    primeraLinea.setBackgroundColor(ContextCompat.getColor(this, R.color.btn_medium));
+                    segundaLinea.setBackgroundColor(ContextCompat.getColor(this, R.color.btn_medium));
                 } else{
-                    imageViewOrdenRecibida.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
-                    textViewOrdenRecibida.setTextColor(ContextCompat.getColor(this, R.color.orange));
-                    imageViewOrdenPreparando.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
-                    textViewOrdenPreparando.setTextColor(ContextCompat.getColor(this, R.color.orange));
-                    imageViewOrdenEnCamino.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
-                    textViewOrdenEnCamino.setTextColor(ContextCompat.getColor(this, R.color.orange));
-                    imageViewOrdenEntregada.setImageTintList(ContextCompat.getColorStateList(this,R.color.orange));
-                    textViewOrdenEntregada.setTextColor(ContextCompat.getColor(this, R.color.orange));
+                    imageViewOrdenRecibida.setImageTintList(ContextCompat.getColorStateList(this,R.color.btn_medium));
+                    textViewOrdenRecibida.setTextColor(ContextCompat.getColor(this, R.color.btn_medium));
+                    imageViewOrdenPreparando.setImageTintList(ContextCompat.getColorStateList(this,R.color.btn_medium));
+                    textViewOrdenPreparando.setTextColor(ContextCompat.getColor(this, R.color.btn_medium));
+                    imageViewOrdenEnCamino.setImageTintList(ContextCompat.getColorStateList(this,R.color.btn_medium));
+                    textViewOrdenEnCamino.setTextColor(ContextCompat.getColor(this, R.color.btn_medium));
+                    imageViewOrdenEntregada.setImageTintList(ContextCompat.getColorStateList(this,R.color.btn_medium));
+                    textViewOrdenEntregada.setTextColor(ContextCompat.getColor(this, R.color.btn_medium));
+                    primeraLinea.setBackgroundColor(ContextCompat.getColor(this, R.color.btn_medium));
+                    segundaLinea.setBackgroundColor(ContextCompat.getColor(this, R.color.btn_medium));
+                    terceraLinea.setBackgroundColor(ContextCompat.getColor(this,R.color.btn_medium));
                 }
             }
         }

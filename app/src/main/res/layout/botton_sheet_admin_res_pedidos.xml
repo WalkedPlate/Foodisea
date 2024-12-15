@@ -13,51 +13,66 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginStart="20dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Orden:"
-            android:textSize="25dp"/>
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp">
+
         <TextView
             android:id="@+id/nombreCliente"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="John Gomez"
-            android:textSize="25dp"/>
+            android:textColor="@color/black"
+            android:fontFamily="@font/sen_font"
+            android:textStyle="bold"
+            android:textSize="16dp"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
         <TextView
             android:id="@+id/idPedido"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/btn_dark"
             android:text="#162432"
-            android:textSize="25dp"
-            android:layout_marginLeft="50dp"/>
+            android:textStyle="bold"
+            android:textSize="16dp"/>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="20dp">
+        android:paddingHorizontal="16dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ordenado el 06 SET 10:00"
-            android:textSize="25dp"/>
+            android:fontFamily="@font/sen_font"
+            android:textSize="14dp"/>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="16dp"
+        android:background="@color/gray_light" />
 
     <!-- Paso 1: Pedido recibido -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="30dp">
+        android:paddingHorizontal="32dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/step1_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="21dp"
+            android:layout_height="match_parent"
             android:src="@drawable/cart"
             app:tint="@color/gray" />
 
@@ -67,13 +82,15 @@
             android:layout_height="wrap_content"
             android:text="La orden ha sido recibida"
             android:textColor="@color/gray"
-            android:layout_marginStart="8dp" />
+            android:fontFamily="@font/sen_font"
+            android:layout_marginStart="11dp" />
     </LinearLayout>
 
     <!-- Línea entre pasos -->
     <View
-        android:layout_width="2dp"
-        android:layout_height="24dp"
+        android:id="@+id/linea1"
+        android:layout_width="1dp"
+        android:layout_height="20dp"
         android:layout_marginStart="41dp"
         android:background="@color/gray" />
 
@@ -82,12 +99,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginStart="30dp">
+        android:paddingHorizontal="32dp"
+        android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/step2_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
             android:src="@drawable/cooking_time"
             app:tint="@color/gray" />
 
@@ -97,13 +115,15 @@
             android:layout_height="wrap_content"
             android:text="El restaurante está preparando el pedido"
             android:textColor="@color/gray"
-            android:layout_marginStart="8dp" />
+            android:fontFamily="@font/sen_font"
+            android:layout_marginStart="15dp" />
     </LinearLayout>
 
     <!-- Línea entre pasos -->
     <View
-        android:layout_width="2dp"
-        android:layout_height="24dp"
+        android:id="@+id/linea2"
+        android:layout_width="1dp"
+        android:layout_height="20dp"
         android:layout_marginStart="41dp"
         android:background="@color/gray" />
 
@@ -112,12 +132,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginStart="31dp">
+        android:paddingHorizontal="32dp"
+        android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/step3_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/delivery"
             app:tint="@color/gray" />
 
@@ -126,14 +147,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="El pedido está en camino a su destino"
+            android:fontFamily="@font/sen_font"
             android:textColor="@color/gray"
-            android:layout_marginStart="8dp" />
+            android:layout_marginStart="12dp" />
     </LinearLayout>
 
     <!-- Línea entre pasos -->
     <View
+        android:id="@+id/linea3"
         android:layout_width="2dp"
-        android:layout_height="24dp"
+        android:layout_height="20dp"
         android:layout_marginStart="41dp"
         android:background="@color/gray" />
 
@@ -142,12 +165,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginStart="31dp">
+        android:paddingHorizontal="32dp"
+        android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/step4_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:src="@drawable/tick_inside_circle"
             app:tint="@color/gray" />
 
@@ -156,8 +180,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="El pedido ha sido entregado"
+            android:fontFamily="@font/sen_font"
             android:textColor="@color/gray"
-            android:layout_marginStart="8dp" />
+            android:layout_marginStart="14dp" />
     </LinearLayout>
 
     <Button
@@ -165,8 +190,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="VER DETALLES DE COMPRA"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="40dp"/>
+        android:backgroundTint="@color/btn_medium"
+        android:textColor="@android:color/white"
+        android:fontFamily="@font/sen_font"
+        android:textSize="16sp"
+        android:padding="14dp"
+        android:textStyle="bold"
+        android:layout_margin="24dp"/>
 
 
 </LinearLayout>
