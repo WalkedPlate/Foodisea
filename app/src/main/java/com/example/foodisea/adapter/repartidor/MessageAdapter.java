@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
 import com.example.foodisea.model.Mensaje;
-import com.example.foodisea.model.Message;
+import com.google.firebase.Timestamp;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,9 +21,11 @@ import java.util.List;
 import java.util.Locale;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
+    private static final int VIEW_TYPE_SENT = 1;
+    private static final int VIEW_TYPE_RECEIVED = 2;
 
-    private Context context;
-    private List<Mensaje> messageList;
+    private final Context context;
+    private final List<Mensaje> messageList;
     private String currentUserId;
 
     public MessageAdapter(Context context, List<Mensaje> messageList) {
@@ -33,38 +35,35 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     public void setCurrentUserId(String currentUserId) {
         this.currentUserId = currentUserId;
+        notifyDataSetChanged(); // Actualizar vista si cambia el usuario
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        Mensaje mensaje = messageList.get(position);
+        if (mensaje.getEmisorId().equals(currentUserId)) {
+            return VIEW_TYPE_SENT;
+        }
+        return VIEW_TYPE_RECEIVED;
     }
 
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_message, parent, false);
+        View view;
+        if (viewType == VIEW_TYPE_SENT) {
+            view = LayoutInflater.from(context).inflate(R.layout.item_message_sent, parent, false);
+        } else {
+            view = LayoutInflater.from(context).inflate(R.layout.item_message_received, parent, false);
+        }
         return new MessageViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Mensaje mensaje = messageList.get(position);
-
-        if (mensaje.getEmisorId().equals(currentUserId)) {
-            holder.senderMessage.setVisibility(View.VISIBLE);
-            holder.senderTime.setVisibility(View.VISIBLE);
-
-            holder.receiverMessage.setVisibility(View.GONE);
-            holder.receiverTime.setVisibility(View.GONE);
-
-            holder.senderMessage.setText(mensaje.getTexto());
-            holder.senderTime.setText(formatTimestamp(mensaje.getTimestamp()));
-        } else {
-            holder.receiverMessage.setVisibility(View.VISIBLE);
-            holder.receiverTime.setVisibility(View.VISIBLE);
-
-            holder.senderMessage.setVisibility(View.GONE);
-            holder.senderTime.setVisibility(View.GONE);
-
-            holder.receiverMessage.setText(mensaje.getTexto());
-            holder.receiverTime.setText(formatTimestamp(mensaje.getTimestamp()));
-        }
+        holder.messageText.setText(mensaje.getTexto());
+        holder.messageTime.setText(formatTimestamp(mensaje.getTimestamp()));
     }
 
     @Override
@@ -72,11 +71,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         return messageList.size();
     }
 
-    private String formatTimestamp(Long timestamp) {
+    private String formatTimestamp(Timestamp timestamp) {
         if (timestamp == null) return "";
 
+        // Convertir Timestamp a milisegundos
+        long milliseconds = timestamp.getSeconds() * 1000 + timestamp.getNanoseconds() / 1000000;
+
         Calendar messageTime = Calendar.getInstance();
-        messageTime.setTimeInMillis(timestamp);
+        messageTime.setTimeInMillis(milliseconds);
 
         Calendar now = Calendar.getInstance();
 
@@ -84,23 +86,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 now.get(Calendar.DAY_OF_YEAR) == messageTime.get(Calendar.DAY_OF_YEAR)) {
             // Mismo día, muestra hora
             return new SimpleDateFormat("hh:mm a", Locale.getDefault())
-                    .format(new Date(timestamp));
+                    .format(new Date(milliseconds));
         } else {
             // Día diferente, muestra solo fecha
             return new SimpleDateFormat("MMM dd", Locale.getDefault())
-                    .format(new Date(timestamp));
+                    .format(new Date(milliseconds));
         }
     }
 
-    public class MessageViewHolder extends RecyclerView.ViewHolder {
-        public TextView senderMessage, receiverMessage, senderTime, receiverTime;
+    static class MessageViewHolder extends RecyclerView.ViewHolder {
+        TextView messageText;
+        TextView messageTime;
 
-        public MessageViewHolder(@NonNull View itemView) {
+        MessageViewHolder(@NonNull View itemView) {
             super(itemView);
-            senderMessage = itemView.findViewById(R.id.senderMessage);
-            receiverMessage = itemView.findViewById(R.id.receiverMessage);
-            senderTime = itemView.findViewById(R.id.senderTime);
-            receiverTime = itemView.findViewById(R.id.receiverTime);
+            messageText = itemView.findViewById(R.id.messageText);
+            messageTime = itemView.findViewById(R.id.messageTime);
         }
     }
 }

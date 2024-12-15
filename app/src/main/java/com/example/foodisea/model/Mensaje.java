@@ -1,5 +1,6 @@
 package com.example.foodisea.model;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
@@ -11,7 +12,7 @@ public class Mensaje {
     private String chatId;      // ID del chat al que pertenece el mensaje
     private String emisorId;    // ID del usuario que envió el mensaje
     private String texto;       // Contenido del mensaje
-    private Long timestamp;     // Marca de tiempo del mensaje
+    private Timestamp timestamp;     // Marca de tiempo del mensaje
     private String tipo;        // Tipo de mensaje ("texto", "imagen", etc.)
 
     // Constructor vacío requerido por Firestore
@@ -52,11 +53,11 @@ public class Mensaje {
         this.texto = texto;
     }
 
-    public Long getTimestamp() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Long timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 

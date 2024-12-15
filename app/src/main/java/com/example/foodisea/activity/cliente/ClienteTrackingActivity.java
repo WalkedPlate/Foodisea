@@ -181,9 +181,8 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
 
         binding.btnChat.setOnClickListener(v -> {
             if (repartidor != null) {
-                Intent intent = new Intent(this, ClientePerfilActivity.class);
-                intent.putExtra("repartidor_id", repartidor.getId());
-                intent.putExtra("pedido_id", pedidoId);
+                Intent intent = new Intent(this, ClienteChatActivity.class);
+                intent.putExtra("pedidoId", pedidoId);
                 startActivity(intent);
             } else {
                 Toast.makeText(this, "Aún no hay repartidor asignado", Toast.LENGTH_SHORT).show();

@@ -1,9 +1,7 @@
-package com.example.foodisea.activity.repartidor;
+package com.example.foodisea.activity.cliente;
 
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -16,57 +14,50 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.repartidor.MessageAdapter;
-import com.example.foodisea.databinding.ActivityRepartidorChatBinding;
+import com.example.foodisea.databinding.ActivityClienteChatBinding;
 import com.example.foodisea.manager.SessionManager;
 import com.example.foodisea.model.Chat;
 import com.example.foodisea.model.Cliente;
 import com.example.foodisea.model.Mensaje;
-import com.example.foodisea.model.Message;
 import com.example.foodisea.model.Repartidor;
 import com.example.foodisea.repository.ChatRepository;
 import com.example.foodisea.repository.UsuarioRepository;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class RepartidorChatActivity extends AppCompatActivity {
-    private ActivityRepartidorChatBinding binding;
+public class ClienteChatActivity extends AppCompatActivity {
+    private ActivityClienteChatBinding binding;
     private MessageAdapter messageAdapter;
     private List<Mensaje> messageList;
     private ChatRepository chatRepository;
     private UsuarioRepository usuarioRepository;
     private String chatId;
-    private String repartidorId;
     private String clienteId;
+    private String repartidorId;
     private Chat chatInfo;
     private SessionManager sessionManager;
-    private Repartidor repartidorActual;
+    private Cliente clienteActual;
+    private String pedidoId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityRepartidorChatBinding.inflate(getLayoutInflater());
+        binding = ActivityClienteChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         sessionManager = SessionManager.getInstance(this);
-        repartidorActual = sessionManager.getRepartidorActual();
-        if (repartidorActual != null) {
-            repartidorId = repartidorActual.getId();
+        clienteActual = sessionManager.getClienteActual();
+        if (clienteActual != null) {
+            clienteId = clienteActual.getId();
         }
 
         initializeVariables();
-        setupViews();
-        setupChatListener();
-        loadChatInfo();
+
+        // Solo configuramos las vistas y cargamos el chat si encontramos el chatId
+        findOrCreateChat();
     }
 
     private void initializeVariables() {
@@ -74,19 +65,40 @@ public class RepartidorChatActivity extends AppCompatActivity {
         usuarioRepository = new UsuarioRepository();
         messageList = new ArrayList<>();
 
-        chatId = getIntent().getStringExtra("chatId");
-        if (chatId == null || chatId.isEmpty()) {
-            Toast.makeText(this, "Error: Chat no válido", Toast.LENGTH_SHORT).show();
+        pedidoId = getIntent().getStringExtra("pedidoId");
+        if (pedidoId == null || pedidoId.isEmpty()) {
+            Toast.makeText(this, "Error: Pedido no válido", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
+    }
+
+    private void findOrCreateChat() {
+        chatRepository.getChatByPedidoId(pedidoId, chat -> {
+            // Si encontramos un chat existente
+            if (chat != null) {
+                chatId = chat.getId();
+                setupViews();
+                setupChatListener();
+                loadChatInfo();
+            } else {
+                // Si no existe un chat, mostramos un mensaje de error
+                Toast.makeText(this, "No hay chat disponible para este pedido",
+                        Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }, e -> {
+            Toast.makeText(this, "Error al cargar el chat: " + e.getMessage(),
+                    Toast.LENGTH_SHORT).show();
+            finish();
+        });
     }
 
     private void setupViews() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.recyclerViewMessages.setLayoutManager(layoutManager);
         messageAdapter = new MessageAdapter(this, messageList);
-        messageAdapter.setCurrentUserId(repartidorId);
+        messageAdapter.setCurrentUserId(clienteId);
         binding.recyclerViewMessages.setAdapter(messageAdapter);
 
         binding.backButton.setOnClickListener(v -> finish());
@@ -97,22 +109,22 @@ public class RepartidorChatActivity extends AppCompatActivity {
         chatRepository.getChatById(chatId, chat -> {
             if (chat != null) {
                 chatInfo = chat;
-                clienteId = chat.getClienteId();
+                repartidorId = chat.getRepartidorId();
 
-                if (clienteId != null && !clienteId.isEmpty()) {
-                    usuarioRepository.getUserById(clienteId)
+                if (repartidorId != null && !repartidorId.isEmpty()) {
+                    usuarioRepository.getUserById(repartidorId)
                             .addOnSuccessListener(usuario -> {
-                                if (usuario instanceof Cliente) {
-                                    Cliente cliente = (Cliente) usuario;
+                                if (usuario instanceof Repartidor) {
+                                    Repartidor repartidor = (Repartidor) usuario;
 
-                                    // Establecer nombre
-                                    String nombreCompleto = cliente.getNombres() + " " + cliente.getApellidos();
+                                    // Establecer nombre del repartidor
+                                    String nombreCompleto = repartidor.getNombres() + " " + repartidor.getApellidos();
                                     binding.userName.setText(nombreCompleto);
 
-                                    // Cargar foto usando Glide
-                                    if (cliente.getFoto() != null && !cliente.getFoto().isEmpty()) {
+                                    // Cargar foto del repartidor
+                                    if (repartidor.getFoto() != null && !repartidor.getFoto().isEmpty()) {
                                         Glide.with(this)
-                                                .load(cliente.getFoto())
+                                                .load(repartidor.getFoto())
                                                 .placeholder(R.drawable.ic_profile)
                                                 .error(R.drawable.ic_profile)
                                                 .circleCrop()
@@ -121,18 +133,15 @@ public class RepartidorChatActivity extends AppCompatActivity {
                                         binding.userProfileImage.setImageResource(R.drawable.ic_profile);
                                     }
                                 } else {
-                                    binding.userName.setText("Cliente");
+                                    binding.userName.setText("Repartidor");
                                     binding.userProfileImage.setImageResource(R.drawable.ic_profile);
                                 }
                             })
                             .addOnFailureListener(e -> {
-                                Log.e("Chat", "Error al obtener información del cliente", e);
-                                binding.userName.setText("Cliente");
+                                Log.e("Chat", "Error al obtener información del repartidor", e);
+                                binding.userName.setText("Repartidor");
                                 binding.userProfileImage.setImageResource(R.drawable.ic_profile);
                             });
-                } else {
-                    binding.userName.setText("Cliente");
-                    binding.userProfileImage.setImageResource(R.drawable.ic_profile);
                 }
 
                 // Estado del pedido
@@ -150,7 +159,7 @@ public class RepartidorChatActivity extends AppCompatActivity {
             messageList.addAll(mensajes);
             messageAdapter.notifyDataSetChanged();
             scrollToBottom();
-        }, e -> Toast.makeText(RepartidorChatActivity.this,
+        }, e -> Toast.makeText(ClienteChatActivity.this,
                 "Error al cargar mensajes: " + e.getMessage(),
                 Toast.LENGTH_SHORT).show());
     }
@@ -163,9 +172,9 @@ public class RepartidorChatActivity extends AppCompatActivity {
 
         Mensaje mensaje = new Mensaje();
         mensaje.setChatId(chatId);
-        mensaje.setEmisorId(repartidorId);
+        mensaje.setEmisorId(clienteId);
         mensaje.setTexto(texto);
-        mensaje.setTimestamp(new Timestamp(new Date())); // Usar Timestamp
+        mensaje.setTimestamp(new Timestamp(new Date()));
         mensaje.setTipo("texto");
 
         chatRepository.enviarMensaje(mensaje, unused -> {
@@ -174,7 +183,7 @@ public class RepartidorChatActivity extends AppCompatActivity {
 
             if (chatInfo != null) {
                 chatInfo.setUltimoMensaje(texto);
-                chatInfo.setTimestamp(new Timestamp(new Date())); // Usar Timestamp
+                chatInfo.setTimestamp(new Timestamp(new Date()));
                 chatRepository.actualizarChat(chatInfo, null, e ->
                         Log.e("Chat", "Error al actualizar último mensaje", e));
             }

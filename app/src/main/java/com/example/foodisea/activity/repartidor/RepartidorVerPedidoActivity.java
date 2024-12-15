@@ -182,12 +182,13 @@ public class RepartidorVerPedidoActivity extends AppCompatActivity {
         pedidoRepository.asignarRepartidorAPedido(pedido.getId(), repartidorId)
                 .addOnSuccessListener(aVoid -> {
                     // Crear el chat
-                    chatRepository.crearChat(pedido.getId(), restauranteId, repartidorId)
+                    chatRepository.crearChat(pedido.getId(), restauranteId, repartidorId, pedido.getClienteId())
                             .addOnSuccessListener(chatId -> {
                                 loadingDialog.dismiss();
                                 Intent intent = new Intent(this, RepartidorDeliveryMapActivity.class);
                                 intent.putExtra("pedidoId", pedido.getId());
-                                intent.putExtra("chatId", chatId); // Pasamos el ID del chat creado.
+                                intent.putExtra("chatId", chatId);// Pasamos el ID del chat creado.
+                                intent.putExtra("clienteId",pedido.getClienteId());
                                 startActivity(intent);
                                 finish();
                             })

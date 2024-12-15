@@ -12,6 +12,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,13 +35,14 @@ public class ChatRepository {
      * @param repartidorId  ID del repartidor.
      * @return Task con el ID del chat creado.
      */
-    public Task<String> crearChat(String pedidoId, String restauranteId, String repartidorId) {
+    public Task<String> crearChat(String pedidoId, String restauranteId, String repartidorId, String clienteId) {
         String chatId = db.collection("chats").document().getId(); // Generar ID único para el chat.
 
         Map<String, Object> chatData = new HashMap<>();
         chatData.put("pedidoId", pedidoId);
         chatData.put("restauranteId", restauranteId);
         chatData.put("repartidorId", repartidorId);
+        chatData.put("clienteId", clienteId);
         chatData.put("estado", "activo");
         chatData.put("timestamp", FieldValue.serverTimestamp()); // Marca de tiempo del servidor.
 
@@ -82,10 +84,61 @@ public class ChatRepository {
     }
 
     public void enviarMensaje(Mensaje mensaje, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        // El mensaje ya tiene el timestamp en formato correcto
         db.collection("mensajes")
                 .add(mensaje)
                 .addOnSuccessListener(documentReference -> onSuccess.onSuccess(null))
                 .addOnFailureListener(onFailure);
     }
+
+    public void getChatById(String chatId, OnSuccessListener<Chat> onSuccess, OnFailureListener onFailure) {
+        db.collection("chats")
+                .document(chatId)
+                .get()
+                .addOnSuccessListener(document -> {
+                    Chat chat = document.toObject(Chat.class);
+                    if (chat != null) {
+                        chat.setId(document.getId());
+                    }
+                    onSuccess.onSuccess(chat);
+                })
+                .addOnFailureListener(onFailure);
+    }
+
+    public void actualizarChat(Chat chat, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("ultimoMensaje", chat.getUltimoMensaje());
+        updates.put("timestamp", chat.getTimestamp()); // Ya es un Timestamp
+        updates.put("estadoPedido", chat.getEstadoPedido());
+
+        db.collection("chats")
+                .document(chat.getId())
+                .update(updates)
+                .addOnSuccessListener(onSuccess != null ? onSuccess : unused -> {})
+                .addOnFailureListener(onFailure != null ? onFailure : e -> {});
+    }
+
+    public void getChatByPedidoId(String pedidoId, OnSuccessListener<Chat> onSuccess, OnFailureListener onFailure) {
+        db.collection("chats")
+                .whereEqualTo("pedidoId", pedidoId)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (!querySnapshot.isEmpty()) {
+                        // Como solo debería haber un chat por pedido, tomamos el primero
+                        DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                        Chat chat = document.toObject(Chat.class);
+                        if (chat != null) {
+                            chat.setId(document.getId());
+                            onSuccess.onSuccess(chat);
+                        } else {
+                            onFailure.onFailure(new Exception("Error al convertir chat"));
+                        }
+                    } else {
+                        onFailure.onFailure(new Exception("No se encontró chat para este pedido"));
+                    }
+                })
+                .addOnFailureListener(onFailure);
+    }
+
 
 }

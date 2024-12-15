@@ -1,5 +1,6 @@
 package com.example.foodisea.model;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
@@ -12,7 +13,7 @@ public class Chat {
     private String clienteId;        // ID del cliente participante
     private String repartidorId;     // ID del repartidor participante
     private String ultimoMensaje;    // Último mensaje enviado
-    private Long timestamp;          // Marca de tiempo del último mensaje
+    private Timestamp timestamp;          // Marca de tiempo del último mensaje
     private String estadoPedido;     // Estado del pedido al momento del mensaje
 
     // Constructor vacío requerido por Firestore
@@ -61,11 +62,11 @@ public class Chat {
         this.ultimoMensaje = ultimoMensaje;
     }
 
-    public Long getTimestamp() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Long timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 

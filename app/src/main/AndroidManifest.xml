@@ -38,6 +38,9 @@
         android:theme="@style/Theme.Foodisea"
         tools:targetApi="31">
         <activity
+            android:name=".activity.cliente.ClienteChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.superadmin.SuperAdminDetalleUsuarioActivity"
             android:exported="false" />
         <activity
