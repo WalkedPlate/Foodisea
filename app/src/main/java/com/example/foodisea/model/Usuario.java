@@ -3,8 +3,10 @@ package com.example.foodisea.model;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
+import java.io.Serializable;
+
 @IgnoreExtraProperties
-public class Usuario {
+public class Usuario implements Serializable {
     @Exclude
     protected String id;
 

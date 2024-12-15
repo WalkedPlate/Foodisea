@@ -1,13 +1,16 @@
 package com.example.foodisea.adapter.superAdmin;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
+import com.example.foodisea.activity.superadmin.SuperAdminDetSoliRepartidorActivity;
 import com.example.foodisea.databinding.ItemSoliRepartidorBinding;
 import com.example.foodisea.model.Usuario;
 import com.example.foodisea.repository.UsuarioRepository;
@@ -55,10 +58,18 @@ public class SolicitudesAdapter extends RecyclerView.Adapter<SolicitudesAdapter.
             holder.binding.ivUserPhoto.setImageResource(R.drawable.ic_usuarios); // Imagen por defecto si no hay imágenes
         }
 
-        // Opcional: si quieres agregar un onClickListener al ítem de usuario
+        // Navegar a SuperAdminDetSoliRepartidorActivity al hacer clic en el ítem
         holder.itemView.setOnClickListener(v -> {
-            // Acción al hacer clic en el usuario (puedes abrir otra actividad o mostrar más detalles)
+            Intent intent = new Intent(context, SuperAdminDetSoliRepartidorActivity.class);
+            intent.putExtra("usuario", usuario); // Enviar usuario completo
+            context.startActivity(intent);
         });
+
+        // Actualizar estado con btnAccept
+        holder.binding.btnAccept.setOnClickListener(v -> actualizarEstado(usuario, "Activo",position));
+
+        // Actualizar estado con btnDeny
+        holder.binding.btnDeny.setOnClickListener(v -> actualizarEstado(usuario, "Denegado",position));
     }
 
     @Override
@@ -74,4 +85,27 @@ public class SolicitudesAdapter extends RecyclerView.Adapter<SolicitudesAdapter.
             this.binding = binding;
         }
     }
+
+    // Método para actualizar estado
+    private void actualizarEstado(Usuario usuario, String nuevoEstado, int position) {
+        usuario.setEstado(nuevoEstado);
+
+        usuarioRepository.actualizarEstadoUsuario(usuario, nuevoEstado)
+                .addOnSuccessListener(aVoid -> {
+                    if(nuevoEstado.equals("Activo")){
+                        Toast.makeText(context, "El usuario ha sido aceptado" , Toast.LENGTH_SHORT).show();
+
+                    } else if (nuevoEstado.equals("Denegado")) {
+                        Toast.makeText(context, "El usuario ha sido denegado", Toast.LENGTH_SHORT).show();
+                    }
+
+                    // Eliminar usuario de la lista
+                    usuarioSoliList.remove(position);
+                    notifyItemRemoved(position);
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(context, "Error al actualizar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
 }

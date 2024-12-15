@@ -102,4 +102,10 @@ public class SuperAdminGestionRepartidorActivity extends AppCompatActivity {
         binding.rvUsers.setLayoutManager(new LinearLayoutManager(this));
         binding.rvUsers.setAdapter(adapter);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        obtenerUsuarios();  // Recarga los usuarios al volver a la actividad
+    }
 }
