@@ -26,7 +26,6 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
-
     <application
         android:name=".FoodiseaApplication"
         android:allowBackup="true"
@@ -38,6 +37,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Foodisea"
         tools:targetApi="31">
+        <activity
+            android:name=".activity.superadmin.SuperAdminDetalleUsuarioActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.repartidor.RepartidorPedidosActivosActivity"
             android:exported="false" />
@@ -91,14 +93,11 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service
             android:name=".service.RepartidorLocationService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="location" />
-
-        <!-- Google Maps -->
+            android:foregroundServiceType="location" /> <!-- Google Maps -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCMRS8oov3wtY6nnW4d6o2VXcX5kABugyc" />
