@@ -55,6 +55,7 @@
 
         <!-- Mensaje de bienvenida -->
         <TextView
+            android:id="@+id/tvWelcome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/sen_font"
@@ -66,7 +67,7 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="40dp">
 
             <TableRow
                 android:layout_width="wrap_content"
@@ -80,7 +81,7 @@
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="8dp"
                     android:layout_margin="10dp"
-                    app:strokeColor="@color/gray_medium"
+                    app:cardElevation="4dp"
                     app:strokeWidth="1dp"
                     android:clickable="true"
                     android:focusable="true"
@@ -119,11 +120,11 @@
                     android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="8dp"
-                    app:strokeColor="@color/gray_medium"
                     app:strokeWidth="1dp"
                     android:layout_margin="10dp"
                     android:clickable="true"
                     android:focusable="true"
+                    app:cardElevation="4dp"
                     android:backgroundTint="@color/bg_color">
 
                     <LinearLayout
@@ -167,7 +168,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:backgroundTint="@color/bg_color"
-                    app:strokeColor="@color/gray_medium">
+                    app:cardElevation="4dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -206,8 +207,8 @@
                     android:layout_margin="10dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:backgroundTint="@color/bg_color"
-                    app:strokeColor="@color/gray_medium">
+                    app:cardElevation="4dp"
+                    android:backgroundTint="@color/bg_color">
 
                     <LinearLayout
                         android:layout_width="match_parent"
