@@ -11,14 +11,15 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="10dp">
 
         <!-- Imagen del producto -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/productImage"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:scaleType="centerCrop"
+            android:alpha="0.95"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.RoundedCorners16dp"/>
 
         <!-- Información del producto -->
@@ -35,7 +36,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hamburguesa casera"
-                android:textSize="18sp"
+                android:textSize="16sp"
+                android:fontFamily="@font/sen_font"
                 android:textColor="@android:color/black"/>
 
 
@@ -52,7 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="S/. 64"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textColor="@android:color/darker_gray" />
             </LinearLayout>
         </LinearLayout>
@@ -74,9 +76,9 @@
     </LinearLayout>
 
     <!-- Divisor entre ítems -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="12dp"
-        android:background="@color/gray_light"/>
+<!--    <View-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="1dp"-->
+<!--        android:layout_marginTop="12dp"-->
+<!--        android:background="@color/gray_light"/>-->
 </LinearLayout>
