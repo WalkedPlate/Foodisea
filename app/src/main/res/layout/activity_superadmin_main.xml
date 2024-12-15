@@ -99,7 +99,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Restaurantes"
-                            android:textSize="14sp"
+                            android:textSize="15sp"
+                            android:fontFamily="@font/sen_font"
                             android:textColor="@color/black"
                             android:gravity="center"/>
 
@@ -108,7 +109,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="100dp"
                             android:src="@drawable/icon_restaurant"
-                            android:layout_marginTop="8dp"/>
+                            android:layout_marginTop="10dp"/>
                     </LinearLayout>
 
 
@@ -139,7 +140,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Administradores"
-                            android:textSize="14sp"
+                            android:textSize="15sp"
+                            android:fontFamily="@font/sen_font"
                             android:textColor="@color/black"
                             android:gravity="center"/>
 
@@ -148,7 +150,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="100dp"
                             android:src="@drawable/icon_admin"
-                            android:layout_marginTop="8dp"/>
+                            android:layout_marginTop="10dp"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </TableRow>
@@ -182,7 +184,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Repartidores"
-                            android:textSize="14sp"
+                            android:textSize="15sp"
+                            android:fontFamily="@font/sen_font"
                             android:textColor="@color/black"
                             android:gravity="center"/>
 
@@ -191,7 +194,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="100dp"
                             android:src="@drawable/ic_repartidor"
-                            android:layout_marginTop="8dp"/>
+                            android:layout_marginTop="10dp"/>
                     </LinearLayout>
 
 
@@ -222,7 +225,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Clientes"
-                            android:textSize="14sp"
+                            android:textSize="15sp"
+                            android:fontFamily="@font/sen_font"
                             android:textColor="@color/black"
                             android:gravity="center"/>
 
@@ -231,7 +235,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="100dp"
                             android:src="@drawable/icon_cliente"
-                            android:layout_marginTop="8dp"/>
+                            android:layout_marginTop="10dp"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </TableRow>

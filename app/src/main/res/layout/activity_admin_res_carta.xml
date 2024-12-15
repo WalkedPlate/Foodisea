@@ -46,15 +46,15 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Barra de búsqueda -->
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/svRestaurants"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="8dp"
-            android:layout_marginHorizontal="16dp"
-            android:background="@drawable/search_view_bg"
-            app:iconifiedByDefault="false"
-            app:queryHint="Buscar platos..." />
+<!--        <androidx.appcompat.widget.SearchView-->
+<!--            android:id="@+id/svRestaurants"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginVertical="8dp"-->
+<!--            android:layout_marginHorizontal="16dp"-->
+<!--            android:background="@drawable/search_view_bg"-->
+<!--            app:iconifiedByDefault="false"-->
+<!--            app:queryHint="Buscar platos..." />-->
 
         <!-- Lista de categorías horizontal -->
         <HorizontalScrollView

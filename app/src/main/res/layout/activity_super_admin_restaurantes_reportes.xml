@@ -56,13 +56,67 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="616dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/rounded_background"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp">
+
+        <!-- NUEVOS DATOS ESTADÍSTICOS -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:layout_marginBottom="36dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_background"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/nroOrdenesTotales"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="20"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PEDIDOS\nTOTALES"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.4"
+                android:background="@drawable/rounded_background"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/gananciaPromedio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$10.50"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GANANICA PROMEDIO\nPOR ORDEN"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -80,63 +134,6 @@
             android:layout_height="300dp"
             android:layout_marginBottom="24dp" />
 
-
-        <!-- NUEVOS DATOS ESTADÍSTICOS -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_orders" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="ÓRDENES TOTALES"
-                android:textSize="18sp" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/nroOrdenesTotales"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="450"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_profit" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="GANANCIA PROMEDIO POR ORDEN"
-                android:textSize="18sp" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/gananciaPromedio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="$10.50"
-            android:textSize="24sp"
-            android:textStyle="bold" />
 
     </LinearLayout>
 

@@ -115,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="30dp"
                     android:layout_marginHorizontal="16dp"
-                    app:queryHint="Buscar restaurantes o comida"
+                    app:queryHint="Buscar restaurante"
                     app:iconifiedByDefault="false"
                     android:background="@drawable/search_view_bg"/>
 
