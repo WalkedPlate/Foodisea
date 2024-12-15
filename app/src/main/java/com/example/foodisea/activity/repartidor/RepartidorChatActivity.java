@@ -48,7 +48,12 @@ public class RepartidorChatActivity extends AppCompatActivity {
         // Inicializar variables
         chatRepository = new ChatRepository();
         messageList = new ArrayList<>();
-        chatId = getIntent().getStringExtra("chatid");
+        chatId = getIntent().getStringExtra("chatId");
+        if (chatId == null || chatId.isEmpty()) {
+            Toast.makeText(this, "Error: El ID del chat no es válido.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
         emisorId = getIntent().getStringExtra("clienteId");
 
         // Configuración del RecyclerView

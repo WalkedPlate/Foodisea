@@ -1,5 +1,7 @@
 package com.example.foodisea.repository;
 
+import android.util.Log;
+
 import com.example.foodisea.model.Chat;
 import com.example.foodisea.model.Mensaje;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -60,10 +62,12 @@ public class ChatRepository {
                 .orderBy("timestamp", Query.Direction.ASCENDING)
                 .addSnapshotListener((querySnapshot, error) -> {
                     if (error != null) {
+                        Log.e("FirestoreError", "Error al obtener mensajes", error);
                         onFailure.onFailure(error);
                         return;
                     }
                     if (querySnapshot != null) {
+                        Log.d("FirestoreDebug", "Mensajes obtenidos: " + querySnapshot.size());
                         List<Mensaje> mensajes = new ArrayList<>();
                         for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                             Mensaje mensaje = document.toObject(Mensaje.class);

@@ -148,7 +148,7 @@ public class RepartidorDeliveryMapActivity extends AppCompatActivity implements 
                 Intent intent = new Intent(this, RepartidorChatActivity.class);
                 intent.putExtra("clienteId", currentPedido.getClienteId());
                 intent.putExtra("pedidoId", pedidoId);
-                intent.putExtra("chatid",chatId);
+                intent.putExtra("chatId",chatId);
                 startActivity(intent);
             }
         });
