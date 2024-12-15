@@ -363,4 +363,12 @@ public class UsuarioRepository {
                 });
     }
 
+    public Task<Void> actualizarEstadoUsuario(Usuario usuario, String nuevoEstado) {
+        return FirebaseFirestore.getInstance()
+                .collection("usuarios")
+                .document(usuario.getId())  // Usa el ID correcto del usuario
+                .update("estado", nuevoEstado);
+    }
+
+
 }

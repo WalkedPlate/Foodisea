@@ -92,4 +92,11 @@ public class SuperAdminSolicitudesRepartidorActivity extends AppCompatActivity {
         binding.rvSolicitudes.setLayoutManager(new LinearLayoutManager(this));
         binding.rvSolicitudes.setAdapter(adapter);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        obtenerUsuarios();  // Recarga los usuarios al volver a la actividad
+    }
+
 }
