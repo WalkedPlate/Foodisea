@@ -17,7 +17,7 @@ public class Pedido {
     private String restauranteId;  // ID del restaurante donde se hizo el pedido
     private List<ProductoCantidad> productos;  // Lista de productos y sus cantidades solicitadas
     private String repartidorId;  // Referencia al repartidor asignado (ID)
-    private String estado;  // "Recibido", "En preparación", "En camino", "Entregado"
+    private String estado;  // "Recibido", "En preparación", "En camino", "Recogiendo pedido", "Entregado"
     private Date fechaPedido;
     private String direccionEntrega;
     private Double latitudEntrega;
@@ -27,6 +27,12 @@ public class Pedido {
     private Double montoTotal;
 
 
+    // Estados del pedido
+    public static final String ESTADO_RECIBIDO = "Recibido";
+    public static final String ESTADO_EN_PREPARACION = "En preparación";
+    public static final String ESTADO_RECOGIENDO = "Recogiendo pedido";  // Nuevo estado
+    public static final String ESTADO_EN_CAMINO = "En camino";
+    public static final String ESTADO_ENTREGADO = "Entregado";
 
     //Constructor, getter y setter
 
@@ -146,6 +152,22 @@ public class Pedido {
 
     public void setLongitudEntrega(Double longitudEntrega) {
         this.longitudEntrega = longitudEntrega;
+    }
+
+    public String getVerificacionEntregaId() {
+        return verificacionEntregaId;
+    }
+
+    public void setVerificacionEntregaId(String verificacionEntregaId) {
+        this.verificacionEntregaId = verificacionEntregaId;
+    }
+
+    public String getEstadoVerificacion() {
+        return estadoVerificacion;
+    }
+
+    public void setEstadoVerificacion(String estadoVerificacion) {
+        this.estadoVerificacion = estadoVerificacion;
     }
 
     public Double getLatitudEntrega() {

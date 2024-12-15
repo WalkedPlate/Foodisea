@@ -51,76 +51,79 @@
                 android:contentDescription="@string/btnDelivery"
                 app:icon="@drawable/ic_delivery_dining"
                 android:backgroundTint="@color/btn_medium"/>
+
         </LinearLayout>
 
-        <androidx.core.widget.NestedScrollView
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_height="match_parent">
 
-            <LinearLayout
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/tvWelcome"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:text="Hola John, ¡Buen Día!"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:fontFamily="@font/sen_font" />
-
-
-                <TextView
-                    android:id="@+id/tvPedidosTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="16dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Pedidos (X)"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/sen_font" />
-
-                <!-- Contenedor para RecyclerView, ProgressBar y mensaje de no pedidos -->
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="200dp">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvPedidos"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        android:padding="16dp"/>
-
-                    <ProgressBar
-                        android:id="@+id/progressBar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:visibility="gone"/>
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tvNoPedidos"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tvWelcome"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="No hay pedidos por el momento"
+                        android:padding="16dp"
+                        android:textColor="@android:color/black"
                         android:textSize="16sp"
-                        android:fontFamily="@font/sen_font"
-                        android:visibility="gone"/>
+                        android:fontFamily="@font/sen_font" />
 
-                </FrameLayout>
+                    <TextView
+                        android:id="@+id/tvPedidosTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="16dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Pedidos Disponibles (0)"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/sen_font" />
 
-            </LinearLayout>
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="200dp">
 
-        </androidx.core.widget.NestedScrollView>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvPedidos"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="8dp"/>
+
+                        <ProgressBar
+                            android:id="@+id/progressBar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:visibility="gone"/>
+
+                        <TextView
+                            android:id="@+id/tvNoPedidos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="No hay pedidos cercanos por el momento"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/sen_font"
+                            android:visibility="gone"/>
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 

@@ -116,6 +116,7 @@
 
     <color name="border_light">#FF8A80</color>
 
+    <color name="route_active">#2196F3</color>
 
 
 </resources>

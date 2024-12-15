@@ -3,6 +3,7 @@
     <dimen name="bottom_sheet_peek_height">120dp</dimen>
 
 
-    <dimen name="map_padding">100dp</dimen>
+    <dimen name="map_padding">64dp</dimen>
+
 
 </resources>

@@ -2,7 +2,10 @@ package com.example.foodisea.activity.cliente;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -235,7 +238,7 @@ public class ClienteCheckoutActivity extends AppCompatActivity {
     private void crearPedido() {
         loadingDialog.show("Procesando pedido...");
 
-        carritoRepository.obtenerCarritoActivo(clienteActual.getId(),restauranteId)
+        carritoRepository.obtenerCarritoActivo(clienteActual.getId(), restauranteId)
                 .addOnSuccessListener(documentSnapshot -> {
                     if (!documentSnapshot.exists()) {
                         loadingDialog.dismiss();
@@ -250,33 +253,42 @@ public class ClienteCheckoutActivity extends AppCompatActivity {
                         return;
                     }
 
-                    // Crear nuevo pedido con coordenadas
+                    // Crear nuevo pedido
                     Pedido pedido = new Pedido();
                     pedido.setClienteId(clienteActual.getId());
                     pedido.setRestauranteId(carrito.getRestauranteId());
                     pedido.setProductos(carrito.getProductos());
-                    pedido.setEstado("Recibido");
+                    pedido.setEstado(Pedido.ESTADO_RECIBIDO);
                     pedido.setFechaPedido(new Date());
                     pedido.setDireccionEntrega(direccionEntrega);
                     pedido.setLatitudEntrega(latitudEntrega);
                     pedido.setLongitudEntrega(longitudEntrega);
                     pedido.setMontoTotal(totalConsumption + DELIVERY_FEE);
                     pedido.setRepartidorId(null);
+                    pedido.setEstadoVerificacion("PENDIENTE");
 
-                    // Guardar pedido y limpiar carrito
                     PedidoRepository pedidoRepository = new PedidoRepository(this);
-                    pedidoRepository.crearPedido(pedido)
-                            .addOnSuccessListener(documentReference -> {
-                                // Obtener el ID del pedido creado
-                                String pedidoId = documentReference.getId();
-
+                    pedidoRepository.crearPedidoConVerificacion(pedido)
+                            .addOnSuccessListener(aVoid -> {
                                 // Limpiar carrito
                                 carritoRepository.limpiarCarrito(clienteActual.getId(), restauranteId)
-                                        .addOnSuccessListener(aVoid -> {
+                                        .addOnSuccessListener(aVoid2 -> {
                                             loadingDialog.dismiss();
-                                            // Pasar a la pantalla de confirmación con el ID del pedido
+
+                                            // Programar cambio de estado después de 10 segundos
+                                            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                                                pedidoRepository.actualizarEstadoPedido(pedido.getId(), Pedido.ESTADO_EN_PREPARACION)
+                                                        .addOnSuccessListener(aVoid3 -> {
+                                                            Log.d("Pedido", "Estado actualizado a En preparación");
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Log.e("Pedido", "Error al actualizar estado: " + e.getMessage());
+                                                        });
+                                            }, 20000); // 20 segundos
+
+                                            // Ir a la confirmación
                                             Intent intent = new Intent(this, ConfirmacionPedido.class);
-                                            intent.putExtra("pedidoId", pedidoId);
+                                            intent.putExtra("pedidoId", pedido.getId());
                                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                                                     Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                             startActivity(intent);
@@ -300,6 +312,7 @@ public class ClienteCheckoutActivity extends AppCompatActivity {
                             e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
+
 
     @Override
     protected void onResume() {

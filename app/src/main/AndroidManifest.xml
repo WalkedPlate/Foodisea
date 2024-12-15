@@ -23,6 +23,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
 
     <application
         android:name=".FoodiseaApplication"
@@ -35,6 +37,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Foodisea"
         tools:targetApi="31">
+        <activity
+            android:name=".activity.repartidor.RepartidorPedidosActivosActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.repartidor.RepartidorEditarPerfilActivity"
             android:exported="false" />
@@ -81,7 +86,11 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service> <!-- Google Maps -->
+        </service>
+
+        <service android:name=".service.RepartidorLocationService" />
+
+        <!-- Google Maps -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCMRS8oov3wtY6nnW4d6o2VXcX5kABugyc" />
@@ -197,7 +206,7 @@
             android:name=".activity.repartidor.RepartidorDeliveryMapActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.repartidor.RepartidorVerOrdenActivity"
+            android:name=".activity.repartidor.RepartidorVerPedidoActivity"
             android:exported="false" />
         <activity
             android:name=".activity.adminRes.AdminResCartaActivity"

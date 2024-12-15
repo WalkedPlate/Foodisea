@@ -1,13 +1,17 @@
 package com.example.foodisea.repository;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.foodisea.dto.PedidoConCliente;
 import com.example.foodisea.dto.PedidoConDetalles;
+import com.example.foodisea.dto.PedidoConDistancia;
 import com.example.foodisea.model.Cliente;
+import com.example.foodisea.model.CodigoQR;
 import com.example.foodisea.model.Pedido;
 import com.example.foodisea.model.Repartidor;
 import com.example.foodisea.model.Restaurante;
+import com.example.foodisea.model.VerificacionEntrega;
 import com.example.foodisea.notification.NotificationHelper;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Task;
@@ -22,12 +26,15 @@ import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PedidoRepository {
     private final FirebaseFirestore db;
     private final NotificationHelper notificationHelper;
-    private static final double RADIO_BUSQUEDA_KM = 5.0; // Radio de búsqueda para repartidores
+    private static final double RADIO_BUSQUEDA_KM = 100.0; // Radio de búsqueda para repartidores
 
     public PedidoRepository(Context context) {
         this.db = FirebaseFirestore.getInstance();
@@ -46,6 +53,59 @@ public class PedidoRepository {
                     notificationHelper.sendNewOrderNotification(pedido);
                 });
     }
+
+
+    public Task<Void> crearPedidoConVerificacion(Pedido pedido) {
+        // Primero creamos el pedido
+        return db.collection("pedidos")
+                .add(pedido)
+                .continueWithTask(task -> {
+                    String pedidoId = task.getResult().getId();
+                    pedido.setId(pedidoId);
+
+                    // Crear la verificación de entrega
+                    VerificacionEntrega verificacion = new VerificacionEntrega(pedidoId);
+                    return db.collection("verificaciones_entrega")
+                            .add(verificacion);
+                })
+                .continueWithTask(task -> {
+                    String verificacionId = task.getResult().getId();
+
+                    // Crear QR de entrega
+                    CodigoQR qrEntrega = new CodigoQR(verificacionId, "ENTREGA");
+                    return db.collection("codigosQR")
+                            .add(qrEntrega)
+                            .continueWithTask(qrTask -> {
+                                String qrEntregaId = qrTask.getResult().getId();
+
+                                // Crear QR de pago
+                                CodigoQR qrPago = new CodigoQR(verificacionId, "PAGO");
+                                return db.collection("codigosQR")
+                                        .add(qrPago)
+                                        .continueWithTask(qrPagoTask -> {
+                                            String qrPagoId = qrPagoTask.getResult().getId();
+
+                                            // Actualizar la verificación con los IDs de QR
+                                            Map<String, Object> updates = new HashMap<>();
+                                            updates.put("qrEntregaId", qrEntregaId);
+                                            updates.put("qrPagoId", qrPagoId);
+                                            return db.collection("verificaciones_entrega")
+                                                    .document(verificacionId)
+                                                    .update(updates);
+                                        });
+                            });
+                });
+    }
+
+    public Task<Void> actualizarEstadoPedido(String pedidoId, String nuevoEstado) {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("estado", nuevoEstado);
+
+        return db.collection("pedidos")
+                .document(pedidoId)
+                .update(updates);
+    }
+
 
     private void buscarRepartidoresCercanos(Pedido pedido) {
         // Solo buscar repartidores si tenemos las coordenadas de entrega
@@ -90,7 +150,7 @@ public class PedidoRepository {
                 });
     }
 
-    private double calcularDistancia(double lat1, double lon1, double lat2, double lon2) {
+    public double calcularDistancia(double lat1, double lon1, double lat2, double lon2) {
         // Radio de la Tierra en kilómetros
         final int R = 6371;
 
@@ -108,82 +168,92 @@ public class PedidoRepository {
     public Task<List<Pedido>> getPedidosCercanosParaRepartidor(double latitudRepartidor,
                                                                double longitudRepartidor) {
         return db.collection("pedidos")
-                .whereEqualTo("estado", "Recibido")
+                .whereEqualTo("estado", "En preparación")
                 .whereEqualTo("repartidorId", null)
                 .get()
-                .continueWith(task -> {
-                    List<Pedido> pedidosCercanos = new ArrayList<>();
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        for (DocumentSnapshot doc : task.getResult()) {
-                            Pedido pedido = doc.toObject(Pedido.class);
-                            if (pedido != null && pedido.getLatitudEntrega() != null
-                                    && pedido.getLongitudEntrega() != null) {
-                                // Calcular distancia
-                                double distancia = calcularDistancia(
-                                        latitudRepartidor,
-                                        longitudRepartidor,
-                                        pedido.getLatitudEntrega(),
-                                        pedido.getLongitudEntrega()
-                                );
+                .continueWithTask(task -> {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
 
-                                if (distancia <= RADIO_BUSQUEDA_KM) {
-                                    pedido.setId(doc.getId());
-                                    pedidosCercanos.add(pedido);
+                    List<DocumentSnapshot> pedidosDocs = task.getResult().getDocuments();
+                    List<Task<PedidoConDistancia>> pedidosTasks = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : pedidosDocs) {
+                        Pedido pedido = doc.toObject(Pedido.class);
+                        if (pedido != null) {
+                            pedido.setId(doc.getId());
+
+                            // Obtener datos del restaurante para calcular distancia total
+                            Task<PedidoConDistancia> pedidoTask = db.collection("restaurantes")
+                                    .document(pedido.getRestauranteId())
+                                    .get()
+                                    .continueWith(restauranteTask -> {
+                                        if (!restauranteTask.isSuccessful()) {
+                                            throw restauranteTask.getException();
+                                        }
+
+                                        Restaurante restaurante = restauranteTask.getResult().toObject(Restaurante.class);
+                                        if (restaurante == null || restaurante.getLatitud() == null ||
+                                                restaurante.getLongitud() == null ||
+                                                pedido.getLatitudEntrega() == null ||
+                                                pedido.getLongitudEntrega() == null) {
+                                            return null;
+                                        }
+
+                                        // Calcular distancia repartidor -> restaurante
+                                        double distanciaARestaurante = calcularDistancia(
+                                                latitudRepartidor,
+                                                longitudRepartidor,
+                                                restaurante.getLatitud(),
+                                                restaurante.getLongitud()
+                                        );
+
+                                        // Calcular distancia restaurante -> cliente
+                                        double distanciaACliente = calcularDistancia(
+                                                restaurante.getLatitud(),
+                                                restaurante.getLongitud(),
+                                                pedido.getLatitudEntrega(),
+                                                pedido.getLongitudEntrega()
+                                        );
+
+                                        // Distancia total del recorrido
+                                        double distanciaTotal = distanciaARestaurante + distanciaACliente;
+
+                                        return new PedidoConDistancia(pedido, distanciaTotal);
+                                    });
+
+                            pedidosTasks.add(pedidoTask);
+                        }
+                    }
+
+                    return Tasks.whenAllSuccess(pedidosTasks)
+                            .continueWith(allTask -> {
+                                List<Pedido> pedidosCercanos = new ArrayList<>();
+
+                                List<Object> rawResults = allTask.getResult();
+                                List<PedidoConDistancia> pedidosConDistancia = new ArrayList<>();
+
+                                // Convertir cada Object en PedidoConDistancia
+                                for (Object obj : rawResults) {
+                                    if (obj instanceof PedidoConDistancia) {
+                                        pedidosConDistancia.add((PedidoConDistancia) obj);
+                                    }
                                 }
-                            }
-                        }
-                    }
-                    return pedidosCercanos;
-                });
-    }
 
-    // Método para obtener la ruta óptima para un repartidor
-    public Task<List<Pedido>> getRutaOptima(String repartidorId, LatLng ubicacionActual) {
-        return db.collection("pedidos")
-                .whereEqualTo("repartidorId", repartidorId)
-                .whereIn("estado", Arrays.asList("En camino", "Recibido"))
-                .get()
-                .continueWith(task -> {
-                    List<Pedido> pedidos = new ArrayList<>();
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        for (DocumentSnapshot doc : task.getResult()) {
-                            Pedido pedido = doc.toObject(Pedido.class);
-                            if (pedido != null) {
-                                pedido.setId(doc.getId());
-                                pedidos.add(pedido);
-                            }
-                        }
-                        // Ordenar pedidos por distancia desde la ubicación actual
-                        Collections.sort(pedidos, (p1, p2) -> {
-                            double d1 = calcularDistancia(
-                                    ubicacionActual.latitude,
-                                    ubicacionActual.longitude,
-                                    p1.getLatitudEntrega(),
-                                    p1.getLongitudEntrega()
-                            );
-                            double d2 = calcularDistancia(
-                                    ubicacionActual.latitude,
-                                    ubicacionActual.longitude,
-                                    p2.getLatitudEntrega(),
-                                    p2.getLongitudEntrega()
-                            );
-                            return Double.compare(d1, d2);
-                        });
-                    }
-                    return pedidos;
+                                // Filtrar por distancia total y ordenar
+                                pedidosConDistancia.stream()
+                                        .filter(p -> p != null && p.getDistanciaTotal() <= RADIO_BUSQUEDA_KM)
+                                        .sorted(Comparator.comparingDouble(p -> p.getDistanciaTotal()))
+                                        .forEach(p -> pedidosCercanos.add(p.getPedido()));
+
+                                return pedidosCercanos;
+                            });
                 });
     }
 
 
 
-
-
-    // Actualizar estado del pedido
-    public Task<Void> actualizarEstadoPedido(String pedidoId, String nuevoEstado) {
-        return db.collection("pedidos")
-                .document(pedidoId)
-                .update("estado", nuevoEstado);
-    }
 
     // Obtener pedidos activos de un repartidor
     public Task<List<Pedido>> getPedidosActivosRepartidor(String repartidorId) {
@@ -199,6 +269,7 @@ public class PedidoRepository {
                     return pedidos;
                 });
     }
+
 
     // Obtener pedidos activos de un restaurante
     public Task<List<PedidoConCliente>> getPedidosActivosRestaurante(String restauranteId) {
@@ -247,6 +318,18 @@ public class PedidoRepository {
                             });
                 });
     }
+
+
+    public Task<Void> asignarRepartidorAPedido(String pedidoId, String repartidorId) {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("estado", "Recogiendo pedido");
+        updates.put("repartidorId", repartidorId);
+
+        return db.collection("pedidos")
+                .document(pedidoId)
+                .update(updates);
+    }
+
 
     // Obtener pedidos por cliente
     public Task<List<Pedido>> getPedidosPorCliente(String clienteId) {
@@ -345,22 +428,30 @@ public class PedidoRepository {
                 });
     }
 
-    // Obtener un pedido específico
-    public Task<Pedido> getPedidoById(String pedidoId) {
+
+
+    // Método para obtener pedidos asignados al repartidor
+    public Task<List<Pedido>> getPedidosAsignadosRepartidor(String repartidorId) {
         return db.collection("pedidos")
-                .document(pedidoId)
+                .whereEqualTo("repartidorId", repartidorId)
+                .whereIn("estado", Arrays.asList("En camino", "Entregado"))
                 .get()
                 .continueWith(task -> {
+                    List<Pedido> pedidos = new ArrayList<>();
                     if (task.isSuccessful() && task.getResult() != null) {
-                        Pedido pedido = task.getResult().toObject(Pedido.class);
-                        if (pedido != null) {
-                            pedido.setId(task.getResult().getId());
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            Pedido pedido = doc.toObject(Pedido.class);
+                            if (pedido != null) {
+                                pedido.setId(doc.getId());
+                                pedidos.add(pedido);
+                            }
                         }
-                        return pedido;
                     }
-                    throw task.getException();
+                    return pedidos;
                 });
     }
+
+
 
 
 }

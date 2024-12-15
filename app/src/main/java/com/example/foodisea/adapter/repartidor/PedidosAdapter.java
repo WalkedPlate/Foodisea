@@ -14,14 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.foodisea.R;
 import com.example.foodisea.activity.adminRes.AdminResPedidosActivity;
 import com.example.foodisea.activity.repartidor.RepartidorRestauranteActivity;
-import com.example.foodisea.activity.repartidor.RepartidorVerOrdenActivity;
+import com.example.foodisea.activity.repartidor.RepartidorVerPedidoActivity;
 import com.example.foodisea.dto.PedidoConCliente;
-import com.example.foodisea.model.Cliente;
-import com.example.foodisea.model.Pago;
-import com.example.foodisea.model.Pedido;
 
 import java.util.List;
-import java.util.Map;
 
 public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoViewHolder> {
 
@@ -51,7 +47,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoVi
 
         holder.itemView.setOnClickListener(v -> {
             if (context instanceof RepartidorRestauranteActivity) {
-                Intent intent = new Intent(context, RepartidorVerOrdenActivity.class);
+                Intent intent = new Intent(context, RepartidorVerPedidoActivity.class);
                 intent.putExtra("pedidoId", pedidoConCliente.getPedido().getId());
                 //Cliente cliente = clientesMap.get(pedido.getClienteId());
                 intent.putExtra("clienteNombre", pedidoConCliente.getCliente().obtenerNombreCompleto());

@@ -8,6 +8,7 @@ public class PedidoConDetalles {
     private Pedido pedido;
     private Restaurante restaurante;
     private Repartidor repartidor;
+    private double distancia; // En kilómetros
 
     public PedidoConDetalles(Pedido pedido, Restaurante restaurante, Repartidor repartidor) {
         this.pedido = pedido;
@@ -29,5 +30,13 @@ public class PedidoConDetalles {
 
     public boolean tieneRepartidor() {
         return repartidor != null;
+    }
+
+    public double getDistancia() {
+        return distancia;
+    }
+
+    public void setDistancia(double distancia) {
+        this.distancia = distancia;
     }
 }

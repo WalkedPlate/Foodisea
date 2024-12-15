@@ -6,13 +6,17 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
@@ -35,6 +39,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
+import com.example.foodisea.databinding.ActivityClienteTrackingBinding;
+import com.example.foodisea.helper.DirectionsHelper;
 import com.example.foodisea.model.Cliente;
 import com.example.foodisea.model.Pedido;
 import com.example.foodisea.model.Repartidor;
@@ -57,6 +63,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -73,6 +80,8 @@ import java.util.Map;
 
 public class ClienteTrackingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private ActivityClienteTrackingBinding binding;
+
     private static final String TAG = "ClienteTrackingActivity";
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
@@ -85,35 +94,35 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
     private ListenerRegistration pedidoListener;
     private ListenerRegistration repartidorListener;
 
-    // UI Elements
-    private BottomSheetBehavior<View> bottomSheetBehavior;
-    private LinearLayout deliveryInfoContainer;
-    private Button btnOrderDetails;
+    // Map related
     private GoogleMap mMap;
-    private TextView orderStatus1, orderStatus2, orderStatus3, orderStatus4;
-    private Button btnChat;
-    private TextView tvRestaurant, tvOrderTime;
-    private ImageView restaurantLogo;
-    private TextView deliveryPersonName;
+    private DirectionsHelper directionsHelper;
+    private Marker repartidorMarker;
+    private LatLng restauranteLocation;
+    private LatLng clienteLocation;
+
+    // Bottom Sheet UI
+    private BottomSheetBehavior<View> bottomSheetBehavior;
 
     // Data
     private String pedidoId;
     private Pedido currentPedido;
     private Restaurante restaurante;
     private Repartidor repartidor;
-    private Marker repartidorMarker;
-    private LatLng restauranteLocation;
-    private LatLng clienteLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cliente_tracking);
+        binding = ActivityClienteTrackingBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         // Inicializar repositories y utilidades
         pedidoRepository = new PedidoRepository(this);
         restauranteRepository = new RestauranteRepository();
         usuarioRepository = new UsuarioRepository();
+
+        // Inicializar DirectionsHelper
+        directionsHelper = new DirectionsHelper(this);
 
         // Obtener pedidoId del intent
         pedidoId = getIntent().getStringExtra("pedidoId");
@@ -124,80 +133,53 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
         }
 
         initializeViews();
-        setupBottomSheet();
         initializeMap();
         setupClickListeners();
         startListeningToUpdates();
     }
 
     private void initializeViews() {
-        // Bottom Sheet y contenedores
-        View bottomSheet = findViewById(R.id.bottom_sheet);
-        deliveryInfoContainer = findViewById(R.id.delivery_info_container);
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-
-        // Botones y controles interactivos
-        btnOrderDetails = findViewById(R.id.btn_order_details);
-        btnChat = findViewById(R.id.btnChat);
-
-        // TextViews para estados
-        orderStatus1 = findViewById(R.id.order_status_1);
-        orderStatus2 = findViewById(R.id.order_status_2);
-        orderStatus3 = findViewById(R.id.order_status_3);
-        orderStatus4 = findViewById(R.id.order_status_4);
-
-        // Información del restaurante y pedido
-        tvRestaurant = findViewById(R.id.tvRestaurant);
-        tvOrderTime = findViewById(R.id.tvOrderTime);
-        restaurantLogo = findViewById(R.id.restaurant_logo);
-        deliveryPersonName = findViewById(R.id.delivery_person_name);
+        // Bottom Sheet
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet);
+        setupBottomSheet();
     }
 
-    private void setupBottomSheet() {
-        bottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottom_sheet));
 
-        // Configurar el estado inicial y comportamiento
+    private void setupBottomSheet() {
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         bottomSheetBehavior.setHideable(false);
+        bottomSheetBehavior.setPeekHeight(getResources().getDimensionPixelSize(R.dimen.bottom_sheet_peek_height));
 
-        // Configurar el callback
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                TextView orderStatus = findViewById(R.id.order_status);
-                LinearLayout deliveryInfo = findViewById(R.id.delivery_info_container);
+                TransitionManager.beginDelayedTransition((ViewGroup) bottomSheet);
 
                 switch (newState) {
                     case BottomSheetBehavior.STATE_EXPANDED:
-                        orderStatus.setVisibility(View.GONE);
-                        deliveryInfo.setVisibility(View.VISIBLE);
+                        showExpandedContent(true);
                         break;
                     case BottomSheetBehavior.STATE_COLLAPSED:
-                        orderStatus.setVisibility(View.VISIBLE);
-                        deliveryInfo.setVisibility(View.GONE);
+                        showExpandedContent(false);
                         break;
                 }
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                // Opcional: Añadir animaciones durante el deslizamiento
-                deliveryInfoContainer.setAlpha(slideOffset);
+                binding.deliveryProgress.setAlpha(slideOffset);
             }
         });
-
-        // Ajustar la altura del peek
-        bottomSheetBehavior.setPeekHeight(getResources().getDimensionPixelSize(R.dimen.bottom_sheet_peek_height));
     }
 
     private void setupClickListeners() {
-        btnOrderDetails.setOnClickListener(v -> {
+        binding.btnOrderDetails.setOnClickListener(v -> {
             Intent intent = new Intent(this, ClienteCompraDetailsActivity.class);
             intent.putExtra("pedidoId", pedidoId);
             startActivity(intent);
         });
 
-        btnChat.setOnClickListener(v -> {
+        binding.btnChat.setOnClickListener(v -> {
             if (repartidor != null) {
                 Intent intent = new Intent(this, ClientePerfilActivity.class);
                 intent.putExtra("repartidor_id", repartidor.getId());
@@ -205,6 +187,14 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
                 startActivity(intent);
             } else {
                 Toast.makeText(this, "Aún no hay repartidor asignado", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        binding.btnCall.setOnClickListener(v -> {
+            if (repartidor != null && repartidor.getTelefono() != null) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + repartidor.getTelefono()));
+                startActivity(intent);
             }
         });
     }
@@ -264,6 +254,12 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
                 if (updatedPedido != null) {
                     updatedPedido.setId(snapshot.getId());
 
+                    // Verificar si se asignó un repartidor nuevo
+                    boolean repartidorCambio = (currentPedido.getRepartidorId() == null &&
+                            updatedPedido.getRepartidorId() != null) ||
+                            (currentPedido.getRepartidorId() != null &&
+                                    !currentPedido.getRepartidorId().equals(updatedPedido.getRepartidorId()));
+
                     // Actualizar coordenadas de entrega
                     clienteLocation = new LatLng(
                             updatedPedido.getLatitudEntrega(),
@@ -275,6 +271,11 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
 
                     currentPedido = updatedPedido;
                     updatePedidoInfo();
+
+                    // Si hay un nuevo repartidor, configurar su listener
+                    if (repartidorCambio && currentPedido.getRepartidorId() != null) {
+                        setupRepartidorListener(currentPedido.getRepartidorId());
+                    }
 
                     if (estadoCambio) {
                         updateDeliveryRoute();
@@ -291,23 +292,23 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
         }
 
         if (repartidorId != null) {
+            Log.d(TAG, "Configurando listener para repartidor: " + repartidorId);
             repartidorListener = pedidoRepository.listenToRepartidor(repartidorId,
-                    new EventListener<DocumentSnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                            @Nullable FirebaseFirestoreException e) {
-                            if (e != null) {
-                                Log.w(TAG, "Repartidor listen failed.", e);
-                                return;
-                            }
+                    (snapshot, e) -> {
+                        if (e != null) {
+                            Log.w(TAG, "Repartidor listen failed.", e);
+                            return;
+                        }
 
-                            if (snapshot != null && snapshot.exists()) {
-                                Repartidor updatedRepartidor = snapshot.toObject(Repartidor.class);
-                                if (updatedRepartidor != null) {
-                                    repartidor = updatedRepartidor;
+                        if (snapshot != null && snapshot.exists()) {
+                            Repartidor updatedRepartidor = snapshot.toObject(Repartidor.class);
+                            if (updatedRepartidor != null) {
+                                updatedRepartidor.setId(snapshot.getId()); // Asegúrate de setear el ID
+                                repartidor = updatedRepartidor;
+                                runOnUiThread(() -> {
                                     updateRepartidorInfo();
                                     updateDeliveryRoute();
-                                }
+                                });
                             }
                         }
                     });
@@ -386,120 +387,170 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
         updateDeliveryRoute();
     }
 
-    private void procederConActualizacion() {
-        // Solo actualizar la ruta cuando tengamos ambas ubicaciones
-        if (restauranteLocation != null && clienteLocation != null) {
-            updateDeliveryRoute();
-        }
-    }
-
-
     private void updateDeliveryRoute() {
-        if (mMap == null) return;
+        if (mMap == null || !checkLocationPermission()) return;
+
         mMap.clear();
 
-        try {
-            // Agregar marcadores de origen y destino
-            addMarkerToMap(restauranteLocation,
-                    restaurante.getNombre(),
-                    R.drawable.ic_restaurant);
+        // Siempre añadimos los marcadores de restaurante y punto de entrega
+        addMarkerToMap(restauranteLocation, restaurante.getNombre(), R.drawable.ic_restaurant);
+        addMarkerToMap(clienteLocation, "Punto de entrega", R.drawable.ic_location_flag);
 
-            addMarkerToMap(clienteLocation,
-                    "Punto de entrega",
-                    R.drawable.ic_location_flag);
+        // Si hay repartidor, manejamos su marcador y rutas
+        if (repartidor != null) {
+            LatLng repartidorLatLng = new LatLng(repartidor.getLatitud(), repartidor.getLongitud());
 
-            // Dibujar rutas según el estado del pedido
+            // Actualizamos el marcador del repartidor
+            updateRepartidorMarker(repartidorLatLng, repartidor.getNombres());
+
             switch (currentPedido.getEstado()) {
-                case "Recibido":
-                    // Ruta punteada entre restaurante y destino
+                case Pedido.ESTADO_RECOGIENDO:
+                    // Ruta del repartidor al restaurante
+                    directionsHelper.getRoute(repartidorLatLng, restauranteLocation,
+                            new DirectionsHelper.DirectionsCallback() {
+                                @Override
+                                public void onDirectionsSuccess(List<LatLng> points, String estimatedTime) {
+                                    drawPolyline(points, R.color.route_active);
+                                    binding.estimatedTime.setText("Llegando al restaurante en " + estimatedTime);
+                                    includeLatLngsInCameraBounds(points);
+                                }
+
+                                @Override
+                                public void onDirectionsFailure(String error) {
+                                    Log.e(TAG, "Error getting directions: " + error);
+                                }
+                            });
+
+                    // Ruta punteada del restaurante al destino
                     drawDottedRoute(restauranteLocation, clienteLocation,
-                            ContextCompat.getColor(this, R.color.gray_500));
+                            ContextCompat.getColor(this, R.color.gray_300));
                     break;
 
-                case "En preparación":
-                    // Ruta sólida del restaurante al destino
-                    drawStaticRoute(restauranteLocation, clienteLocation,
-                            ContextCompat.getColor(this, R.color.warning));
-                    break;
+                case Pedido.ESTADO_EN_CAMINO:
+                    // Solo dibujamos la ruta activa al punto de entrega
+                    directionsHelper.getRoute(repartidorLatLng, clienteLocation,
+                            new DirectionsHelper.DirectionsCallback() {
+                                @Override
+                                public void onDirectionsSuccess(List<LatLng> points, String estimatedTime) {
+                                    drawPolyline(points, R.color.route_active);
+                                    binding.estimatedTime.setText("Llegando en " + estimatedTime);
+                                    includeLatLngsInCameraBounds(points);
+                                }
 
-                case "En camino":
-                    if (repartidor != null) {
-                        LatLng repartidorLatLng = new LatLng(
-                                repartidor.getLatitud(),
-                                repartidor.getLongitud()
-                        );
-
-                        // Actualizar marcador del repartidor
-                        updateRepartidorMarker(repartidorLatLng,
-                                repartidor.getNombres() + " " + repartidor.getApellidos());
-
-                        // Ruta completada en verde (restaurante a repartidor)
-                        drawStaticRoute(restauranteLocation, repartidorLatLng,
-                                ContextCompat.getColor(this, R.color.success));
-
-                        // Ruta activa en azul (repartidor a destino)
-                        drawStaticRoute(repartidorLatLng, clienteLocation,
-                                ContextCompat.getColor(this, R.color.btn_medium));
-                    }
-                    break;
-
-                case "Entregado":
-                    // Ruta completa en verde
-                    drawStaticRoute(restauranteLocation, clienteLocation,
-                            ContextCompat.getColor(this, R.color.success));
+                                @Override
+                                public void onDirectionsFailure(String error) {
+                                    Log.e(TAG, "Error getting directions: " + error);
+                                }
+                            });
                     break;
             }
+        }
+        else {
+            // Si estamos en estado inicial, solo ajustamos la cámara
+            switch (currentPedido.getEstado()) {
+                case Pedido.ESTADO_RECIBIDO:
+                case Pedido.ESTADO_EN_PREPARACION:
+                    adjustMapCamera();
+                    break;
+            }
+        }
+        // En los estados Recibido y En preparación no dibujamos ninguna línea
+        adjustMapCamera(); // Ajustar la cámara para mostrar los marcadores
+    }
+    private void adjustMapCamera() {
+        if (mMap == null) return;
 
-            // Ajustar cámara para mostrar toda la ruta
-            adjustMapCamera();
+        try {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
+            // Siempre incluir restaurante y punto de entrega
+            builder.include(restauranteLocation);
+            builder.include(clienteLocation);
+
+            // Si hay repartidor, incluir su ubicación
+            if (repartidor != null) {
+                builder.include(new LatLng(repartidor.getLatitud(), repartidor.getLongitud()));
+            }
+
+            // Construir los límites
+            LatLngBounds bounds = builder.build();
+
+            // Obtener el ancho y alto de la pantalla
+            int width = getResources().getDisplayMetrics().widthPixels;
+            int height = getResources().getDisplayMetrics().heightPixels;
+
+            // Calcular el padding (20% del ancho de pantalla)
+            int padding = (int) (width * 0.20);
+
+            // Crear el update de cámara
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+
+            // Animar la cámara
+            mMap.animateCamera(cu);
         } catch (Exception e) {
-            Log.e(TAG, "Error updating delivery route", e);
+            Log.e(TAG, "Error adjusting camera", e);
+
+            // Si falla, intentar un zoom out para mostrar toda el área
+            if (restauranteLocation != null) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(restauranteLocation, 13f));
+            }
         }
     }
 
+
+    private void drawPolyline(List<LatLng> points, int colorResId, float width) {
+        if (mMap == null || points == null || points.isEmpty()) return;
+
+        PolylineOptions polylineOptions = new PolylineOptions()
+                .addAll(points)
+                .width(width)
+                .color(ContextCompat.getColor(this, colorResId));
+
+        mMap.addPolyline(polylineOptions);
+    }
+
+    // Sobrecarga del método para usar el ancho por defecto
+    private void drawPolyline(List<LatLng> points, int colorResId) {
+        drawPolyline(points, colorResId, 10f);
+    }
+
+    private void includeLatLngsInCameraBounds(List<LatLng> points) {
+        if (points.isEmpty()) return;
+
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (LatLng point : points) {
+            builder.include(point);
+        }
+
+        // Incluir también la ubicación del restaurante si no está en la ruta
+        builder.include(restauranteLocation);
+
+        // Aplicar el padding y animar la cámara
+        int padding = getResources().getDimensionPixelSize(R.dimen.map_padding);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(builder.build(), padding);
+        mMap.animateCamera(cu);
+    }
+
+
+    // Método para actualizar el marcador del repartidor con icono de moto
     private void updateRepartidorMarker(LatLng position, String nombre) {
         if (mMap == null) return;
 
         try {
             if (repartidorMarker == null) {
-                BitmapDescriptor icon = getBitmapDescriptor(R.drawable.ic_delivery_marker);
-                MarkerOptions markerOptions = new MarkerOptions()
+                BitmapDescriptor icon = getBitmapDescriptor(R.drawable.ic_delivery_bike);
+                repartidorMarker = mMap.addMarker(new MarkerOptions()
                         .position(position)
                         .title("Repartidor: " + nombre)
                         .icon(icon)
                         .flat(true)
-                        .anchor(0.5f, 0.5f);
-
-                repartidorMarker = mMap.addMarker(markerOptions);
-            } else {
-                // Solo animar si la posición cambió
-                LatLng currentPos = repartidorMarker.getPosition();
-                if (currentPos.latitude != position.latitude ||
-                        currentPos.longitude != position.longitude) {
-                    animateMarker(repartidorMarker, position);
-                }
+                        .anchor(0.5f, 0.5f));
+            } else if (!repartidorMarker.getPosition().equals(position)) {
+                animateMarker(repartidorMarker, position);
             }
         } catch (Exception e) {
             Log.e(TAG, "Error updating delivery marker", e);
         }
-    }
-
-    // Métodos auxiliares para las rutas
-    private void drawCompletedRoute(LatLng start, LatLng end) {
-        PolylineOptions options = new PolylineOptions()
-                .add(start, end)
-                .width(10)
-                .color(ContextCompat.getColor(this, R.color.success));
-        mMap.addPolyline(options);
-    }
-
-    private void drawActiveRoute(LatLng start, LatLng end) {
-        PolylineOptions options = new PolylineOptions()
-                .add(start, end)
-                .width(10)
-                .color(ContextCompat.getColor(this, R.color.btn_medium));
-        mMap.addPolyline(options);
     }
 
     private void drawDottedRoute(LatLng start, LatLng end, int color) {
@@ -520,30 +571,6 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
                 .width(10)
                 .color(color);
         mMap.addPolyline(polylineOptions);
-    }
-
-    // Método para ajustar la cámara del mapa
-    private void adjustMapCamera() {
-        try {
-            LatLngBounds.Builder builder = new LatLngBounds.Builder()
-                    .include(restauranteLocation)
-                    .include(clienteLocation);
-
-            if (repartidor != null) {
-                builder.include(new LatLng(
-                        repartidor.getLatitud(),
-                        repartidor.getLongitud()
-                ));
-            }
-
-            LatLngBounds bounds = builder.build();
-            int padding = getResources().getDimensionPixelSize(R.dimen.map_padding);
-
-            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-            mMap.animateCamera(cu);
-        } catch (Exception e) {
-            Log.e(TAG, "Error adjusting camera", e);
-        }
     }
 
     // Método para animar el movimiento del marcador
@@ -616,25 +643,36 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
     private void updatePedidoInfo() {
         if (currentPedido == null) return;
 
-        // Actualizar estado del pedido
-        updateOrderStatus(getEstadoIndex(currentPedido.getEstado()));
+        String estado = currentPedido.getEstado();
+        updateOrderStatus(getEstadoIndex(estado));
 
-        // Actualizar hora del pedido
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM, hh:mm a", Locale.getDefault());
-        String fechaFormateada = sdf.format(currentPedido.getFechaPedido());
-        tvOrderTime.setText(fechaFormateada);
+        binding.tvOrderTime.setText(sdf.format(currentPedido.getFechaPedido()));
+
+        binding.estimatedTime.setVisibility(estado.equals("En camino") ? View.VISIBLE : View.GONE);
+    }
+
+    private int getProgressForState(String estado) {
+        switch (estado) {
+            case Pedido.ESTADO_RECIBIDO: return 20;        // 20%
+            case Pedido.ESTADO_EN_PREPARACION: return 40;  // 40%
+            case Pedido.ESTADO_RECOGIENDO: return 60;      // 60%
+            case Pedido.ESTADO_EN_CAMINO: return 80;       // 80%
+            case Pedido.ESTADO_ENTREGADO: return 100;      // 100%
+            default: return 0;
+        }
     }
 
     private void updateRestauranteInfo() {
         if (restaurante == null) return;
 
-        tvRestaurant.setText(restaurante.getNombre());
+        binding.tvRestaurant.setText(restaurante.getNombre());
         if (restaurante.getImagenes() != null && !restaurante.getImagenes().isEmpty()) {
             Glide.with(this)
                     .load(restaurante.getImagenes().get(0))
                     .placeholder(R.drawable.restaurant_placeholder)
                     .error(R.drawable.restaurant_placeholder)
-                    .into(restaurantLogo);
+                    .into(binding.restaurantLogo);
         }
 
         updateMapLocations();
@@ -644,55 +682,112 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
         if (repartidor == null) return;
 
         String nombreCompleto = repartidor.getNombres() + " " + repartidor.getApellidos();
-        deliveryPersonName.setText(nombreCompleto);
+        binding.deliveryPersonName.setText(nombreCompleto);
 
         if (repartidor.getFoto() != null && !repartidor.getFoto().isEmpty()) {
-            // Implementar carga de foto con Glide si se necesita
+            Glide.with(this)
+                    .load(repartidor.getFoto())
+                    .placeholder(R.drawable.rounded_person_24)
+                    .error(R.drawable.rounded_person_24)
+                    .into(binding.deliveryPersonPhoto);
         }
 
-        // Si tenemos la ubicación del repartidor, actualizar el mapa
+        binding.deliveryPersonInfo.setVisibility(View.VISIBLE);
         updateDeliveryRoute();
     }
+
 
     private void updateOrderStatus(int status) {
         int inactiveColor = ContextCompat.getColor(this, R.color.gray_500);
         int activeColor = ContextCompat.getColor(this, R.color.success);
 
         // Resetear todos los estados
-        orderStatus1.setTextColor(inactiveColor);
-        orderStatus2.setTextColor(inactiveColor);
-        orderStatus3.setTextColor(inactiveColor);
-        orderStatus4.setTextColor(inactiveColor);
+        binding.orderStatus1.setTextColor(inactiveColor);
+        binding.orderStatus2.setTextColor(inactiveColor);
+        binding.orderStatus3.setTextColor(inactiveColor);
+        binding.orderStatus4.setTextColor(inactiveColor);
+        binding.orderStatus5.setTextColor(inactiveColor);
 
+        // Activar estados según el progreso
         switch (status) {
-            case 4:
-                orderStatus4.setTextColor(activeColor);
-                orderStatus3.setTextColor(activeColor);
-                orderStatus2.setTextColor(activeColor);
-                orderStatus1.setTextColor(activeColor);
+            case 5: // Entregado
+                binding.orderStatus5.setTextColor(activeColor);
+            case 4: // En camino
+                binding.orderStatus4.setTextColor(activeColor);
+            case 3: // Recogiendo
+                binding.orderStatus3.setTextColor(activeColor);
+            case 2: // En preparación
+                binding.orderStatus2.setTextColor(activeColor);
+            case 1: // Recibido
+                binding.orderStatus1.setTextColor(activeColor);
                 break;
-            case 3:
-                orderStatus3.setTextColor(activeColor);
-                orderStatus2.setTextColor(activeColor);
-                orderStatus1.setTextColor(activeColor);
-                break;
-            case 2:
-                orderStatus2.setTextColor(activeColor);
-                orderStatus1.setTextColor(activeColor);
-                break;
-            case 1:
-                orderStatus1.setTextColor(activeColor);
-                break;
+        }
+
+        // Actualizar el badge y progress
+        updateBadgeAndProgress(status);
+    }
+
+    private void updateBadgeAndProgress(int status) {
+        int badgeColor = getBadgeColor(status);
+        Drawable background = binding.orderStatusBadge.getBackground();
+        if (background instanceof GradientDrawable) {
+            ((GradientDrawable) background).setColor(ContextCompat.getColor(this, badgeColor));
+        }
+
+        binding.deliveryProgress.setProgress(getProgressForState(currentPedido.getEstado()));
+        binding.orderStatusBadge.setText(getEstadoTexto(currentPedido.getEstado()));
+    }
+
+
+    private int getBadgeColor(int status) {
+        switch (status) {
+            case 1: return R.color.warning;
+            case 2: return R.color.warning;
+            case 3: // Recogiendo pedido
+            case 4: // En camino
+                return R.color.btn_medium;
+            case 5: return R.color.success;
+            default: return R.color.gray_500;
         }
     }
 
+    private String getEstadoTexto(String estado) {
+        switch(estado) {
+            case Pedido.ESTADO_RECIBIDO:
+                return "Tu pedido ha sido recibido";
+            case Pedido.ESTADO_EN_PREPARACION:
+                return "Preparando tu pedido";
+            case Pedido.ESTADO_RECOGIENDO:
+                return "Repartidor en camino al restaurante";
+            case Pedido.ESTADO_EN_CAMINO:
+                return "Tu pedido está en camino";
+            case Pedido.ESTADO_ENTREGADO:
+                return "Pedido entregado";
+            default:
+                return "Estado desconocido";
+        }
+    }
+
+
     private int getEstadoIndex(String estado) {
         switch (estado) {
-            case "Recibido": return 1;
-            case "En preparación": return 2;
-            case "En camino": return 3;
-            case "Entregado": return 4;
+            case Pedido.ESTADO_RECIBIDO: return 1;
+            case Pedido.ESTADO_EN_PREPARACION: return 2;
+            case Pedido.ESTADO_RECOGIENDO: return 3;
+            case Pedido.ESTADO_EN_CAMINO: return 4;
+            case Pedido.ESTADO_ENTREGADO: return 5;
             default: return 0;
+        }
+    }
+
+    private void showExpandedContent(boolean show) {
+        int visibility = show ? View.VISIBLE : View.GONE;
+        binding.deliveryProgress.setVisibility(visibility);
+        binding.statusStepsContainer.setVisibility(visibility);
+
+        // Si hay repartidor, mostrar/ocultar su información
+        if (repartidor != null) {
+            binding.deliveryPersonInfo.setVisibility(visibility);
         }
     }
 
@@ -718,5 +813,6 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
         if (repartidorListener != null) {
             repartidorListener.remove();
         }
+        binding = null;
     }
 }
