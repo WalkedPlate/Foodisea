@@ -1,8 +1,8 @@
 package com.example.foodisea.model;
 
 public class Repartidor extends Usuario {
-    private double latitud;
-    private double longitud;
+    private Double latitud;
+    private Double longitud;
     private String disposicion;  // "Disponible", "Ocupado"
 
     public Repartidor() {
@@ -29,19 +29,19 @@ public class Repartidor extends Usuario {
     //Constructor, getter y setter
 
 
-    public double getLatitud() {
+    public Double getLatitud() {
         return latitud;
     }
 
-    public void setLatitud(double latitud) {
+    public void setLatitud(Double latitud) {
         this.latitud = latitud;
     }
 
-    public double getLongitud() {
+    public Double getLongitud() {
         return longitud;
     }
 
-    public void setLongitud(double longitud) {
+    public void setLongitud(Double longitud) {
         this.longitud = longitud;
     }
 

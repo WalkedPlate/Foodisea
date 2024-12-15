@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,31 +8,40 @@
     android:layout_height="match_parent"
     tools:context=".activity.repartidor.RepartidorDeliveryMapActivity">
 
-    <!-- Título flotante -->
+    <!-- Header con título y botón de cierre -->
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginHorizontal="16dp">
 
-        <!-- Título de la actividad (sin usar Toolbar) -->
         <TextView
             android:id="@+id/estadoOrden"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Entregando orden"
+            android:text="Recogiendo pedido"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@android:color/black"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnClose"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Botón de cierre flotante (X) -->
+        <TextView
+            android:id="@+id/estimatedTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Tiempo estimado: 15 min"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/estadoOrden" />
+
         <ImageButton
             android:id="@+id/btnClose"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginEnd="16dp"
             android:background="@drawable/circle_button_background"
             android:src="@drawable/ic_close"
             app:tint="@android:color/white"
@@ -40,19 +50,19 @@
             app:layout_constraintTop_toTopOf="@id/estadoOrden" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
-        android:id="@+id/mapImage"
+    <!-- Mapa -->
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitCenter"
-        android:src="@drawable/mapa" />
+        android:layout_height="match_parent" />
 
     <!-- BottomSheet -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/gray_light"
+        android:background="@drawable/bottom_sheet_background"
         app:behavior_hideable="false"
         app:behavior_peekHeight="200dp"
         app:behavior_fitToContents="true"
@@ -62,8 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="16dp"
-            android:paddingBottom="32dp"
-            android:clipToPadding="false">
+            android:paddingBottom="32dp">
 
             <!-- Bottom Sheet Handle -->
             <View
@@ -76,130 +85,166 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- Contenido del BottomSheet -->
+            <!-- Estado del Pedido Badge -->
             <TextView
-                android:id="@+id/restaurantName"
-                android:layout_width="0dp"
+                android:id="@+id/pedidoEstadoBadge"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Burger Bistro"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                android:layout_marginTop="16dp"
                 android:layout_marginHorizontal="16dp"
-                app:layout_constraintTop_toBottomOf="@id/bottomSheetHandle"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/status_badge_background"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:text="Recogiendo pedido"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/bottomSheetHandle" />
 
-            <TextView
-                android:id="@+id/restaurantAddress"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="2118 Thornridge Cir, Syracuse"
-                android:drawableStart="@drawable/ic_location"
-                android:drawablePadding="4dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                app:layout_constraintTop_toBottomOf="@id/restaurantName"
-                app:layout_constraintStart_toStartOf="@id/restaurantName"
-                app:layout_constraintEnd_toEndOf="@id/restaurantName" />
-
-            <TextView
-                android:id="@+id/pickupTime"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="El pedido estará listo a las 4:30 pm"
-                android:drawableStart="@drawable/ic_clock"
-                android:drawablePadding="4dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                app:layout_constraintTop_toBottomOf="@id/restaurantAddress"
-                app:layout_constraintStart_toStartOf="@id/restaurantName"
-                app:layout_constraintEnd_toEndOf="@id/restaurantName" />
-
-            <View
-                android:id="@+id/divider"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="16dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintTop_toBottomOf="@id/pickupTime"
-                app:layout_constraintStart_toStartOf="@id/restaurantName"
-                app:layout_constraintEnd_toEndOf="@id/restaurantName" />
-
+            <!-- Información del pedido -->
             <TextView
                 android:id="@+id/orderNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Orden #162432"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                app:layout_constraintTop_toBottomOf="@id/divider"
-                app:layout_constraintStart_toStartOf="@id/restaurantName" />
+                android:textStyle="bold"
+                android:textSize="18sp"
+                app:layout_constraintTop_toBottomOf="@id/pedidoEstadoBadge"
+                app:layout_constraintStart_toStartOf="parent" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/orderItemsRecyclerView"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/orderTime"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:drawableStart="@drawable/ic_clock"
+                android:drawablePadding="8dp"
+                android:text="Pedido realizado: 15:30"
                 app:layout_constraintTop_toBottomOf="@id/orderNumber"
-                app:layout_constraintStart_toStartOf="@id/restaurantName"
-                app:layout_constraintEnd_toEndOf="@id/restaurantName"
-                tools:listitem="@layout/order_item"
-                tools:itemCount="2" />
+                app:layout_constraintStart_toStartOf="parent" />
 
+            <!-- Detalles del restaurante -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/restaurantCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:layout_constraintTop_toBottomOf="@id/orderTime">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Recoger en"
+                        android:textStyle="bold"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:id="@+id/restaurantName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Burger Bistro"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:id="@+id/restaurantAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:drawableStart="@drawable/ic_location"
+                        android:drawablePadding="8dp"
+                        android:text="2118 Thornridge Cir, Syracuse"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Botón de acción principal -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/pickupButton"
+                android:id="@+id/actionButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_margin="16dp"
                 android:text="RECOGÍ EL PEDIDO"
                 android:textColor="@android:color/white"
                 app:backgroundTint="#FF3A12"
-                app:layout_constraintTop_toBottomOf="@id/orderItemsRecyclerView"
-                app:layout_constraintStart_toStartOf="@id/restaurantName"
-                app:layout_constraintEnd_toEndOf="@id/restaurantName" />
+                app:layout_constraintTop_toBottomOf="@id/restaurantCard"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/customerAvatar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/ic_profile"
-                app:layout_constraintStart_toStartOf="@id/restaurantName"
-                app:layout_constraintTop_toBottomOf="@id/pickupButton" />
-
-            <TextView
-                android:id="@+id/customerName"
-                android:layout_width="0dp"
+            <!-- Información del cliente -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/customerCard"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="John Gomez Doe"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                app:layout_constraintTop_toTopOf="@id/customerAvatar"
-                app:layout_constraintBottom_toBottomOf="@id/customerAvatar"
-                app:layout_constraintStart_toEndOf="@id/customerAvatar"
-                app:layout_constraintEnd_toStartOf="@id/phoneButton" />
+                android:layout_margin="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:layout_constraintTop_toBottomOf="@id/actionButton">
 
-            <ImageButton
-                android:id="@+id/phoneButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_phone"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="8dp"
-                app:layout_constraintTop_toTopOf="@id/customerAvatar"
-                app:layout_constraintBottom_toBottomOf="@id/customerAvatar"
-                app:layout_constraintEnd_toStartOf="@id/chatButton" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/chatButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_chat"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="8dp"
-                app:layout_constraintTop_toTopOf="@id/customerAvatar"
-                app:layout_constraintBottom_toBottomOf="@id/customerAvatar"
-                app:layout_constraintEnd_toEndOf="@id/restaurantName" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Entregar a"
+                        android:textStyle="bold"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:id="@+id/deliveryAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:drawableStart="@drawable/ic_location"
+                        android:drawablePadding="8dp"
+                        android:text="Av. Lima 123, Miraflores"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/customerAvatar"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/ic_profile"/>
+
+                        <TextView
+                            android:id="@+id/customerName"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:text="John Doe"
+                            android:textSize="16sp"/>
+
+                        <ImageButton
+                            android:id="@+id/chatButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_chat"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:padding="8dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

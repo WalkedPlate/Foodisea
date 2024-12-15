@@ -24,6 +24,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
 
     <application
@@ -91,7 +92,11 @@
             </intent-filter>
         </service>
 
-        <service android:name=".service.RepartidorLocationService" />
+        <service
+            android:name=".service.RepartidorLocationService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="location" />
 
         <!-- Google Maps -->
         <meta-data

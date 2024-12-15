@@ -30,11 +30,15 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class PedidoRepository {
     private final FirebaseFirestore db;
     private final NotificationHelper notificationHelper;
     private static final double RADIO_BUSQUEDA_KM = 100.0; // Radio de búsqueda para repartidores
+
+    // Mapa estático para almacenar las distancias
+    private static final Map<String, Double> distanciasCalculadas = new HashMap<>();
 
     public PedidoRepository(Context context) {
         this.db = FirebaseFirestore.getInstance();
@@ -167,6 +171,9 @@ public class PedidoRepository {
     // Obtener pedidos con ubicación cercana para repartidor
     public Task<List<Pedido>> getPedidosCercanosParaRepartidor(double latitudRepartidor,
                                                                double longitudRepartidor) {
+        // Limpiar distancias anteriores
+        distanciasCalculadas.clear();
+
         return db.collection("pedidos")
                 .whereEqualTo("estado", "En preparación")
                 .whereEqualTo("repartidorId", null)
@@ -230,29 +237,33 @@ public class PedidoRepository {
                     return Tasks.whenAllSuccess(pedidosTasks)
                             .continueWith(allTask -> {
                                 List<Pedido> pedidosCercanos = new ArrayList<>();
-
                                 List<Object> rawResults = allTask.getResult();
-                                List<PedidoConDistancia> pedidosConDistancia = new ArrayList<>();
 
-                                // Convertir cada Object en PedidoConDistancia
-                                for (Object obj : rawResults) {
-                                    if (obj instanceof PedidoConDistancia) {
-                                        pedidosConDistancia.add((PedidoConDistancia) obj);
-                                    }
+                                // Ordenar los resultados por distancia antes de filtrar
+                                List<PedidoConDistancia> pedidosConDistancia = rawResults.stream()
+                                        .filter(obj -> obj instanceof PedidoConDistancia)
+                                        .map(obj -> (PedidoConDistancia) obj)
+                                        .filter(pcd -> pcd != null && pcd.getDistanciaTotal() <= RADIO_BUSQUEDA_KM)
+                                        .sorted(Comparator.comparingDouble(PedidoConDistancia::getDistanciaTotal))
+                                        .collect(Collectors.toList());
+
+                                // Procesar los pedidos ordenados
+                                for (PedidoConDistancia pedidoConDist : pedidosConDistancia) {
+                                    distanciasCalculadas.put(
+                                            pedidoConDist.getPedido().getId(),
+                                            pedidoConDist.getDistanciaTotal()
+                                    );
+                                    pedidosCercanos.add(pedidoConDist.getPedido());
                                 }
-
-                                // Filtrar por distancia total y ordenar
-                                pedidosConDistancia.stream()
-                                        .filter(p -> p != null && p.getDistanciaTotal() <= RADIO_BUSQUEDA_KM)
-                                        .sorted(Comparator.comparingDouble(p -> p.getDistanciaTotal()))
-                                        .forEach(p -> pedidosCercanos.add(p.getPedido()));
 
                                 return pedidosCercanos;
                             });
                 });
     }
 
-
+    public double getDistanciaCalculada(String pedidoId) {
+        return distanciasCalculadas.getOrDefault(pedidoId, 0.0);
+    }
 
 
     // Obtener pedidos activos de un repartidor

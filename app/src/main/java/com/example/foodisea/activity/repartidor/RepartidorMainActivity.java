@@ -41,7 +41,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -220,8 +222,6 @@ public class RepartidorMainActivity extends AppCompatActivity implements Reparti
                         binding.tvPedidosTitle.setText(
                                 String.format("Pedidos Disponibles (%d)", pedidos.size())
                         );
-
-                        // Aquí llamamos directamente a obtenerDetallesPedidos
                         obtenerDetallesPedidos(pedidos);
                     }
                 })
@@ -236,9 +236,20 @@ public class RepartidorMainActivity extends AppCompatActivity implements Reparti
                 });
     }
 
-    private void obtenerDetallesPedidos(List<Pedido> pedidosConDistancia) {
-        List<Task<PedidoConDetalles>> tareas = pedidosConDistancia.stream()
-                .map(pedido -> pedidoRepository.getPedidoConDetalles(pedido.getId()))
+    private void obtenerDetallesPedidos(List<Pedido> pedidos) {
+        List<Task<PedidoConDetalles>> tareas = pedidos.stream()
+                .map(pedido -> pedidoRepository.getPedidoConDetalles(pedido.getId())
+                        .continueWith(task -> {
+                            PedidoConDetalles detalles = task.getResult();
+                            double distancia = pedidoRepository.getDistanciaCalculada(pedido.getId());
+
+                            return new PedidoConDetalles(
+                                    detalles.getPedido(),
+                                    detalles.getRestaurante(),
+                                    detalles.getRepartidor(),
+                                    distancia
+                            );
+                        }))
                 .collect(Collectors.toList());
 
         Tasks.whenAllComplete(tareas)
@@ -246,8 +257,7 @@ public class RepartidorMainActivity extends AppCompatActivity implements Reparti
                     List<PedidoConDetalles> pedidosConDetalles = tareas.stream()
                             .map(task -> {
                                 try {
-                                    PedidoConDetalles detalles = ((Task<PedidoConDetalles>) task).getResult();
-                                    return detalles;
+                                    return ((Task<PedidoConDetalles>) task).getResult();
                                 } catch (Exception e) {
                                     return null;
                                 }

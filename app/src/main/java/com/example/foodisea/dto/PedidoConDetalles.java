@@ -10,6 +10,13 @@ public class PedidoConDetalles {
     private Repartidor repartidor;
     private double distancia; // En kilómetros
 
+    public PedidoConDetalles(Pedido pedido, Restaurante restaurante, Repartidor repartidor, double distancia) {
+        this.pedido = pedido;
+        this.restaurante = restaurante;
+        this.repartidor = repartidor;
+        this.distancia = distancia;
+    }
+
     public PedidoConDetalles(Pedido pedido, Restaurante restaurante, Repartidor repartidor) {
         this.pedido = pedido;
         this.restaurante = restaurante;

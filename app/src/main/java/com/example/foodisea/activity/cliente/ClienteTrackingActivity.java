@@ -206,16 +206,27 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
                     restaurante = detalles.getRestaurante();
                     repartidor = detalles.getRepartidor();
 
-                    // Asignar las coordenadas inmediatamente
-                    restauranteLocation = new LatLng(
-                            restaurante.getLatitud(),
-                            restaurante.getLongitud()
-                    );
+                    // Validar y asignar las coordenadas del restaurante
+                    if (restaurante != null &&
+                            restaurante.getLatitud() != null &&
+                            restaurante.getLongitud() != null) {
 
-                    clienteLocation = new LatLng(
-                            currentPedido.getLatitudEntrega(),
-                            currentPedido.getLongitudEntrega()
-                    );
+                        restauranteLocation = new LatLng(
+                                restaurante.getLatitud(),
+                                restaurante.getLongitud()
+                        );
+                    }
+
+                    // Validar y asignar las coordenadas de entrega
+                    if (currentPedido != null &&
+                            currentPedido.getLatitudEntrega() != null &&
+                            currentPedido.getLongitudEntrega() != null) {
+
+                        clienteLocation = new LatLng(
+                                currentPedido.getLatitudEntrega(),
+                                currentPedido.getLongitudEntrega()
+                        );
+                    }
 
                     // Actualizar UI con los datos iniciales
                     updatePedidoInfo();
@@ -234,8 +245,7 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error al obtener detalles del pedido", e);
-                    Toast.makeText(this, "Error al cargar el pedido",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Error al cargar el pedido", Toast.LENGTH_SHORT).show();
                     finish();
                 });
     }
@@ -302,16 +312,100 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
 
                         if (snapshot != null && snapshot.exists()) {
                             Repartidor updatedRepartidor = snapshot.toObject(Repartidor.class);
-                            if (updatedRepartidor != null) {
-                                updatedRepartidor.setId(snapshot.getId()); // Asegúrate de setear el ID
+                            if (updatedRepartidor != null &&
+                                    updatedRepartidor.getLatitud() != null &&
+                                    updatedRepartidor.getLongitud() != null) {
+
+                                updatedRepartidor.setId(snapshot.getId());
                                 repartidor = updatedRepartidor;
+
+                                // Actualizar directamente en el UI thread
                                 runOnUiThread(() -> {
                                     updateRepartidorInfo();
-                                    updateDeliveryRoute();
+                                    updateRepartidorLocation(new LatLng(
+                                            updatedRepartidor.getLatitud(),
+                                            updatedRepartidor.getLongitud()
+                                    ));
                                 });
                             }
                         }
                     });
+        }
+    }
+
+    private void updateRepartidorLocation(LatLng newLocation) {
+        if (mMap == null) return;
+
+        // Validar la nueva ubicación
+        if (newLocation == null) {
+            Log.e(TAG, "Nueva ubicación del repartidor es null");
+            return;
+        }
+
+        // Actualizar o crear el marcador del repartidor
+        if (repartidorMarker == null) {
+            BitmapDescriptor icon = getBitmapDescriptor(R.drawable.ic_delivery_bike);
+            repartidorMarker = mMap.addMarker(new MarkerOptions()
+                    .position(newLocation)
+                    .title("Repartidor: " + repartidor.getNombres())
+                    .icon(icon)
+                    .flat(true)
+                    .anchor(0.5f, 0.5f));
+        } else {
+            animateMarker(repartidorMarker, newLocation);
+        }
+
+        // Actualizar ruta según el estado
+        if (currentPedido != null) {
+            switch (currentPedido.getEstado()) {
+                case Pedido.ESTADO_RECOGIENDO:
+                    // Ruta al restaurante
+                    directionsHelper.getRoute(newLocation, restauranteLocation,
+                            new DirectionsHelper.DirectionsCallback() {
+                                @Override
+                                public void onDirectionsSuccess(List<LatLng> points, String estimatedTime) {
+                                    mMap.clear();
+                                    addMarkerToMap(restauranteLocation, restaurante.getNombre(), R.drawable.ic_restaurant);
+                                    addMarkerToMap(clienteLocation, "Punto de entrega", R.drawable.ic_location_flag);
+                                    drawPolyline(points, R.color.route_active);
+                                    drawDottedRoute(restauranteLocation, clienteLocation,
+                                            ContextCompat.getColor(ClienteTrackingActivity.this, R.color.gray_300));
+                                    binding.estimatedTime.setText("Repartidor llegando al restaurante en " + estimatedTime);
+                                    includeLatLngsInCameraBounds(points);
+                                    // Recrear el marcador del repartidor después de limpiar el mapa
+                                    updateRepartidorMarker(newLocation, repartidor.getNombres());
+                                }
+
+                                @Override
+                                public void onDirectionsFailure(String error) {
+                                    Log.e(TAG, "Error getting directions: " + error);
+                                }
+                            });
+                    break;
+
+                case Pedido.ESTADO_EN_CAMINO:
+                    // Ruta al cliente
+                    directionsHelper.getRoute(newLocation, clienteLocation,
+                            new DirectionsHelper.DirectionsCallback() {
+                                @Override
+                                public void onDirectionsSuccess(List<LatLng> points, String estimatedTime) {
+                                    mMap.clear();
+                                    addMarkerToMap(restauranteLocation, restaurante.getNombre(), R.drawable.ic_restaurant);
+                                    addMarkerToMap(clienteLocation, "Punto de entrega", R.drawable.ic_location_flag);
+                                    drawPolyline(points, R.color.route_active);
+                                    binding.estimatedTime.setText("Llegando en " + estimatedTime);
+                                    includeLatLngsInCameraBounds(points);
+                                    // Recrear el marcador del repartidor después de limpiar el mapa
+                                    updateRepartidorMarker(newLocation, repartidor.getNombres());
+                                }
+
+                                @Override
+                                public void onDirectionsFailure(String error) {
+                                    Log.e(TAG, "Error getting directions: " + error);
+                                }
+                            });
+                    break;
+            }
         }
     }
 
@@ -392,105 +486,115 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
 
         mMap.clear();
 
-        // Siempre añadimos los marcadores de restaurante y punto de entrega
+        // Validar ubicaciones esenciales
+        if (restauranteLocation == null || clienteLocation == null) {
+            Log.e(TAG, "Ubicaciones esenciales son null");
+            return;
+        }
+
+        // Añadir marcadores base siempre
         addMarkerToMap(restauranteLocation, restaurante.getNombre(), R.drawable.ic_restaurant);
         addMarkerToMap(clienteLocation, "Punto de entrega", R.drawable.ic_location_flag);
 
-        // Si hay repartidor, manejamos su marcador y rutas
+        // Si hay repartidor activo, manejar su marcador y rutas
         if (repartidor != null) {
             LatLng repartidorLatLng = new LatLng(repartidor.getLatitud(), repartidor.getLongitud());
-
-            // Actualizamos el marcador del repartidor
+            // Actualizar marcador del repartidor
             updateRepartidorMarker(repartidorLatLng, repartidor.getNombres());
 
-            switch (currentPedido.getEstado()) {
-                case Pedido.ESTADO_RECOGIENDO:
-                    // Ruta del repartidor al restaurante
-                    directionsHelper.getRoute(repartidorLatLng, restauranteLocation,
-                            new DirectionsHelper.DirectionsCallback() {
-                                @Override
-                                public void onDirectionsSuccess(List<LatLng> points, String estimatedTime) {
-                                    drawPolyline(points, R.color.route_active);
-                                    binding.estimatedTime.setText("Llegando al restaurante en " + estimatedTime);
-                                    includeLatLngsInCameraBounds(points);
-                                }
+            if (currentPedido != null) {
+                switch (currentPedido.getEstado()) {
+                    case Pedido.ESTADO_RECOGIENDO:
+                        directionsHelper.getRoute(repartidorLatLng, restauranteLocation,
+                                new DirectionsHelper.DirectionsCallback() {
+                                    @Override
+                                    public void onDirectionsSuccess(List<LatLng> points, String estimatedTime) {
+                                        drawPolyline(points, R.color.route_active);
+                                        binding.estimatedTime.setText("Llegando al restaurante en " + estimatedTime);
+                                        drawDottedRoute(restauranteLocation, clienteLocation,
+                                                ContextCompat.getColor(ClienteTrackingActivity.this, R.color.gray_300));
+                                        includeLatLngsInCameraBounds(points);
+                                        // Redibujar el marcador del repartidor para asegurar que esté visible
+                                        updateRepartidorMarker(repartidorLatLng, repartidor.getNombres());
+                                    }
 
-                                @Override
-                                public void onDirectionsFailure(String error) {
-                                    Log.e(TAG, "Error getting directions: " + error);
-                                }
-                            });
+                                    @Override
+                                    public void onDirectionsFailure(String error) {
+                                        Log.e(TAG, "Error getting directions: " + error);
+                                        adjustMapCameraToMarkers();
+                                    }
+                                });
+                        break;
 
-                    // Ruta punteada del restaurante al destino
-                    drawDottedRoute(restauranteLocation, clienteLocation,
-                            ContextCompat.getColor(this, R.color.gray_300));
-                    break;
+                    case Pedido.ESTADO_EN_CAMINO:
+                        directionsHelper.getRoute(repartidorLatLng, clienteLocation,
+                                new DirectionsHelper.DirectionsCallback() {
+                                    @Override
+                                    public void onDirectionsSuccess(List<LatLng> points, String estimatedTime) {
+                                        drawPolyline(points, R.color.route_active);
+                                        binding.estimatedTime.setText("Llegando en " + estimatedTime);
+                                        includeLatLngsInCameraBounds(points);
+                                        // Redibujar el marcador del repartidor para asegurar que esté visible
+                                        updateRepartidorMarker(repartidorLatLng, repartidor.getNombres());
+                                    }
 
-                case Pedido.ESTADO_EN_CAMINO:
-                    // Solo dibujamos la ruta activa al punto de entrega
-                    directionsHelper.getRoute(repartidorLatLng, clienteLocation,
-                            new DirectionsHelper.DirectionsCallback() {
-                                @Override
-                                public void onDirectionsSuccess(List<LatLng> points, String estimatedTime) {
-                                    drawPolyline(points, R.color.route_active);
-                                    binding.estimatedTime.setText("Llegando en " + estimatedTime);
-                                    includeLatLngsInCameraBounds(points);
-                                }
-
-                                @Override
-                                public void onDirectionsFailure(String error) {
-                                    Log.e(TAG, "Error getting directions: " + error);
-                                }
-                            });
-                    break;
+                                    @Override
+                                    public void onDirectionsFailure(String error) {
+                                        Log.e(TAG, "Error getting directions: " + error);
+                                        adjustMapCameraToMarkers();
+                                    }
+                                });
+                        break;
+                }
             }
+        } else {
+            // Si no hay repartidor, ajustar la cámara para mostrar los puntos base
+            adjustMapCameraToMarkers();
         }
-        else {
-            // Si estamos en estado inicial, solo ajustamos la cámara
-            switch (currentPedido.getEstado()) {
-                case Pedido.ESTADO_RECIBIDO:
-                case Pedido.ESTADO_EN_PREPARACION:
-                    adjustMapCamera();
-                    break;
-            }
-        }
-        // En los estados Recibido y En preparación no dibujamos ninguna línea
-        adjustMapCamera(); // Ajustar la cámara para mostrar los marcadores
     }
-    private void adjustMapCamera() {
+
+    private void adjustMapCameraToMarkers() {
         if (mMap == null) return;
 
         try {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            boolean hasPoints = false;
 
-            // Siempre incluir restaurante y punto de entrega
-            builder.include(restauranteLocation);
-            builder.include(clienteLocation);
-
-            // Si hay repartidor, incluir su ubicación
-            if (repartidor != null) {
-                builder.include(new LatLng(repartidor.getLatitud(), repartidor.getLongitud()));
+            // Incluir restaurante si está disponible
+            if (restauranteLocation != null) {
+                builder.include(restauranteLocation);
+                hasPoints = true;
             }
 
-            // Construir los límites
-            LatLngBounds bounds = builder.build();
+            // Incluir punto de entrega si está disponible
+            if (clienteLocation != null) {
+                builder.include(clienteLocation);
+                hasPoints = true;
+            }
 
-            // Obtener el ancho y alto de la pantalla
-            int width = getResources().getDisplayMetrics().widthPixels;
-            int height = getResources().getDisplayMetrics().heightPixels;
+            // Incluir repartidor si está disponible
+            if (repartidor != null) {
+                LatLng repartidorLatLng = new LatLng(repartidor.getLatitud(), repartidor.getLongitud());
+                builder.include(repartidorLatLng);
+                hasPoints = true;
+            }
 
-            // Calcular el padding (20% del ancho de pantalla)
-            int padding = (int) (width * 0.20);
+            if (hasPoints) {
+                // Obtener el ancho y alto de la pantalla
+                int width = getResources().getDisplayMetrics().widthPixels;
+                int height = getResources().getDisplayMetrics().heightPixels;
 
-            // Crear el update de cámara
-            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+                // Calcular el padding (20% del ancho de pantalla)
+                int padding = (int) (width * 0.20);
 
-            // Animar la cámara
-            mMap.animateCamera(cu);
+                // Construir los límites y animar la cámara
+                LatLngBounds bounds = builder.build();
+                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+                mMap.animateCamera(cu);
+            }
         } catch (Exception e) {
-            Log.e(TAG, "Error adjusting camera", e);
-
-            // Si falla, intentar un zoom out para mostrar toda el área
+            Log.e(TAG, "Error adjusting camera to markers", e);
+            // Si falla, hacer un zoom out al restaurante como fallback
             if (restauranteLocation != null) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(restauranteLocation, 13f));
             }
@@ -534,18 +638,19 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
 
     // Método para actualizar el marcador del repartidor con icono de moto
     private void updateRepartidorMarker(LatLng position, String nombre) {
-        if (mMap == null) return;
+        if (mMap == null || position == null) return;
 
         try {
             if (repartidorMarker == null) {
-                BitmapDescriptor icon = getBitmapDescriptor(R.drawable.ic_delivery_bike);
-                repartidorMarker = mMap.addMarker(new MarkerOptions()
+                MarkerOptions markerOptions = new MarkerOptions()
                         .position(position)
                         .title("Repartidor: " + nombre)
-                        .icon(icon)
-                        .flat(true)
-                        .anchor(0.5f, 0.5f));
-            } else if (!repartidorMarker.getPosition().equals(position)) {
+                        .icon(getBitmapDescriptor(R.drawable.ic_delivery_bike))
+                        .anchor(0.5f, 0.5f)
+                        .flat(true);
+
+                repartidorMarker = mMap.addMarker(markerOptions);
+            } else {
                 animateMarker(repartidorMarker, position);
             }
         } catch (Exception e) {
@@ -618,21 +723,10 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
                 return BitmapDescriptorFactory.defaultMarker();
             }
 
-            int width = vectorDrawable.getIntrinsicWidth();
-            int height = vectorDrawable.getIntrinsicHeight();
-            // Si el drawable no tiene tamaño intrínseco, usar valores por defecto
-            if (width <= 0) width = 48;
-            if (height <= 0) height = 48;
-
-            vectorDrawable.setBounds(0, 0, width, height);
-            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            vectorDrawable.setBounds(0, 0, 48, 48); // Forzar un tamaño fijo
+            Bitmap bitmap = Bitmap.createBitmap(48, 48, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
             vectorDrawable.draw(canvas);
-
-            // Asegurarse de que el bitmap no sea nulo
-            if (bitmap == null) {
-                return BitmapDescriptorFactory.defaultMarker();
-            }
 
             return BitmapDescriptorFactory.fromBitmap(bitmap);
         } catch (Exception e) {
@@ -640,6 +734,7 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
             return BitmapDescriptorFactory.defaultMarker();
         }
     }
+
     private void updatePedidoInfo() {
         if (currentPedido == null) return;
 
@@ -803,6 +898,9 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
             }
         }
     }
+
+
+
 
     @Override
     protected void onDestroy() {
