@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
 import com.example.foodisea.activity.superadmin.SuperAdminDetSoliRepartidorActivity;
 import com.example.foodisea.databinding.ItemSoliRepartidorBinding;
@@ -47,15 +48,16 @@ public class SolicitudesAdapter extends RecyclerView.Adapter<SolicitudesAdapter.
         holder.binding.tvUserName.setText(nombreCompleto);
         holder.binding.tvCorreo.setText(usuario.getCorreo());
 
+        // Cargar la imagen usando Glide
         if (!usuario.getFoto().isEmpty()) {
-            int imageResId = context.getResources().getIdentifier(usuario.getFoto(), "drawable", context.getPackageName());
-            if (imageResId != 0) {
-                holder.binding.ivUserPhoto.setImageResource(imageResId);
-            } else {
-                holder.binding.ivUserPhoto.setImageResource(R.drawable.ic_usuarios); // Imagen por defecto si no se encuentra
-            }
+            Glide.with(context)
+                    .load(usuario.getFoto())  // URL o ruta local de la imagen
+                    .placeholder(R.drawable.ic_usuarios)  // Imagen por defecto
+                    .error(R.drawable.ic_usuarios)  // Imagen en caso de error
+                    .circleCrop()  // Imagen redondeada
+                    .into(holder.binding.ivUserPhoto);
         } else {
-            holder.binding.ivUserPhoto.setImageResource(R.drawable.ic_usuarios); // Imagen por defecto si no hay imágenes
+            holder.binding.ivUserPhoto.setImageResource(R.drawable.ic_usuarios);  // Imagen por defecto si no hay foto
         }
 
         // Navegar a SuperAdminDetSoliRepartidorActivity al hacer clic en el ítem

@@ -18,10 +18,9 @@
 
         <ImageView
             android:id="@+id/ivUserPhoto"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:layout_gravity="center"
-            android:background="@drawable/rounded_background"
             android:scaleType="centerCrop" />
 
         <LinearLayout
