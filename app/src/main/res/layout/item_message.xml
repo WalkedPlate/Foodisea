@@ -1,93 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:background="@color/background">
 
-
-    <!-- Imagen del receptor (alineada a la izquierda) -->
+    <!-- Imagen del receptor -->
     <ImageView
         android:id="@+id/receiverProfileImage"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/rounded_person_24"
+        android:src="@drawable/ic_profile"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Hora de envío del receptor -->
-    <TextView
-        android:id="@+id/receiverTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="8:11 pm"
-        android:textSize="12sp"
-        android:textColor="@android:color/darker_gray"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="12dp"
-        app:layout_constraintStart_toEndOf="@id/receiverProfileImage"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone" />
-
-    <!-- Burbuja del mensaje del receptor -->
+    <!-- Burbuja de mensaje del receptor -->
     <TextView
         android:id="@+id/receiverMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mensaje del receptor"
-        android:background="@drawable/receiver_bubble"
-        android:textColor="@android:color/black"
+        android:background="@drawable/bubble_receiver"
         android:padding="12dp"
-        android:layout_marginStart="8dp"
+        android:textColor="@android:color/black"
+        android:text="Hola, ¿cómo estás?"
+        android:textSize="16sp"
+        android:layout_marginBottom="4dp"
+        android:visibility="gone"
         app:layout_constraintStart_toEndOf="@id/receiverProfileImage"
-        app:layout_constraintTop_toBottomOf="@id/receiverTime"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:visibility="gone" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Imagen del remitente (alineada a la derecha) -->
+    <!-- Hora del receptor -->
+    <TextView
+        android:id="@+id/receiverTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="8:11 PM"
+        android:textSize="12sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginStart="8dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/receiverProfileImage"
+        app:layout_constraintTop_toBottomOf="@id/receiverMessage" />
+
+    <!-- Imagen del remitente -->
     <ImageView
         android:id="@+id/senderProfileImage"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
+        android:layout_marginBottom="4dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/rounded_person_24"
+        android:src="@drawable/ic_profile"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Hora de envío del remitente -->
-    <TextView
-        android:id="@+id/senderTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="8:10 pm"
-        android:textSize="12sp"
-        android:textColor="@android:color/darker_gray"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="12dp"
-        app:layout_constraintEnd_toStartOf="@id/senderProfileImage"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone" />
-
-    <!-- Burbuja del mensaje del remitente -->
+    <!-- Burbuja de mensaje del remitente -->
     <TextView
         android:id="@+id/senderMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mensaje del remitente"
-        android:background="@drawable/sender_bubble"
-        android:textColor="@android:color/white"
+        android:background="@drawable/bubble_sender"
         android:padding="12dp"
-        android:layout_marginEnd="8dp"
+        android:textColor="@android:color/white"
+        android:text="¡Todo bien, gracias!"
+        android:textSize="16sp"
+        android:layout_marginBottom="4dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@id/senderProfileImage"
-        app:layout_constraintTop_toBottomOf="@id/senderTime"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:visibility="gone" />
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Hora del remitente -->
+    <TextView
+        android:id="@+id/senderTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="8:12 PM"
+        android:textSize="12sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/senderProfileImage"
+        app:layout_constraintTop_toBottomOf="@id/senderMessage" />
 </androidx.constraintlayout.widget.ConstraintLayout>

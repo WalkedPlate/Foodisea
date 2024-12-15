@@ -89,6 +89,7 @@ public class RepartidorDeliveryMapActivity extends AppCompatActivity implements 
 
     // Data
     private String pedidoId;
+    private String chatId;
     private Pedido currentPedido;
     private Restaurante restaurante;
     private ListenerRegistration pedidoListener;
@@ -111,6 +112,13 @@ public class RepartidorDeliveryMapActivity extends AppCompatActivity implements 
         pedidoId = getIntent().getStringExtra("pedidoId");
         if (pedidoId == null) {
             Toast.makeText(this, "Error: No se encontró el pedido", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        // Obtener chatId del intent
+        chatId = getIntent().getStringExtra("chatId");
+        if (chatId == null) {
+            Toast.makeText(this, "Error: No se encontró el chat", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -140,6 +148,7 @@ public class RepartidorDeliveryMapActivity extends AppCompatActivity implements 
                 Intent intent = new Intent(this, RepartidorChatActivity.class);
                 intent.putExtra("clienteId", currentPedido.getClienteId());
                 intent.putExtra("pedidoId", pedidoId);
+                intent.putExtra("chatid",chatId);
                 startActivity(intent);
             }
         });

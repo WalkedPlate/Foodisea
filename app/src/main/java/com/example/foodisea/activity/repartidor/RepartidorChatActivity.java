@@ -1,6 +1,7 @@
 package com.example.foodisea.activity.repartidor;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,15 +13,27 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.repartidor.MessageAdapter;
 import com.example.foodisea.databinding.ActivityRepartidorChatBinding;
+import com.example.foodisea.manager.SessionManager;
+import com.example.foodisea.model.Mensaje;
 import com.example.foodisea.model.Message;
+import com.example.foodisea.repository.ChatRepository;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RepartidorChatActivity extends AppCompatActivity {
 
     private MessageAdapter messageAdapter;
-    private List<Message> messageList;
+    private List<Mensaje> messageList;
+    private ChatRepository chatRepository;
+    private String chatId;
+    private String emisorId;
 
     ActivityRepartidorChatBinding binding;
 
@@ -29,30 +42,49 @@ public class RepartidorChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
 
-        // binding
         binding = ActivityRepartidorChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Configurar los insets de la ventana para adaptarse a las barras del sistema
-        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
-        // Inicializar RecyclerView usando binding
-        binding.recyclerViewMessages.setLayoutManager(new LinearLayoutManager(this));
-
-        // Inicializar lista de mensajes y agregar mensajes de prueba
+        // Inicializar variables
+        chatRepository = new ChatRepository();
         messageList = new ArrayList<>();
-        messageList.add(new Message("¿Estás en camino?", true, R.drawable.rounded_person_24, "8:10 pm"));
-        messageList.add(new Message("Sí, estoy en camino al restaurante", false, R.drawable.rounded_person_24, "8:11 pm"));
-        messageList.add(new Message("Toca el timbre al llegar", true, R.drawable.rounded_person_24, "8:20 pm"));
-        messageList.add(new Message("Ok, eso haré cuando llegue", false, R.drawable.rounded_person_24, "8:25 pm"));
-        messageList.add(new Message("Gracias", true, R.drawable.rounded_person_24, "8:25 pm"));
+        chatId = getIntent().getStringExtra("chatid");
+        emisorId = getIntent().getStringExtra("clienteId");
 
-        // Inicializar el adaptador y asignarlo al RecyclerView
+        // Configuración del RecyclerView
+        binding.recyclerViewMessages.setLayoutManager(new LinearLayoutManager(this));
         messageAdapter = new MessageAdapter(this, messageList);
         binding.recyclerViewMessages.setAdapter(messageAdapter);
+
+        // Escuchar mensajes en Firestore
+        escucharMensajes();
+
+        // Configurar botón de enviar
+        binding.sendButton.setOnClickListener(v -> enviarMensaje());
+    }
+
+    private void escucharMensajes() {
+        chatRepository.getMensajes(chatId, mensajes -> {
+            messageList.clear();
+            messageList.addAll(mensajes);
+            messageAdapter.notifyDataSetChanged();
+            binding.recyclerViewMessages.scrollToPosition(messageList.size() - 1);
+        }, e -> Toast.makeText(this, "Error al obtener mensajes: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    private void enviarMensaje() {
+        String texto = binding.messageInput.getText().toString().trim();
+        if (texto.isEmpty()) return;
+
+        Mensaje mensaje = new Mensaje();
+        mensaje.setChatId(chatId);
+        mensaje.setEmisorId(emisorId);
+        mensaje.setTexto(texto);
+        mensaje.setTimestamp(System.currentTimeMillis());
+        mensaje.setTipo("texto");
+
+        chatRepository.enviarMensaje(mensaje, unused -> {
+            binding.messageInput.setText(""); // Limpiar el campo de texto
+        }, e -> Toast.makeText(this, "Error al enviar mensaje: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }

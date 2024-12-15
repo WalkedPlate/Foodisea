@@ -22,6 +22,7 @@ import com.example.foodisea.model.Pedido;
 import com.example.foodisea.model.Producto;
 import com.example.foodisea.model.ProductoCantidad;
 import com.example.foodisea.model.Restaurante;
+import com.example.foodisea.repository.ChatRepository;
 import com.example.foodisea.repository.PedidoRepository;
 import com.example.foodisea.repository.ProductoRepository;
 import com.example.foodisea.repository.UsuarioRepository;
@@ -41,6 +42,7 @@ public class RepartidorVerPedidoActivity extends AppCompatActivity {
     private ProductoRepository productoRepository;
     private LoadingDialog loadingDialog;
     private String pedidoId;
+    private final ChatRepository chatRepository = new ChatRepository();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,14 +177,24 @@ public class RepartidorVerPedidoActivity extends AppCompatActivity {
     private void aceptarPedido(Pedido pedido) {
         loadingDialog.show("Aceptando pedido...");
         String repartidorId = SessionManager.getInstance(this).getRepartidorActual().getId();
+        String restauranteId = pedido.getRestauranteId(); // Asegúrate de tener este dato en el pedido.
 
         pedidoRepository.asignarRepartidorAPedido(pedido.getId(), repartidorId)
                 .addOnSuccessListener(aVoid -> {
-                    loadingDialog.dismiss();
-                    Intent intent = new Intent(this, RepartidorDeliveryMapActivity.class);
-                    intent.putExtra("pedidoId", pedido.getId());
-                    startActivity(intent);
-                    finish();
+                    // Crear el chat
+                    chatRepository.crearChat(pedido.getId(), restauranteId, repartidorId)
+                            .addOnSuccessListener(chatId -> {
+                                loadingDialog.dismiss();
+                                Intent intent = new Intent(this, RepartidorDeliveryMapActivity.class);
+                                intent.putExtra("pedidoId", pedido.getId());
+                                intent.putExtra("chatId", chatId); // Pasamos el ID del chat creado.
+                                startActivity(intent);
+                                finish();
+                            })
+                            .addOnFailureListener(e -> {
+                                loadingDialog.dismiss();
+                                Toast.makeText(this, "Error al crear el chat", Toast.LENGTH_SHORT).show();
+                            });
                 })
                 .addOnFailureListener(e -> {
                     loadingDialog.dismiss();
