@@ -2,25 +2,40 @@ package com.example.foodisea.activity.superadmin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.foodisea.R;
+import com.example.foodisea.adapter.superAdmin.SolicitudesAdapter;
 import com.example.foodisea.databinding.ActivitySuperAdminSolicitudesRepartidorBinding;
+import com.example.foodisea.model.Usuario;
+import com.example.foodisea.repository.UsuarioRepository;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SuperAdminSolicitudesRepartidorActivity extends AppCompatActivity {
 
     ActivitySuperAdminSolicitudesRepartidorBinding binding;
+    UsuarioRepository usuarioRepository;
+    private List<Usuario> listaUsuarios = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeComponents();
         setupListeners();
+
+        usuarioRepository = new UsuarioRepository();
+        obtenerUsuarios();
     }
 
     /**
@@ -55,5 +70,26 @@ public class SuperAdminSolicitudesRepartidorActivity extends AppCompatActivity {
             startActivity(home);
             finish();
         });
+    }
+
+    public void obtenerUsuarios(){
+        List<String> estadosPermitidos = Arrays.asList("Pendiente");
+
+        usuarioRepository.getUsuariosPorTipoYEstados("Repartidor", estadosPermitidos)
+                .addOnSuccessListener(usuarios -> {
+                    listaUsuarios = usuarios;
+                    setupReciclerView();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al cargar los usuarios: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.d("error", e.getMessage());
+                });
+
+    }
+
+    public void setupReciclerView(){
+        SolicitudesAdapter adapter = new SolicitudesAdapter(this, listaUsuarios,usuarioRepository);
+        binding.rvSolicitudes.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvSolicitudes.setAdapter(adapter);
     }
 }

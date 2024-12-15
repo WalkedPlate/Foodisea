@@ -41,6 +41,9 @@
             android:name=".activity.repartidor.RepartidorPedidosActivosActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.superadmin.SuperAdminDetSoliRepartidorActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.repartidor.RepartidorEditarPerfilActivity"
             android:exported="false" />
         <activity

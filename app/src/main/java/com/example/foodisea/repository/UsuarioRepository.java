@@ -304,6 +304,26 @@ public class UsuarioRepository {
                 });
     }
 
+    public Task<List<Usuario>> getUsuariosPorTipoYEstados(String tipoUsuario, List<String> estadosPermitidos) {
+        return db.collection(COLLECTION_USUARIOS)
+                .whereEqualTo("tipoUsuario", tipoUsuario) // Filtrar por tipoUsuario
+                .get()
+                .continueWith(task -> {
+                    List<Usuario> usuarios = new ArrayList<>();
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            Usuario usuario = doc.toObject(Usuario.class);
+                            // Verificar si el estado está en la lista de estados permitidos
+                            if (usuario != null && estadosPermitidos.contains(usuario.getEstado())) {
+                                usuario.setId(doc.getId()); // Establecer ID del documento
+                                usuarios.add(usuario);
+                            }
+                        }
+                    }
+                    return usuarios;
+                });
+    }
+
     public Task<List<AdministradorRestaurante>> getAdministradoresRestaurantes(){
         return db.collection(COLLECTION_USUARIOS)
                 .whereEqualTo("tipoUsuario","AdministradorRestaurante")

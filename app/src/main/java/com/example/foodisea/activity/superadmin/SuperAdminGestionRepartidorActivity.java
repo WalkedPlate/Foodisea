@@ -22,6 +22,7 @@ import com.example.foodisea.model.Usuario;
 import com.example.foodisea.repository.UsuarioRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SuperAdminGestionRepartidorActivity extends AppCompatActivity {
@@ -80,33 +81,11 @@ public class SuperAdminGestionRepartidorActivity extends AppCompatActivity {
         });
     }
 
-    // Método que devuelve una lista de usuarios de ejemplo
-    private List<Usuario> getUsuariosList() {
-        List<Usuario> usuarioList = new ArrayList<>();
-
-        // Agregar usuarios de diferentes tipos
-        usuarioList.add(new Usuario("1", "Juan", "Pérez", "juan.perez@mail.com", "123456789", "123 Calle Falsa","DNI",  "12345678", "01/01/1990", "", "Activo", "Cliente"));
-        usuarioList.add(new Usuario("2", "María", "Gómez", "maria.gomez@mail.com", "987654321", "456 Avenida Real", "DNI", "87654321", "02/02/1985", "", "Inactivo", "Cliente"));
-        usuarioList.add(new Usuario("3", "Carlos", "López", "carlos.lopez@mail.com", "112233445", "789 Calle Principal","DNI",  "65432189", "03/03/1988", "", "Activo", "Repartidor"));
-        usuarioList.add(new Usuario("4", "Ana", "Ramírez", "ana.ramirez@mail.com", "123789456", "321 Calle Secundaria", "DNI", "13254687", "04/04/1991", "", "Activo", "AdministradorRestaurante"));
-        usuarioList.add(new Usuario("4", "Ana", "Ramírez", "ana.ramirez@mail.com", "123789456", "321 Calle Secundaria","DNI",  "13254687", "04/04/1991", "", "Activo", "Repartidor"));
-        usuarioList.add(new Usuario("4", "Ana", "Ramírez", "ana.ramirez@mail.com", "123789456", "321 Calle Secundaria","DNI",  "13254687", "04/04/1991", "", "Activo", "AdministradorRestaurante"));
-        usuarioList.add(new Usuario("4", "Ana", "Ramírez", "ana.ramirez@mail.com", "123789456", "321 Calle Secundaria", "DNI", "13254687", "04/04/1991", "", "Activo", "Repartidor"));
-        usuarioList.add(new Usuario("4", "Ana", "Ramírez", "ana.ramirez@mail.com", "123789456", "321 Calle Secundaria", "DNI", "13254687", "04/04/1991", "", "Activo", "AdministradorRestaurante"));
-
-        // Filtrar solo los usuarios de tipo "Cliente"
-        List<Usuario> usuariosClientes = new ArrayList<>();
-        for (Usuario usuario : usuarioList) {
-            if ("Repartidor".equals(usuario.getTipoUsuario())) {
-                usuariosClientes.add(usuario);
-            }
-        }
-
-        return usuariosClientes;
-    }
 
     public void obtenerUsuarios(){
-        usuarioRepository.getUsuariosPorTipo("Repartidor")
+        List<String> estadosPermitidos = Arrays.asList("Activo", "Inactivo");
+
+        usuarioRepository.getUsuariosPorTipoYEstados("Repartidor", estadosPermitidos)
                 .addOnSuccessListener(usuarios -> {
                     listaUsuarios = usuarios;
                     setupReciclerView();
@@ -115,6 +94,7 @@ public class SuperAdminGestionRepartidorActivity extends AppCompatActivity {
                     Toast.makeText(this, "Error al cargar los usuarios: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.d("error", e.getMessage());
                 });
+
     }
 
     public void setupReciclerView(){
