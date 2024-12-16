@@ -13,7 +13,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.foodisea.R;
+import com.example.foodisea.model.AdministradorRestaurante;
 import com.example.foodisea.model.Pedido;
+import com.example.foodisea.model.Restaurante;
 import com.example.foodisea.model.Usuario;
 import com.example.foodisea.repository.UsuarioRepository;
 import com.google.android.gms.tasks.Task;
@@ -250,5 +252,90 @@ public class NotificationHelper {
                 .addOnFailureListener(e ->
                         Log.e(TAG, "Error al obtener pedido: " + e.getMessage()));
     }
+
+
+    // ADMIN REST:---------------------------------------------------------------------------------------------------------------------
+    public void enviarNotificacionNuevoPedidoRestaurante(Pedido pedido) {
+        db.collection("restaurantes")
+                .document(pedido.getRestauranteId())
+                .get()
+                .addOnSuccessListener(restauranteDoc -> {
+                    Restaurante restaurante = restauranteDoc.toObject(Restaurante.class);
+                    if (restaurante != null && restaurante.getAdministradorId() != null) {
+                        db.collection("usuarios")
+                                .document(restaurante.getAdministradorId())
+                                .get()
+                                .addOnSuccessListener(adminDoc -> {
+                                    AdministradorRestaurante admin = adminDoc.toObject(AdministradorRestaurante.class);
+                                    if (admin != null && admin.getFcmToken() != null) {
+                                        String pedidoFormateado = String.format("#%s",
+                                                pedido.getId().substring(0, 5).toUpperCase());
+
+                                        String titulo = "🔔 Nuevo pedido";
+                                        String mensaje = String.format("%s | S./%.2f",
+                                                pedidoFormateado, pedido.getMontoTotal());
+
+                                        Map<String, String> data = new HashMap<>();
+                                        data.put("tipo", "nuevo_pedido_restaurante");
+                                        data.put("pedidoId", pedido.getId());
+                                        data.put("restauranteId", pedido.getRestauranteId());
+                                        data.put("montoTotal", String.valueOf(pedido.getMontoTotal()));
+
+                                        enviarNotificacionFCM(admin.getFcmToken(), titulo, mensaje, data);
+                                    }
+                                });
+                    }
+                });
+    }
+
+    public void enviarNotificacionCambioEstadoPedidoRestaurante(Pedido pedido, String estadoAnterior) {
+        db.collection("restaurantes")
+                .document(pedido.getRestauranteId())
+                .get()
+                .addOnSuccessListener(restauranteDoc -> {
+                    Restaurante restaurante = restauranteDoc.toObject(Restaurante.class);
+                    if (restaurante != null && restaurante.getAdministradorId() != null) {
+                        db.collection("usuarios")
+                                .document(restaurante.getAdministradorId())
+                                .get()
+                                .addOnSuccessListener(adminDoc -> {
+                                    AdministradorRestaurante admin = adminDoc.toObject(AdministradorRestaurante.class);
+                                    if (admin != null && admin.getFcmToken() != null) {
+                                        String titulo = "Estado actualizado";
+                                        String mensaje = generarMensajeEstadoPedidoRestaurante(pedido, estadoAnterior);
+
+                                        Map<String, String> data = new HashMap<>();
+                                        data.put("tipo", "cambio_estado_pedido_restaurante");
+                                        data.put("pedidoId", pedido.getId());
+                                        data.put("estadoAnterior", estadoAnterior);
+                                        data.put("estadoNuevo", pedido.getEstado());
+
+                                        enviarNotificacionFCM(admin.getFcmToken(), titulo, mensaje, data);
+                                    }
+                                });
+                    }
+                });
+    }
+
+    private String generarMensajeEstadoPedidoRestaurante(Pedido pedido, String estadoAnterior) {
+        String pedidoFormateado = String.format("#%s",
+                pedido.getId().substring(0, 5).toUpperCase());
+
+        switch (pedido.getEstado()) {
+            case "Recibido":
+                return String.format("🔔 %s | Pedido recibido", pedidoFormateado);
+            case "En preparación":
+                return String.format("👨‍🍳 %s | En cocina", pedidoFormateado);
+            case "Recogiendo pedido":
+                return String.format("🛵 %s | Repartidor en camino", pedidoFormateado);
+            case "En camino":
+                return String.format("📦 %s | En ruta al cliente", pedidoFormateado);
+            case "Entregado":
+                return String.format("✅ %s | Entregado", pedidoFormateado);
+            default:
+                return String.format("ℹ️ %s | Estado: %s", pedidoFormateado, pedido.getEstado());
+        }
+    }
+
 
 }

@@ -154,19 +154,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 }
                 break;
 
-            case "nuevo_pedido_restaurante":
-                if ("AdministradorRestaurante".equals(tipoUsuario)) {
-                    titulo = "Nuevo Pedido";
-                    mensaje = "Has recibido un nuevo pedido en tu restaurante";
-                    String pedidoId = data.get("pedidoId");
-                    if (pedidoId != null) {
-                        intent = new Intent(this, AdminResPedidosActivity.class);
-                        intent.putExtra("pedidoId", pedidoId);
-                        intent.putExtra("abrirPedido", true);
-                    }
-                }
-                break;
-
             case "verificacion_completa":
                 if ("Cliente".equals(tipoUsuario)) {
                     intent = new Intent(this, ClienteConfirmacionEntregaActivity.class);
@@ -176,6 +163,61 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     intent = new Intent(this, RepartidorConfirmacionEntregaActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+                }
+                break;
+
+            case "nuevo_pedido_restaurante":
+                if ("AdministradorRestaurante".equals(tipoUsuario)) {
+                    String pedidoFormateado = String.format("#%s",
+                            data.get("pedidoId").substring(0, 5).toUpperCase());
+                    titulo = "🔔 Nuevo pedido";
+                    mensaje = String.format("%s | $%s",
+                            pedidoFormateado, data.get("montoTotal"));
+
+                    String pedidoId = data.get("pedidoId");
+                    if (pedidoId != null) {
+                        intent = new Intent(this, AdminResPedidosActivity.class);
+                        intent.putExtra("pedidoId", pedidoId);
+                        intent.putExtra("abrirPedido", true);
+                    }
+                }
+                break;
+
+            case "cambio_estado_pedido_restaurante":
+                if ("AdministradorRestaurante".equals(tipoUsuario)) {
+                    String pedidoFormateado = String.format("#%s",
+                            data.get("pedidoId").substring(0, 5).toUpperCase());
+                    String estadoNuevo = data.get("estadoNuevo");
+
+                    // Seleccionar emoji según el estado
+                    String emoji;
+                    switch (estadoNuevo) {
+                        case "En preparación":
+                            emoji = "👨‍🍳";
+                            break;
+                        case "Recogiendo pedido":
+                            emoji = "🛵";
+                            break;
+                        case "En camino":
+                            emoji = "📦";
+                            break;
+                        case "Entregado":
+                            emoji = "✅";
+                            break;
+                        default:
+                            emoji = "ℹ️";
+                    }
+
+                    titulo = "Estado actualizado";
+                    mensaje = String.format("%s %s | %s",
+                            emoji, pedidoFormateado, estadoNuevo);
+
+                    String pedidoId = data.get("pedidoId");
+                    if (pedidoId != null) {
+                        intent = new Intent(this, AdminResPedidosActivity.class);
+                        intent.putExtra("pedidoId", pedidoId);
+                        intent.putExtra("abrirPedido", true);
+                    }
                 }
                 break;
 

@@ -54,6 +54,9 @@ public class PedidoRepository {
                     String pedidoId = task.getResult().getId();
                     pedido.setId(pedidoId);
 
+                    // Notificar al restaurante sobre el nuevo pedido
+                    notificationHelper.enviarNotificacionNuevoPedidoRestaurante(pedido);
+
                     // Crear la verificación de entrega
                     VerificacionEntrega verificacion = new VerificacionEntrega(pedidoId);
                     return db.collection("verificaciones_entrega")
@@ -111,8 +114,15 @@ public class PedidoRepository {
                                 if (updateTask.isSuccessful() && pedido != null) {
                                     pedido.setId(pedidoId);
                                     pedido.setEstado(nuevoEstado);
-                                    // Enviar notificación del cambio de estado
+
+                                    // Enviar notificación del cambio de estado al cliente
                                     notificationHelper.enviarNotificacionCambioEstadoPedido(
+                                            pedido,
+                                            estadoAnterior
+                                    );
+
+                                    // Enviar notificación del cambio de estado al restaurante/Administrador
+                                    notificationHelper.enviarNotificacionCambioEstadoPedidoRestaurante(
                                             pedido,
                                             estadoAnterior
                                     );
