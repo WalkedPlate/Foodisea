@@ -13,8 +13,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VerificacionEntregaRepository {
@@ -62,6 +64,45 @@ public class VerificacionEntregaRepository {
                 });
     }
 
+    private Task<Void> manejarFinalizacionVerificacion(String verificacionId) {
+        Log.d("VerificacionRepo", "Manejando finalización de verificación...");
+        return verificacionCollection.document(verificacionId).get()
+                .continueWithTask(docTask -> {
+                    VerificacionEntrega verificacion = docTask.getResult().toObject(VerificacionEntrega.class);
+                    if (verificacion != null) {
+                        return FirebaseFirestore.getInstance()
+                                .collection("pedidos")
+                                .document(verificacion.getPedidoId())
+                                .get()
+                                .continueWithTask(pedidoTask -> {
+                                    String repartidorId = pedidoTask.getResult().getString("repartidorId");
+
+                                    List<Task<Void>> tasks = new ArrayList<>();
+
+                                    tasks.add(FirebaseFirestore.getInstance()
+                                            .collection("pedidos")
+                                            .document(verificacion.getPedidoId())
+                                            .update(
+                                                    "estado", "Entregado",
+                                                    "estadoVerificacion", "COMPLETADO"
+                                            ));
+
+                                    tasks.add(FirebaseFirestore.getInstance()
+                                            .collection("usuarios")
+                                            .document(repartidorId)
+                                            .update("disposicion", "Disponible"));
+
+                                    NotificationHelper notificationHelper = new NotificationHelper(context);
+                                    notificationHelper.enviarNotificacionVerificacionCompletada(verificacion.getPedidoId());
+
+                                    return Tasks.whenAll(tasks);
+                                });
+                    }
+                    return Tasks.forResult(null);
+                });
+    }
+
+
     public Task<Void> confirmarEntrega(String id) {
         Log.d("VerificacionRepo", "Iniciando confirmación de entrega para id: " + id);
 
@@ -79,29 +120,13 @@ public class VerificacionEntregaRepository {
                 })
                 .continueWithTask(task -> {
                     if (task.isSuccessful() && Boolean.TRUE.equals(task.getResult())) {
-                        return verificacionCollection.document(id).get()
-                                .continueWithTask(docTask -> {
-                                    VerificacionEntrega verificacion = docTask.getResult().toObject(VerificacionEntrega.class);
-                                    if (verificacion != null) {
-                                        // Crear notificationHelper con contexto
-                                        NotificationHelper notificationHelper = new NotificationHelper(context);
-                                        // Solo pasar el pedidoId, el helper se encargará de obtener los usuarios
-                                        notificationHelper.enviarNotificacionVerificacionCompletada(verificacion.getPedidoId());
-
-                                        return FirebaseFirestore.getInstance()
-                                                .collection("pedidos")
-                                                .document(verificacion.getPedidoId())
-                                                .update(
-                                                        "estado", "ENTREGADO",
-                                                        "estadoVerificacion", "COMPLETADO"
-                                                );
-                                    }
-                                    return Tasks.forResult(null);
-                                });
+                        return manejarFinalizacionVerificacion(id);
                     }
                     return Tasks.forResult(null);
                 });
     }
+
+
 
     public Task<Void> confirmarPago(String id) {
         Log.d("VerificacionRepo", "Iniciando confirmación de pago para id: " + id);
@@ -114,39 +139,16 @@ public class VerificacionEntregaRepository {
                 .update(updates)
                 .continueWithTask(task -> {
                     if (task.isSuccessful()) {
-                        Log.d("VerificacionRepo", "Pago marcado como confirmado, verificando estado completo...");
                         return verificarConfirmacionesCompletas(id);
                     }
-                    Log.e("VerificacionRepo", "Error al marcar pago: " + task.getException());
                     return Tasks.forException(task.getException());
                 })
                 .continueWithTask(task -> {
                     if (task.isSuccessful() && Boolean.TRUE.equals(task.getResult())) {
-                        Log.d("VerificacionRepo", "Ambas confirmaciones completas, actualizando pedido...");
-                        return verificacionCollection.document(id).get()
-                                .continueWithTask(docTask -> {
-                                    VerificacionEntrega verificacion = docTask.getResult().toObject(VerificacionEntrega.class);
-                                    if (verificacion != null) {
-                                        Log.d("VerificacionRepo", "Actualizando estado del pedido: " + verificacion.getPedidoId());
-                                        return FirebaseFirestore.getInstance()
-                                                .collection("pedidos")
-                                                .document(verificacion.getPedidoId())
-                                                .update(
-                                                        "estado", "Entregado",
-                                                        "estadoVerificacion", "COMPLETADO"
-                                                );
-                                    }
-                                    Log.e("VerificacionRepo", "Verificación no encontrada");
-                                    return Tasks.forResult(null);
-                                });
+                        return manejarFinalizacionVerificacion(id);
                     }
-                    Log.d("VerificacionRepo", "Confirmación de pago completada sin actualizar pedido");
                     return Tasks.forResult(null);
-                })
-                .addOnSuccessListener(__ ->
-                        Log.d("VerificacionRepo", "Proceso de confirmación de pago completado exitosamente"))
-                .addOnFailureListener(e ->
-                        Log.e("VerificacionRepo", "Error en proceso de confirmación de pago: " + e.getMessage()));
+                });
     }
 
     // Método útil para verificar si ambas confirmaciones están completas
@@ -164,22 +166,5 @@ public class VerificacionEntregaRepository {
                 });
     }
 
-    public Task<Boolean> esUltimaVerificacion(String verificacionId) {
-        Log.d("VerificacionRepo", "Verificando si es última verificación: " + verificacionId);
-        return verificacionCollection.document(verificacionId)
-                .get()
-                .continueWith(task -> {
-                    if (task.isSuccessful()) {
-                        VerificacionEntrega verificacion = task.getResult().toObject(VerificacionEntrega.class);
-                        boolean entregaConfirmada = verificacion.isEntregaConfirmada();
-                        boolean pagoConfirmado = verificacion.isPagoConfirmado();
-
-                        Log.d("VerificacionRepo", "Estado verificaciones - Entrega: " + entregaConfirmada + ", Pago: " + pagoConfirmado);
-                        // Si ambas están confirmadas, esta fue la última
-                        return entregaConfirmada && pagoConfirmado;
-                    }
-                    return false;
-                });
-    }
 
 }

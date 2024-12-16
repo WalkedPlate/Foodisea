@@ -168,20 +168,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 break;
 
             case "verificacion_completa":
-                String rol = data.get("rol");
-                String pedidoId = data.get("pedidoId");
-                String destino = data.get("destino");
-
-                if ("CLIENTE".equals(rol) && "Cliente".equals(tipoUsuario)) {
-                    titulo = "¡Pedido completado!";
-                    mensaje = "La entrega y el pago han sido confirmados";
+                if ("Cliente".equals(tipoUsuario)) {
                     intent = new Intent(this, ClienteConfirmacionEntregaActivity.class);
-                    intent.putExtra("pedidoId", pedidoId);
-                } else if ("REPARTIDOR".equals(rol) && "Repartidor".equals(tipoUsuario)) {
-                    titulo = "¡Pedido completado!";
-                    mensaje = "La entrega y el pago han sido confirmados";
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                } else if ("Repartidor".equals(tipoUsuario)) {
                     intent = new Intent(this, RepartidorConfirmacionEntregaActivity.class);
-                    intent.putExtra("pedidoId", pedidoId);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 }
                 break;
 

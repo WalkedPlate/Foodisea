@@ -137,7 +137,7 @@ public class ClienteScannerQrActivity extends AppCompatActivity {
         Log.d("QRVerification", "Código QR detectado: " + codigoQR);
         Log.d("QRVerification", "PedidoId actual: " + pedidoId);
 
-        isScanning = false;  // Desactivamos el scanning al inicio de la verificación
+        isScanning = false;
 
         verificacionRepository.obtenerPorPedidoId(pedidoId)
                 .addOnSuccessListener(document -> {
@@ -152,10 +152,12 @@ public class ClienteScannerQrActivity extends AppCompatActivity {
                                         verificacionRepository.confirmarPago(verificacionId)
                                                 .addOnSuccessListener(aVoid -> {
                                                     Log.d("QRVerification", "Pago confirmado exitosamente");
-                                                    vibrar();
-                                                    Toast.makeText(this, "Pago confirmado exitosamente",
-                                                            Toast.LENGTH_SHORT).show();
-                                                    finish();
+                                                    runOnUiThread(() -> {
+                                                        vibrar();
+                                                        Toast.makeText(this, "Pago confirmado exitosamente",
+                                                                Toast.LENGTH_SHORT).show();
+                                                        finish();
+                                                    });
                                                 })
                                                 .addOnFailureListener(e -> {
                                                     Log.e("QRVerification", "Error al confirmar pago: " + e.getMessage());

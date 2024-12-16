@@ -135,12 +135,11 @@ public class RepartidorScannerQrActivity extends AppCompatActivity {
         }
         lastScanTimestamp = currentTime;
 
-        Log.d("QRVerification", "=== INICIO VERIFICACIÓN ===");
+        Log.d("QRVerification", "=== INICIO VERIFICACIÓN ENTREGA ===");
         Log.d("QRVerification", "Código QR detectado: " + codigoQR);
         Log.d("QRVerification", "PedidoId actual: " + pedidoId);
 
-        // Quitamos la verificación inicial de isScanning
-        isScanning = false;  // Lo ponemos en false al inicio de la verificación
+        isScanning = false;
 
         verificacionRepository.obtenerPorPedidoId(pedidoId)
                 .addOnSuccessListener(document -> {
@@ -155,16 +154,16 @@ public class RepartidorScannerQrActivity extends AppCompatActivity {
                                         verificacionRepository.confirmarEntrega(verificacionId)
                                                 .addOnSuccessListener(aVoid -> {
                                                     Log.d("QRVerification", "Entrega confirmada exitosamente");
-                                                    // Ya no necesitamos verificar aquí porque las notificaciones
-                                                    // se manejarán automáticamente
-                                                    vibrar();
-                                                    Toast.makeText(this, "Entrega confirmada exitosamente",
-                                                            Toast.LENGTH_SHORT).show();
-                                                    finish();
+                                                    runOnUiThread(() -> {
+                                                        vibrar();
+                                                        Toast.makeText(this, "Entrega confirmada exitosamente",
+                                                                Toast.LENGTH_SHORT).show();
+                                                        finish();
+                                                    });
                                                 })
                                                 .addOnFailureListener(e -> {
                                                     Log.e("QRVerification", "Error al confirmar entrega: " + e.getMessage());
-                                                    isScanning = true;  // Reactivamos el scanning si hay error
+                                                    isScanning = true;
                                                     runOnUiThread(() ->
                                                             Toast.makeText(this, "Error al confirmar la entrega",
                                                                     Toast.LENGTH_SHORT).show()
@@ -172,7 +171,7 @@ public class RepartidorScannerQrActivity extends AppCompatActivity {
                                                 });
                                     } else {
                                         Log.d("QRVerification", "QR inválido");
-                                        isScanning = true;  // Reactivamos el scanning si el QR es inválido
+                                        isScanning = true;
                                         runOnUiThread(() ->
                                                 Toast.makeText(this, "Código QR inválido",
                                                         Toast.LENGTH_SHORT).show()
@@ -181,7 +180,7 @@ public class RepartidorScannerQrActivity extends AppCompatActivity {
                                 })
                                 .addOnFailureListener(e -> {
                                     Log.e("QRVerification", "Error en validación: " + e.getMessage());
-                                    isScanning = true;  // Reactivamos el scanning si hay error
+                                    isScanning = true;
                                     runOnUiThread(() ->
                                             Toast.makeText(this, "Error al validar el código QR",
                                                     Toast.LENGTH_SHORT).show()
@@ -189,12 +188,12 @@ public class RepartidorScannerQrActivity extends AppCompatActivity {
                                 });
                     } else {
                         Log.e("QRVerification", "No se encontró verificación");
-                        isScanning = true;  // Reactivamos el scanning si no hay verificación
+                        isScanning = true;
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.e("QRVerification", "Error al obtener verificación: " + e.getMessage());
-                    isScanning = true;  // Reactivamos el scanning si hay error
+                    isScanning = true;
                 });
     }
     private void vibrar() {
