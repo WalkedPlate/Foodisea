@@ -203,7 +203,7 @@ public class ClienteEditarPerfilActivity extends AppCompatActivity implements On
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         StorageReference storageRef = FirebaseStorage.getInstance().getReference("profile_photos/").child(userId + ".jpg");
 
-        // Subir la foto a Firebase Storage
+        // Si hay una nueva foto, subirla
         if (fotoUri != null) {
             storageRef.putFile(fotoUri)
                     .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
@@ -212,8 +212,9 @@ public class ClienteEditarPerfilActivity extends AppCompatActivity implements On
                         showError("Error al subir la foto de perfil");
                     });
         } else {
-            // Sin foto nueva, actualizar solo teléfono y dirección
-            updateFirestoreData(userId, telefono, direccion, null);
+            // Si no hay nueva foto, usar la URL existente del intent
+            String existingPhotoUrl = getIntent().getStringExtra("foto");
+            updateFirestoreData(userId, telefono, direccion, existingPhotoUrl);
         }
     }
 
@@ -233,6 +234,14 @@ public class ClienteEditarPerfilActivity extends AppCompatActivity implements On
                 .update(updates)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
+                    // Crear intent para devolver datos actualizados
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("telefono", telefono);
+                    resultIntent.putExtra("direccion", direccion);
+                    resultIntent.putExtra("foto", fotoUrl);
+
+                    // Enviar resultado y cerrar actividad
+                    setResult(RESULT_OK, resultIntent);
                     finish();
                 })
                 .addOnFailureListener(e -> {

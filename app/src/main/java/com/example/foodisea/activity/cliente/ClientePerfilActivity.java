@@ -168,4 +168,13 @@ public class ClientePerfilActivity extends AppCompatActivity {
         super.onDestroy();
         binding = null;
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Actualizar cliente actual y recargar UI
+        clienteActual = sessionManager.getClienteActual();
+        updateUIWithUserData();
+    }
 }
