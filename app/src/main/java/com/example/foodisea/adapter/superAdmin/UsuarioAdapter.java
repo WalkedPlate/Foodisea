@@ -2,6 +2,7 @@ package com.example.foodisea.adapter.superAdmin;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -80,8 +81,8 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
                         String accion = isChecked ? "Activado" : "Desactivado";
                         String detalles = "Usuario: " + nombreCompleto + " - ha sido: " + accion;
                         logManager.createLog(usuario.getId(), accion, detalles)
-                                .addOnSuccessListener(documentReference -> Toast.makeText(context, "Log registrado", Toast.LENGTH_SHORT).show())
-                                .addOnFailureListener(e -> Toast.makeText(context, "Error al registrar log: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                                .addOnSuccessListener(documentReference -> Log.d("LogManager", "Log registrado exitosamente con ID: " + documentReference.getId()))
+                                .addOnFailureListener(e -> Log.e("LogManager", "Error al registrar log: " + e.getMessage(), e));
                     })
                     .addOnFailureListener(e -> Toast.makeText(context, "Error al actualizar: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         });

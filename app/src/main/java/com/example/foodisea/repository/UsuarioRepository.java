@@ -3,6 +3,7 @@ package com.example.foodisea.repository;
 import android.net.Uri;
 import android.util.Log;
 
+import com.example.foodisea.manager.LogManager;
 import com.example.foodisea.model.AdministradorRestaurante;
 import com.example.foodisea.model.Cliente;
 import com.example.foodisea.model.Producto;
@@ -178,6 +179,7 @@ public class UsuarioRepository {
      * @return Task<Usuario> con los datos del usuario registrado
      */
     public Task<Usuario> registerUser(String email, String password, Usuario usuario, @Nullable Uri photoUri) {
+        LogManager logManager = new LogManager();
         return auth.createUserWithEmailAndPassword(email, password)
                 .continueWithTask(task -> {
                     if (!task.isSuccessful()) {
@@ -192,7 +194,15 @@ public class UsuarioRepository {
                         return db.collection(COLLECTION_USUARIOS)
                                 .document(uid)
                                 .set(usuario)
-                                .continueWith(firestoreTask -> usuario);
+                                .continueWith(firestoreTask -> {
+                                    // Registrar log de éxito
+                                    logManager.createLog(
+                                            uid,
+                                            "REGISTER_USER",
+                                            "Usuario registrado exitosamente con email: " + email
+                                    );
+                                    return usuario;
+                                });
                     }
 
                     // Si hay foto, subirla primero y luego registrar usuario
@@ -203,7 +213,15 @@ public class UsuarioRepository {
                                 return db.collection(COLLECTION_USUARIOS)
                                         .document(uid)
                                         .set(usuario)
-                                        .continueWith(firestoreTask -> usuario);
+                                        .continueWith(firestoreTask -> {
+                                            // Registrar log de éxito
+                                            logManager.createLog(
+                                                    uid,
+                                                    "REGISTER_USER",
+                                                    "Usuario registrado exitosamente email: " + email
+                                            );
+                                            return usuario;
+                                        });
                             });
                 });
     }
