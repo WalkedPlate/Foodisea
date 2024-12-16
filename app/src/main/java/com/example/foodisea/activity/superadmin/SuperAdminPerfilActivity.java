@@ -158,4 +158,11 @@ public class SuperAdminPerfilActivity extends AppCompatActivity {
         super.onDestroy();
         binding = null;
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        superadminActual = sessionManager.getSuperadminActual();
+        updateUIWithUserData();
+    }
 }

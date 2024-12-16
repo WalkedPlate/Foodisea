@@ -191,6 +191,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:layout_marginBottom="24dp">
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -200,7 +201,6 @@
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
                     android:hint="Latitud"
-                    android:visibility="gone"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     app:boxStrokeColor="@color/border_light"
                     app:hintTextColor="@color/border_light">
@@ -221,7 +221,6 @@
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:hint="Longitud"
-                    android:visibility="gone"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     app:boxStrokeColor="@color/border_light"
                     app:hintTextColor="@color/border_light">
@@ -248,7 +247,7 @@
                 android:textColor="@android:color/white"
                 android:fontFamily="@font/sen_font"
                 android:padding="14dp"
-                android:layout_margin="8dp"
+                android:layout_marginVertical="24dp"
                 android:textStyle="bold"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

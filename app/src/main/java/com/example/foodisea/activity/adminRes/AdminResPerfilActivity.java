@@ -165,4 +165,10 @@ public class AdminResPerfilActivity extends AppCompatActivity {
         binding = null;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        administradorRestauranteActual = sessionManager.getAdminRestauranteActual();
+        updateUIWithUserData();
+    }
 }

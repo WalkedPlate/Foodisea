@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -20,6 +22,27 @@ public class RepartidorInfoPerfilActivity extends AppCompatActivity {
     ActivityRepartidorInfoPerfilBinding binding;
     private SessionManager sessionManager;
     private Repartidor repartidorActual;
+
+    // Declaración del ActivityResultLauncher
+    private final ActivityResultLauncher<Intent> editProfileLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    // Obtener datos enviados desde la actividad de edición
+                    String telefono = result.getData().getStringExtra("telefono");
+                    String direccion = result.getData().getStringExtra("direccion");
+                    String foto = result.getData().getStringExtra("foto");
+
+                    // Actualizar datos del cliente actual
+                    repartidorActual.setTelefono(telefono);
+                    repartidorActual.setDireccion(direccion);
+                    repartidorActual.setFoto(foto);
+
+                    // Actualizar UI
+                    updateUIWithUserData();
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +124,10 @@ public class RepartidorInfoPerfilActivity extends AppCompatActivity {
         binding.btnBack.setOnClickListener(v -> finish());
         binding.btnEdit.setOnClickListener(v -> {
             Intent intent = new Intent(this, RepartidorEditarPerfilActivity.class);
-            startActivity(intent);
+            intent.putExtra("telefono", repartidorActual.getTelefono());
+            intent.putExtra("direccion", repartidorActual.getDireccion());
+            intent.putExtra("foto", repartidorActual.getFoto());
+            editProfileLauncher.launch(intent);  // Lanzar actividad de edición
         });
     }
 }

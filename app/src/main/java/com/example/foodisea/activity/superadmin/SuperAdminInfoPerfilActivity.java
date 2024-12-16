@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -21,6 +23,26 @@ public class SuperAdminInfoPerfilActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private Superadmin superadminActual;
 
+    // Declaración del ActivityResultLauncher
+    private final ActivityResultLauncher<Intent> editProfileLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    // Obtener datos enviados desde la actividad de edición
+                    String telefono = result.getData().getStringExtra("telefono");
+                    String direccion = result.getData().getStringExtra("direccion");
+                    String foto = result.getData().getStringExtra("foto");
+
+                    // Actualizar datos del cliente actual
+                    superadminActual.setTelefono(telefono);
+                    superadminActual.setDireccion(direccion);
+                    superadminActual.setFoto(foto);
+
+                    // Actualizar UI
+                    updateUIWithUserData();
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +89,10 @@ public class SuperAdminInfoPerfilActivity extends AppCompatActivity {
         binding.btnBack.setOnClickListener(v -> finish());
         binding.btnEdit.setOnClickListener(v -> {
             Intent intent = new Intent(this, SuperAdminEditarPerfilActivity.class);
+            intent.putExtra("telefono", superadminActual.getTelefono());
+            intent.putExtra("direccion", superadminActual.getDireccion());
+            intent.putExtra("foto", superadminActual.getFoto());
+            editProfileLauncher.launch(intent);  // Lanzar actividad de edición
             startActivity(intent);
         });
     }

@@ -161,4 +161,11 @@ public class RepartidorPerfilActivity extends AppCompatActivity {
         binding = null;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        repartidorActual = sessionManager.getRepartidorActual();
+        updateUIWithUserData();
+    }
+
 }
