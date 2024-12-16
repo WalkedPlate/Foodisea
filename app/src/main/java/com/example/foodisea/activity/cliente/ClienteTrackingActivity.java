@@ -235,9 +235,7 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         bottomSheetBehavior.setHideable(false);
         bottomSheetBehavior.setFitToContents(true);
-        bottomSheetBehavior.setPeekHeight(
-                getResources().getDimensionPixelSize(R.dimen.bottom_sheet_peek_height)
-        );
+
 
         // Mejorar las animaciones del BottomSheet
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -466,7 +464,6 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
                                     drawDottedRoute(restauranteLocation, clienteLocation,
                                             ContextCompat.getColor(ClienteTrackingActivity.this, R.color.gray_300));
                                     binding.estimatedTime.setText("Repartidor llegando al restaurante en " + estimatedTime);
-                                    bottomSheetBehavior.setPeekHeight(110);
                                     includeLatLngsInCameraBounds(points);
                                     // Recrear el marcador del repartidor después de limpiar el mapa
                                     updateRepartidorMarker(newLocation, repartidor.getNombres());
