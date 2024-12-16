@@ -108,11 +108,6 @@ public class ClientePerfilActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        binding.llMyOrders.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ClienteHistorialPedidosActivity.class);
-            startActivity(intent);
-        });
-
         binding.llLogout.setOnClickListener(v -> showLogoutConfirmationDialog());
     }
 

@@ -75,26 +75,6 @@
                     android:fontFamily="@font/sen_font"/>
 
 
-
-                <!-- Pedidos -->
-<!--                app:backgroundTint="#A0FFE57F"-->
-<!--                <Button-->
-<!--                    android:id="@+id/btnPedidos"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="60dp"-->
-<!--                    android:layout_marginVertical="10dp"-->
-<!--                    android:layout_marginHorizontal="16dp"-->
-<!--                    android:background="@drawable/search_view_bg"-->
-<!--                    android:paddingHorizontal="50dp"-->
-<!--                    app:backgroundTint="@color/btn_light"-->
-<!--                    android:text="Dale seguimiento a tu orden"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:textSize="16sp"-->
-<!--                    android:fontFamily="@font/sen_font"-->
-<!--                    app:icon="@drawable/ic_delivery_dining"-->
-<!--                    app:iconTint="#000000"-->
-<!--                    app:iconSize="26dp" />-->
-
                 <!-- Restaurantes -->
                 <TextView
                     android:id="@+id/tvRestaurants"
