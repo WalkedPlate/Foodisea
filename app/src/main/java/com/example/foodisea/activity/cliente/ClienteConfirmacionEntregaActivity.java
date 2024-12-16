@@ -25,6 +25,7 @@ public class ClienteConfirmacionEntregaActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // Configurar ajustes de EdgeToEdge (si es necesario)
+        EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
