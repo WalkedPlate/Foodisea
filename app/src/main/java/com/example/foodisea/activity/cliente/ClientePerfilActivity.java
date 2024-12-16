@@ -108,6 +108,12 @@ public class ClientePerfilActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        binding.llChangePass.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ClienteChangePasswordActivity.class);
+            startActivity(intent);
+        });
+
+
         binding.llLogout.setOnClickListener(v -> showLogoutConfirmationDialog());
     }
 

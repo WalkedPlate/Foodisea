@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
+import com.example.foodisea.activity.cliente.ClienteChangePasswordActivity;
 import com.example.foodisea.activity.login.LoginActivity;
 import com.example.foodisea.manager.SessionManager;
 import com.example.foodisea.databinding.ActivitySuperAdminPerfilBinding;
@@ -95,6 +96,10 @@ public class SuperAdminPerfilActivity extends AppCompatActivity {
 
         binding.llPersonalInfo.setOnClickListener(v -> {
             Intent intent = new Intent(this, SuperAdminInfoPerfilActivity.class);
+            startActivity(intent);
+        });
+        binding.llChangePass.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SuperAdminChangePasswordActivity.class);
             startActivity(intent);
         });
 

@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
+import com.example.foodisea.activity.cliente.ClienteChangePasswordActivity;
 import com.example.foodisea.activity.login.LoginActivity;
 import com.example.foodisea.manager.SessionManager;
 import com.example.foodisea.databinding.ActivityRepartidorPerfilBinding;
@@ -100,6 +101,11 @@ public class RepartidorPerfilActivity extends AppCompatActivity {
             Intent intent = new Intent(this, RepartidorInfoPerfilActivity.class);
             startActivity(intent);
         });
+        binding.llChangePass.setOnClickListener(v -> {
+            Intent intent = new Intent(this, RepartidorChangePasswordActivity.class);
+            startActivity(intent);
+        });
+
         binding.llLogout.setOnClickListener(v -> showLogoutConfirmationDialog());
     }
 
