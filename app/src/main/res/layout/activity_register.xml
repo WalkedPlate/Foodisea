@@ -283,7 +283,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="28dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
@@ -338,7 +338,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="28dp">
+                android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilLatitud"
@@ -381,7 +381,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
-            <!-- Sección de contacato -->
+            <!-- Sección de contacto -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

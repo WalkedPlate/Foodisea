@@ -246,7 +246,7 @@ public class AdminResHomeActivity extends AppCompatActivity {
                 .addOnSuccessListener(restaurante -> {
                     if (restaurante != null) {
                         updateUI(restaurante);
-                        loadRestaurantImage(restaurante.getId());
+                        loadRestaurantImage(restaurante.getImagenes().get(0)); // Obtén la primera URL de la lista
                     } else {
                         Toast.makeText(this, "No se encontró el restaurante",
                                 Toast.LENGTH_SHORT).show();
@@ -259,34 +259,25 @@ public class AdminResHomeActivity extends AppCompatActivity {
                 });
     }
 
-    private void loadRestaurantImage(String restaurantId) {
-        StorageReference imageRef = storage.getReference()
-                .child("restaurants")
-                .child(restaurantId)
-                .child("profile.jpg");
-
-        imageRef.getDownloadUrl()
-                .addOnSuccessListener(uri -> {
-                    Glide.with(this)
-                            .load(uri)
-                            .placeholder(R.drawable.restaurant_image)
-                            .error(R.drawable.restaurant_image)
-                            .centerCrop()
-                            .into(binding.imageView2);
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error loading restaurant image", e);
-                    binding.imageView2.setImageResource(R.drawable.restaurant_image);
-                });
+    private void loadRestaurantImage(String imageUrl) {
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Glide.with(this)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.placeholder_image)
+                    .error(R.drawable.placeholder_image)
+                    .centerCrop()
+                    .into(binding.imageView2);
+        } else {
+            binding.imageView2.setImageResource(R.drawable.placeholder_image);
+        }
     }
+
 
     private void updateUI(Restaurante restaurante) {
         binding.nombreRestaurant.setText(restaurante.getNombre());
         binding.descripcionRestaurant.setText(restaurante.getDescripcion());
         binding.tvRestaurantAddress.setText(restaurante.getDireccion());
         binding.tvRestaurantTelef.setText(restaurante.getTelefono());
-        String ratingText = String.format("%.1f", restaurante.getRating());
-        //binding.tvRestaurantRating.setText(ratingText);
     }
 
     private void createNotificationChannel() {
