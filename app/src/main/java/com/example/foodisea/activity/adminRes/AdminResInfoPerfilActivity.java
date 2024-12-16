@@ -64,7 +64,7 @@ public class AdminResInfoPerfilActivity extends AppCompatActivity {
     private void updateUIWithUserData() {
         if (administradorRestauranteActual != null) {
             // Actualizar datos del administrador del restaurante
-            binding.tvTipoDocId.setText(administradorRestauranteActual.getRestauranteId());
+            binding.tvTipoDocId.setText(administradorRestauranteActual.getTipoDocumentoId());
             binding.tvUserName.setText(administradorRestauranteActual.obtenerNombreCompleto());
             binding.tvUserDocId.setText(administradorRestauranteActual.getDocumentoId());
             binding.tvUserBirthdate.setText(administradorRestauranteActual.getFechaNacimiento());

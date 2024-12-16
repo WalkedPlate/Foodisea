@@ -272,13 +272,13 @@ public class SessionManager {
         try {
             switch (usuario.getTipoUsuario()) {
                 case "AdministradorRestaurante":
-                    if (!(usuario instanceof AdministradorRestaurante)) {
-                        Log.e("SessionManager", "Usuario no es instancia de AdministradorRestaurante");
-                        return false;
-                    }
-                    AdministradorRestaurante admin = (AdministradorRestaurante) usuario;
-                    return admin.getRestauranteId() != null && !admin.getRestauranteId().isEmpty();
-
+//                    if (!(usuario instanceof AdministradorRestaurante)) {
+//                        Log.e("SessionManager", "Usuario no es instancia de AdministradorRestaurante");
+//                        return false;
+//                    }
+//                    AdministradorRestaurante admin = (AdministradorRestaurante) usuario;
+//                    return admin.getRestauranteId() != null && !admin.getRestauranteId().isEmpty();
+                    return usuario instanceof AdministradorRestaurante;
                 case "Repartidor":
                     if (!(usuario instanceof Repartidor)) {
                         Log.e("SessionManager", "Usuario no es instancia de Repartidor");

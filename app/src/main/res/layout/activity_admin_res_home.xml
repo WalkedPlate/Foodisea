@@ -48,8 +48,20 @@
             app:icon="@drawable/rounded_orders_24" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tvMessage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="¡Lo sentimos!\n Aún no se le asigna un restaurante."
+        android:textColor="@color/btn_dark"
+        android:fontFamily="@font/sen_font"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:visibility="gone"/>
+
     <!-- Parte scrolleable -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/Home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">

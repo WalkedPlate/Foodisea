@@ -10,6 +10,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -213,13 +215,14 @@ public class AdminResHomeActivity extends AppCompatActivity {
             public void onSessionValid(Usuario usuario) {
                 if (usuario instanceof AdministradorRestaurante) {
                     administradorRestauranteActual = (AdministradorRestaurante) usuario;
-                    Log.d(TAG, "Sesión válida para administrador: " +
-                            administradorRestauranteActual.getId());
-
-                    // Actualizar token FCM después de validar sesión
-                    getFCMToken(() -> {
-                        loadRestaurantData();
-                    });
+                    if (administradorRestauranteActual.getRestauranteId() == null ||
+                            administradorRestauranteActual.getRestauranteId().isEmpty()) {
+                        // Si no tiene restaurante asignado
+                        showNoRestaurantAssignedMessage();
+                    } else {
+                        // Cargar datos del restaurante
+                        getFCMToken(() -> loadRestaurantData());
+                    }
                 } else {
                     Toast.makeText(AdminResHomeActivity.this,
                             "Acceso no autorizado", Toast.LENGTH_SHORT).show();
@@ -233,6 +236,14 @@ public class AdminResHomeActivity extends AppCompatActivity {
                 goToLogin();
             }
         });
+    }
+
+    private void showNoRestaurantAssignedMessage() {
+        // Ocultar las vistas innecesarias
+        binding.btnPedidos.setVisibility(View.GONE);
+        binding.Home.setVisibility(View.GONE);
+
+        binding.tvMessage.setVisibility(View.VISIBLE);
     }
 
     private void loadRestaurantData() {
