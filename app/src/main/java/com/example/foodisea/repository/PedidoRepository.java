@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.foodisea.dto.PedidoConCliente;
 import com.example.foodisea.dto.PedidoConDetalles;
 import com.example.foodisea.dto.PedidoConDistancia;
+import com.example.foodisea.manager.LogManager;
 import com.example.foodisea.model.Cliente;
 import com.example.foodisea.model.CodigoQR;
 import com.example.foodisea.model.Pedido;
@@ -46,7 +47,8 @@ public class PedidoRepository {
     }
 
 
-    public Task<Void> crearPedidoConVerificacion(Pedido pedido) {
+    public Task<Void> crearPedidoConVerificacion(Pedido pedido, Cliente cliente ) {
+        LogManager logManager = new LogManager();
         // Primero creamos el pedido
         return db.collection("pedidos")
                 .add(pedido)
@@ -88,6 +90,23 @@ public class PedidoRepository {
                                                     .update(updates);
                                         });
                             });
+                })
+                .continueWithTask(updateTask -> {
+                    if (!updateTask.isSuccessful()) {
+                        throw updateTask.getException();
+                    }
+
+                    // Registrar un log después de completar el proceso
+                    return logManager.createLog(
+                            cliente.getId(),
+                            "CREAR_PEDIDO",
+                            "Pedido " + pedido.getId() + " creado por " + cliente.getNombres() + " " + cliente.getApellidos()
+                    ).continueWithTask(logTask -> {
+                        if (!logTask.isSuccessful()) {
+                            throw logTask.getException();
+                        }
+                        return Tasks.forResult(null); // Convertir a Task<Void>
+                    });
                 });
     }
 

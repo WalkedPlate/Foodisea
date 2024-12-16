@@ -282,7 +282,7 @@ public class ClienteCheckoutActivity extends AppCompatActivity {
                     pedido.setEstadoVerificacion("PENDIENTE");
 
                     PedidoRepository pedidoRepository = new PedidoRepository(this);
-                    pedidoRepository.crearPedidoConVerificacion(pedido)
+                    pedidoRepository.crearPedidoConVerificacion(pedido,clienteActual)
                             .addOnSuccessListener(aVoid -> {
                                 // Limpiar carrito
                                 carritoRepository.limpiarCarrito(clienteActual.getId(), restauranteId)
