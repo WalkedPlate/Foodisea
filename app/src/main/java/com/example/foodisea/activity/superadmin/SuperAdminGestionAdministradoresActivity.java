@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -29,6 +30,7 @@ public class SuperAdminGestionAdministradoresActivity extends AppCompatActivity 
     UsuarioRepository usuarioRepository;
     private List<Usuario> listaUsuarios = new ArrayList<>();
     LogManager logManager = new LogManager();
+    UsuarioAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,32 +68,27 @@ public class SuperAdminGestionAdministradoresActivity extends AppCompatActivity 
 
         //Obtiene los usuarios de BD y los carga al Recicler View
         obtenerUsuarios();
-    }
 
-    // Método que devuelve una lista de usuarios de ejemplo
-    private List<Usuario> getUsuariosList() {
-        List<Usuario> usuarioList = new ArrayList<>();
-
-        // Agregar usuarios de diferentes tipos
-        usuarioList.add(new Usuario("1", "Juan", "Pérez", "juan.perez@mail.com", "123456789", "123 Calle Falsa","DNI",  "12345678", "01/01/1990", "icon_cliente", "Activo", "Cliente"));
-        usuarioList.add(new Usuario("2", "María", "Gómez", "maria.gomez@mail.com", "987654321", "456 Avenida Real","DNI",  "87654321", "02/02/1985", "icon_cliente", "Inactivo", "Cliente"));
-        usuarioList.add(new Usuario("3", "Carlos", "López", "carlos.lopez@mail.com", "112233445", "789 Calle Principal","DNI",  "65432189", "03/03/1988", "icon_cliente", "Activo", "Repartidor"));
-        usuarioList.add(new Usuario("4", "Ana", "Ramírez", "ana.ramirez@mail.com", "123789456", "321 Calle Secundaria","DNI",  "13254687", "04/04/1991", "icon_cliente", "Activo", "AdministradorRestaurante"));
-        usuarioList.add(new Usuario("4", "Ana", "Ramírez", "ana.ramirez@mail.com", "123789456", "321 Calle Secundaria","DNI",  "13254687", "04/04/1991", "icon_cliente", "Activo", "Repartidor"));
-        usuarioList.add(new Usuario("4", "Ana", "Ramírez", "ana.ramirez@mail.com", "123789456", "321 Calle Secundaria", "DNI", "13254687", "04/04/1991", "icon_cliente", "Activo", "AdministradorRestaurante"));
-        usuarioList.add(new Usuario("4", "Ana", "Ramírez", "ana.ramirez@mail.com", "123789456", "321 Calle Secundaria","DNI",  "13254687", "04/04/1991", "icon_cliente", "Activo", "Repartidor"));
-        usuarioList.add(new Usuario("4", "Ana", "Ramírez", "ana.ramirez@mail.com", "123789456", "321 Calle Secundaria","DNI",  "13254687", "04/04/1991", "icon_cliente", "Activo", "AdministradorRestaurante"));
-
-        // Filtrar solo los usuarios de tipo "Cliente"
-        List<Usuario> usuariosClientes = new ArrayList<>();
-        for (Usuario usuario : usuarioList) {
-            if ("AdministradorRestaurante".equals(usuario.getTipoUsuario())) {
-                usuariosClientes.add(usuario);
+        // Configurar SearchView
+        binding.svRestaurants.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (adapter != null) {
+                    adapter.filter(query);
+                }
+                return true;
             }
-        }
 
-        return usuariosClientes;
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (adapter != null) {
+                    adapter.filter(newText);
+                }
+                return true;
+            }
+        });
     }
+
 
     public void obtenerUsuarios(){
         usuarioRepository.getUsuariosPorTipo("AdministradorRestaurante")
@@ -106,7 +103,7 @@ public class SuperAdminGestionAdministradoresActivity extends AppCompatActivity 
     }
 
     public void setupReciclerView(){
-        UsuarioAdapter adapter = new UsuarioAdapter(this, listaUsuarios,usuarioRepository,logManager);
+        adapter = new UsuarioAdapter(this, listaUsuarios,usuarioRepository,logManager);
         binding.rvUsers.setLayoutManager(new LinearLayoutManager(this));
         binding.rvUsers.setAdapter(adapter);
     }

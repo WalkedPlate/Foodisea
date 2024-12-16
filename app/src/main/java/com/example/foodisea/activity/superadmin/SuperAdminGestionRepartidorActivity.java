@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -31,6 +32,7 @@ public class SuperAdminGestionRepartidorActivity extends AppCompatActivity {
     UsuarioRepository usuarioRepository;
     private List<Usuario> listaUsuarios = new ArrayList<>();
     LogManager logManager = new LogManager();
+    UsuarioAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,25 @@ public class SuperAdminGestionRepartidorActivity extends AppCompatActivity {
 
         //Obtiene los usuarios de BD y los carga al Recicler View
         obtenerUsuarios();
+
+        // Configurar SearchView
+        binding.svRepartidores.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (adapter != null) {
+                    adapter.filter(query);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (adapter != null) {
+                    adapter.filter(newText);
+                }
+                return true;
+            }
+        });
     }
 
     /**
@@ -100,7 +121,7 @@ public class SuperAdminGestionRepartidorActivity extends AppCompatActivity {
     }
 
     public void setupReciclerView(){
-        UsuarioAdapter adapter = new UsuarioAdapter(this, listaUsuarios,usuarioRepository,logManager);
+        adapter = new UsuarioAdapter(this, listaUsuarios,usuarioRepository,logManager);
         binding.rvUsers.setLayoutManager(new LinearLayoutManager(this));
         binding.rvUsers.setAdapter(adapter);
     }
