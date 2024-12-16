@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.adminRes.CartaAdapter;
 import com.example.foodisea.databinding.ActivityAdminResCartaBinding;
+import com.example.foodisea.manager.SessionManager;
+import com.example.foodisea.model.AdministradorRestaurante;
 import com.example.foodisea.model.Producto;
 import com.example.foodisea.repository.ProductoRepository;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,6 +37,8 @@ public class AdminResCartaActivity extends AppCompatActivity {
     private CartaAdapter adapter;
     private List<Producto> listaCompletaProductos = new ArrayList<>();
     private String categoriaSeleccionada = "TODOS"; // Por defecto
+    private SessionManager sessionManager;
+    private AdministradorRestaurante administradorRestauranteActual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,10 @@ public class AdminResCartaActivity extends AppCompatActivity {
 
         // Inicializar repository
         productoRepository = new ProductoRepository();
+
+        //Inicializar al admin
+        sessionManager = SessionManager.getInstance(this);
+        administradorRestauranteActual = sessionManager.getAdminRestauranteActual();
 
         // Resaltar el botón TODOS inicialmente
         binding.btnTodos.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.btn_dark)));
@@ -80,7 +88,7 @@ public class AdminResCartaActivity extends AppCompatActivity {
     }
 
     private void cargarProductos() {
-        String restauranteId = "REST001";
+        String restauranteId = administradorRestauranteActual.getRestauranteId();
 
         productoRepository.obtenerProductosPorRestaurante(restauranteId)
                 .addOnSuccessListener(productos -> {
