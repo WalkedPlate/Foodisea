@@ -189,13 +189,10 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
             }
         });
 
-        binding.btnCall.setOnClickListener(v -> {
-            if (repartidor != null && repartidor.getTelefono() != null) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:" + repartidor.getTelefono()));
-                startActivity(intent);
-            }
+        binding.btnBack.setOnClickListener(view -> {
+            finish();
         });
+
     }
 
     private void startListeningToUpdates() {
@@ -370,6 +367,7 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
                                     drawDottedRoute(restauranteLocation, clienteLocation,
                                             ContextCompat.getColor(ClienteTrackingActivity.this, R.color.gray_300));
                                     binding.estimatedTime.setText("Repartidor llegando al restaurante en " + estimatedTime);
+                                    bottomSheetBehavior.setPeekHeight(110);
                                     includeLatLngsInCameraBounds(points);
                                     // Recrear el marcador del repartidor después de limpiar el mapa
                                     updateRepartidorMarker(newLocation, repartidor.getNombres());
@@ -393,6 +391,7 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
                                     addMarkerToMap(clienteLocation, "Punto de entrega", R.drawable.ic_location_flag);
                                     drawPolyline(points, R.color.route_active);
                                     binding.estimatedTime.setText("Llegando en " + estimatedTime);
+                                    bottomSheetBehavior.setPeekHeight(90);
                                     includeLatLngsInCameraBounds(points);
                                     // Recrear el marcador del repartidor después de limpiar el mapa
                                     updateRepartidorMarker(newLocation, repartidor.getNombres());
