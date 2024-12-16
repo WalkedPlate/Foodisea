@@ -18,6 +18,8 @@ import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.adminRes.ImagePreviewAdapter;
 import com.example.foodisea.databinding.ActivityAdminResNuevoProductoBinding;
+import com.example.foodisea.manager.SessionManager;
+import com.example.foodisea.model.AdministradorRestaurante;
 import com.example.foodisea.model.Producto;
 import com.example.foodisea.repository.ProductoRepository;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -40,6 +42,9 @@ public class AdminResNuevoProductoActivity extends AppCompatActivity {
     private static final int PICK_IMAGES_REQUEST = 1;
     private ImagePreviewAdapter imagePreviewAdapter;
 
+    private SessionManager sessionManager;
+    private AdministradorRestaurante administradorRestauranteActual;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +57,10 @@ public class AdminResNuevoProductoActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Obtener al admin logueado
+        sessionManager = SessionManager.getInstance(this);
+        administradorRestauranteActual = sessionManager.getAdminRestauranteActual();
 
         setupUI();
         setupRecyclerView();
@@ -181,7 +190,7 @@ public class AdminResNuevoProductoActivity extends AppCompatActivity {
         String descripcion = binding.etDescripcion.getText().toString().trim();
         double precio = Double.parseDouble(binding.etPrecio.getText().toString());
         String categoria = binding.spinnerCategoria.getText().toString();
-        String restauranteId = "REST001"; // Restaurante de prueba
+        String restauranteId = administradorRestauranteActual.getRestauranteId(); // Restaurante de prueba
 
         ProductoRepository.UploadProgressListener progressListener = new ProductoRepository.UploadProgressListener() {
             @Override

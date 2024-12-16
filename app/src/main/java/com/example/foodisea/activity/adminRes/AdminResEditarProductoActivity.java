@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.adminRes.ImagePreviewAdapter;
 import com.example.foodisea.databinding.ActivityAdminResEditarProductoBinding;
+import com.example.foodisea.manager.SessionManager;
+import com.example.foodisea.model.AdministradorRestaurante;
 import com.example.foodisea.model.Producto;
 import com.example.foodisea.repository.ProductoRepository;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -36,6 +38,9 @@ public class AdminResEditarProductoActivity extends AppCompatActivity {
     private String productoId;
     private Producto productoActual;
 
+    private SessionManager sessionManager;
+    private AdministradorRestaurante administradorRestauranteActual;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +53,10 @@ public class AdminResEditarProductoActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Obtener al admin logueado
+        sessionManager = SessionManager.getInstance(this);
+        administradorRestauranteActual = sessionManager.getAdminRestauranteActual();
 
         // Obtener ID del producto de los extras
         productoId = getIntent().getStringExtra("PRODUCTO_ID");

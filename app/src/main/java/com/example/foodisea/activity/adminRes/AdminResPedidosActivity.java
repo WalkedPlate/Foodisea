@@ -101,19 +101,9 @@ public class AdminResPedidosActivity extends AppCompatActivity {
     private void validateSession() {
         //loadingDialog.show("Verificando sesión...");
 
-        sessionManager.checkExistingSession(this, new SessionManager.SessionCallback() {
-            @Override
-            public void onSessionValid(Usuario usuario) {
-                administradorRestauranteActual = sessionManager.getAdminRestauranteActual();
-                //loadingDialog.dismiss();
-
-            }
-
-            @Override
-            public void onSessionError() {
-
-            }
-        });
+        // Obtener al admin logueado
+        sessionManager = SessionManager.getInstance(this);
+        administradorRestauranteActual = sessionManager.getAdminRestauranteActual();
     }
 
     private void highlightOrder(String orderId) {
@@ -123,7 +113,7 @@ public class AdminResPedidosActivity extends AppCompatActivity {
 
     //Obtiene lista de pedidos de la BD
     public void obtenerListaPedidos(){
-        pedidoRepository.getPedidosActivosRestaurante("REST001")
+        pedidoRepository.getPedidosActivosRestaurante(administradorRestauranteActual.getRestauranteId())
                 .addOnSuccessListener(pedidos -> {
                     // Guardar la lista completa
                     listaCompletaPedidos = pedidos;

@@ -10,8 +10,13 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
 import com.example.foodisea.databinding.ActivityAdminResEditPerfilBinding;
+import com.example.foodisea.manager.SessionManager;
+import com.example.foodisea.model.AdministradorRestaurante;
 
 public class AdminResEditPerfilActivity extends AppCompatActivity {
+
+    private SessionManager sessionManager;
+    private AdministradorRestaurante administradorRestauranteActual;
 
     ActivityAdminResEditPerfilBinding binding;
 
@@ -20,6 +25,11 @@ public class AdminResEditPerfilActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         initializeComponents();
         setupListeners();
+
+        // Obtener al admin logueado
+        sessionManager = SessionManager.getInstance(this);
+        administradorRestauranteActual = sessionManager.getAdminRestauranteActual();
+
     }
 
     private void initializeComponents() {

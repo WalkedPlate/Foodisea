@@ -13,6 +13,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.foodisea.R;
 import com.example.foodisea.databinding.ActivityAdminResReportesBinding;
 import com.example.foodisea.dto.PedidoConCliente;
+import com.example.foodisea.manager.SessionManager;
+import com.example.foodisea.model.AdministradorRestaurante;
 import com.example.foodisea.model.Pedido;
 import com.example.foodisea.model.Producto;
 import com.example.foodisea.model.ProductoCantidad;
@@ -40,6 +42,9 @@ public class AdminResReportesActivity extends AppCompatActivity {
     private List<PedidoConCliente> listaPedidosConCliente = new ArrayList<>();
     private HashMap<String, String> mapaProductoIdANombre = new HashMap<>();
 
+    private SessionManager sessionManager;
+    private AdministradorRestaurante administradorRestauranteActual;
+
     ActivityAdminResReportesBinding binding;
 
     @Override
@@ -48,6 +53,10 @@ public class AdminResReportesActivity extends AppCompatActivity {
 
         binding = ActivityAdminResReportesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Obtener al admin logueado
+        sessionManager = SessionManager.getInstance(this);
+        administradorRestauranteActual = sessionManager.getAdminRestauranteActual();
 
         // boton
         binding.btnBack.setOnClickListener(view -> finish());
@@ -124,7 +133,7 @@ public class AdminResReportesActivity extends AppCompatActivity {
 
     // Obtiene la lista de productos para construir el mapa de ID a nombre
     public void cargarMapaProductos() {
-        productoRepository.obtenerProductosPorRestaurante("REST001") // Método que obtenga todos los productos
+        productoRepository.obtenerProductosPorRestaurante(administradorRestauranteActual.getRestauranteId()) // Método que obtenga todos los productos
                 .addOnSuccessListener(productos -> {
                     for (Producto producto : productos) {
                         mapaProductoIdANombre.put(producto.getId(), producto.getNombre());

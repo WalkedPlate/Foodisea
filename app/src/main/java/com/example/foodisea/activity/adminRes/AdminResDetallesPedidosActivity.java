@@ -19,6 +19,8 @@ import com.example.foodisea.adapter.adminRes.CartaAdapter;
 import com.example.foodisea.adapter.adminRes.ProductoDetalleAdapter;
 import com.example.foodisea.databinding.ActivityAdminResDetallesPedidosBinding;
 import com.example.foodisea.dto.ProductoClaseCantidad;
+import com.example.foodisea.manager.SessionManager;
+import com.example.foodisea.model.AdministradorRestaurante;
 import com.example.foodisea.model.Producto;
 import com.example.foodisea.model.ProductoCantidad;
 import com.example.foodisea.repository.ProductoRepository;
@@ -38,8 +40,15 @@ public class AdminResDetallesPedidosActivity extends AppCompatActivity {
     private HashMap<String, Producto> mapaProductoIdAProducto = new HashMap<>();
     private List<ProductoClaseCantidad> listaProductosCantidad = new ArrayList<>();
 
+    private SessionManager sessionManager;
+    private AdministradorRestaurante administradorRestauranteActual;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // Obtener al admin logueado
+        sessionManager = SessionManager.getInstance(this);
+        administradorRestauranteActual = sessionManager.getAdminRestauranteActual();
 
         Intent intent = getIntent();
         String idPedido = intent.getStringExtra("idPedido");
@@ -105,7 +114,7 @@ public class AdminResDetallesPedidosActivity extends AppCompatActivity {
 
     // Obtiene la lista de productos para construir el mapa de ID a nombre
     public void cargarMapaProductos() {
-        productoRepository.obtenerProductosPorRestaurante("REST001") // Método que obtenga todos los productos
+        productoRepository.obtenerProductosPorRestaurante(administradorRestauranteActual.getRestauranteId()) // Método que obtenga todos los productos
                 .addOnSuccessListener(productos -> {
                     for (Producto producto : productos) {
                         mapaProductoIdAProducto.put(producto.getId(), producto);

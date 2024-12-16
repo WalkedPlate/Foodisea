@@ -19,6 +19,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.foodisea.R;
 import com.example.foodisea.adapter.adminRes.ImageAdapter;
 import com.example.foodisea.databinding.ActivityAdminResDetallesProductoBinding;
+import com.example.foodisea.manager.SessionManager;
+import com.example.foodisea.model.AdministradorRestaurante;
 import com.example.foodisea.repository.ProductoRepository;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -29,6 +31,9 @@ public class AdminResDetallesProductoActivity extends AppCompatActivity {
     private ProductoRepository productoRepository;
     private String productoId;
     private ImageAdapter imageAdapter;
+
+    private SessionManager sessionManager;
+    private AdministradorRestaurante administradorRestauranteActual;
 
     private final ActivityResultLauncher<Intent> editProductLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -53,6 +58,10 @@ public class AdminResDetallesProductoActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Obtener al admin logueado
+        sessionManager = SessionManager.getInstance(this);
+        administradorRestauranteActual = sessionManager.getAdminRestauranteActual();
 
         productoRepository = new ProductoRepository();
         productoId = getIntent().getStringExtra("PRODUCTO_ID");
