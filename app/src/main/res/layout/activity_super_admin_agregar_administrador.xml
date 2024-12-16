@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:paddingBottom="16dp">
+                android:paddingBottom="28dp">
 
                 <!-- Contenedor circular con imagen de perfil e ícono de cámara -->
                 <FrameLayout
@@ -87,6 +87,15 @@
 
             </LinearLayout>
 
+            <!-- Sección de información personal -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Información personal"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/sen_font"
+                android:layout_marginBottom="8dp"/>
 
             <!-- Nombres -->
             <com.google.android.material.textfield.TextInputLayout
@@ -130,12 +139,35 @@
                     android:maxLength="50" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Seleccionar el tipo de documento -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etTipoDocLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Seleccionar doc. de identidad"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                app:boxStrokeColor="@color/border_light"
+                app:hintTextColor="@color/border_light"
+                app:cursorColor="@color/border_light">
+
+                <AutoCompleteTextView
+                    android:id="@+id/tvTipoDoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:backgroundTint="@color/bg_color"
+                    app:simpleItems="@array/document_types"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <!-- DNI -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/etDniLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="DNI"
+                android:visibility="gone"
                 android:layout_marginBottom="16dp"
                 app:endIconMode="custom"
                 app:endIconDrawable="@drawable/rounded_person_24"
@@ -149,6 +181,50 @@
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:maxLength="8" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Pasaporte -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etPassportLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Pasaporte"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/rounded_person_24"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/border_light"
+                app:hintTextColor="@color/border_light"
+                app:cursorColor="@color/border_light">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPassport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="8"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Carnet de Extranjería -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etExtranjeriaLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Carnet de Extranjería"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/rounded_person_24"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/border_light"
+                app:hintTextColor="@color/border_light"
+                app:cursorColor="@color/border_light">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etExtranjeria"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="9"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Fecha de Nacimiento -->
@@ -169,140 +245,151 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Sección de domicilio -->
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="Datos del domicilio"-->
-<!--                android:textSize="18sp"-->
-<!--                android:textStyle="bold"-->
-<!--                android:layout_marginBottom="16dp"/>-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Datos del domicilio"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/sen_font"
+                android:layout_marginBottom="10dp"/>
+
 
             <!-- Campo de dirección -->
-<!--            <com.google.android.material.textfield.TextInputLayout-->
-<!--                android:id="@+id/etDireccionLayout"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:hint="Domicilio (Calle, número, distrito)"-->
-<!--                android:layout_marginBottom="16dp"-->
-<!--                app:startIconDrawable="@drawable/round_search_24"-->
-<!--                app:endIconMode="clear_text"-->
-<!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                app:boxStrokeColor="@color/border_light"-->
-<!--                app:hintTextColor="@color/border_light"-->
-<!--                app:helperText="Busca una dirección o selecciona en el mapa"-->
-<!--                app:helperTextEnabled="true">-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etDireccionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Domicilio (Calle, número, distrito)"
+                android:layout_marginBottom="16dp"
+                app:startIconDrawable="@drawable/round_search_24"
+                app:endIconMode="clear_text"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/border_light"
+                app:hintTextColor="@color/border_light"
+                app:helperText="Busca una dirección o selecciona en el mapa"
+                app:helperTextEnabled="true">
 
-<!--                <com.google.android.material.textfield.TextInputEditText-->
-<!--                    android:id="@+id/etDireccion"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:inputType="textPostalAddress"-->
-<!--                    android:imeOptions="actionSearch"-->
-<!--                    android:maxLength="100"/>-->
-<!--            </com.google.android.material.textfield.TextInputLayout>-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDireccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPostalAddress"
+                    android:imeOptions="actionSearch"
+                    android:maxLength="100"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Mapa en CardView para consistencia -->
-<!--            <androidx.cardview.widget.CardView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="250dp"-->
-<!--                android:layout_marginBottom="16dp"-->
-<!--                app:cardCornerRadius="8dp"-->
-<!--                app:cardElevation="0dp"-->
-<!--                app:strokeWidth="1dp"-->
-<!--                app:strokeColor="@color/border_light">-->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginBottom="28dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/border_light">
 
-<!--                <FrameLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent">-->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-<!--                    <fragment-->
-<!--                        android:id="@+id/mapView"-->
-<!--                        android:name="com.google.android.gms.maps.SupportMapFragment"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="match_parent"/>-->
+                    <fragment
+                        android:id="@+id/mapView"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
 
-<!--                    &lt;!&ndash; Botones flotantes &ndash;&gt;-->
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_gravity="end|bottom"-->
-<!--                        android:layout_margin="16dp"-->
-<!--                        android:orientation="vertical">-->
+                    <!-- Botones flotantes -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|bottom"
+                        android:layout_margin="16dp"
+                        android:orientation="vertical">
 
-<!--                        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                            android:id="@+id/btnMyLocation"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginBottom="8dp"-->
-<!--                            android:src="@drawable/ic_location_search"-->
-<!--                            app:fabSize="mini"-->
-<!--                            app:backgroundTint="@color/white"-->
-<!--                            app:tint="@color/black"-->
-<!--                            app:borderWidth="0dp"-->
-<!--                            android:contentDescription="Mi ubicación"/>-->
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/btnMyLocation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:src="@drawable/ic_location_search"
+                            app:fabSize="mini"
+                            app:backgroundTint="@color/white"
+                            app:tint="@color/black"
+                            app:borderWidth="0dp"
+                            android:contentDescription="Mi ubicación"/>
 
-<!--                        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                            android:id="@+id/btnAdjustMap"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:src="@drawable/ic_center_map"-->
-<!--                            app:fabSize="mini"-->
-<!--                            app:backgroundTint="@color/white"-->
-<!--                            app:tint="@color/black"-->
-<!--                            app:borderWidth="0dp"-->
-<!--                            android:contentDescription="Centrar mapa"/>-->
-<!--                    </LinearLayout>-->
-<!--                </FrameLayout>-->
-<!--            </androidx.cardview.widget.CardView>-->
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/btnAdjustMap"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_center_map"
+                            app:fabSize="mini"
+                            app:backgroundTint="@color/white"
+                            app:tint="@color/black"
+                            app:borderWidth="0dp"
+                            android:contentDescription="Centrar mapa"/>
+                    </LinearLayout>
+                </FrameLayout>
+            </androidx.cardview.widget.CardView>
 
             <!-- Coordenadas -->
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:layout_marginBottom="16dp">-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
 
-<!--                <com.google.android.material.textfield.TextInputLayout-->
-<!--                    android:id="@+id/tilLatitud"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:layout_marginEnd="8dp"-->
-<!--                    android:hint="Latitud"-->
-<!--                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                    app:boxStrokeColor="@color/border_light"-->
-<!--                    app:hintTextColor="@color/border_light">-->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilLatitud"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:hint="Latitud"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/border_light"
+                    app:hintTextColor="@color/border_light">
 
-<!--                    <com.google.android.material.textfield.TextInputEditText-->
-<!--                        android:id="@+id/txtLatitud"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:inputType="none"-->
-<!--                        android:focusable="false"-->
-<!--                        android:textSize="14sp"/>-->
-<!--                </com.google.android.material.textfield.TextInputLayout>-->
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtLatitud"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:textSize="14sp"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-<!--                <com.google.android.material.textfield.TextInputLayout-->
-<!--                    android:id="@+id/tilLongitud"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:layout_marginStart="8dp"-->
-<!--                    android:hint="Longitud"-->
-<!--                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                    app:boxStrokeColor="@color/border_light"-->
-<!--                    app:hintTextColor="@color/border_light">-->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilLongitud"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:hint="Longitud"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/border_light"
+                    app:hintTextColor="@color/border_light">
 
-<!--                    <com.google.android.material.textfield.TextInputEditText-->
-<!--                        android:id="@+id/txtLongitud"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:inputType="none"-->
-<!--                        android:focusable="false"-->
-<!--                        android:textSize="14sp"/>-->
-<!--                </com.google.android.material.textfield.TextInputLayout>-->
-<!--            </LinearLayout>-->
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtLongitud"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:textSize="14sp"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
+            <!-- Sección de contacto -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Información de contacto"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/sen_font"
+                android:layout_marginBottom="8dp"/>
 
             <!-- Teléfono -->
             <com.google.android.material.textfield.TextInputLayout
@@ -332,7 +419,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Correo electrónico"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="24dp"
                 app:endIconMode="custom"
                 app:endIconDrawable="@drawable/ic_email"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -347,44 +434,6 @@
                     android:maxLength="50" />
             </com.google.android.material.textfield.TextInputLayout>
 
-
-            <!-- Contraseña -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/etPasswordLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Contraseña"
-                android:layout_marginBottom="16dp"
-                app:endIconMode="password_toggle"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:boxStrokeColor="@color/border_light"
-                app:hintTextColor="@color/border_light"
-                app:cursorColor="@color/border_light">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Confirmar Contraseña -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/etConfirmPasswordLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Confirmar contraseña"
-                android:layout_marginBottom="16dp"
-                app:endIconMode="password_toggle"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:boxStrokeColor="@color/border_light"
-                app:hintTextColor="@color/border_light"
-                app:cursorColor="@color/border_light">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etConfirmPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword"/>
-            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Botón de registro -->
             <Button

@@ -76,13 +76,13 @@ public class AdminResInfoPerfilActivity extends AppCompatActivity {
             if (administradorRestauranteActual.getFoto() != null && !administradorRestauranteActual.getFoto().isEmpty()) {
                 Glide.with(this)
                         .load(administradorRestauranteActual.getFoto())
-                        .placeholder(R.drawable.ic_profile)
-                        .error(R.drawable.error_image)
+                        .placeholder(R.drawable.ic_usuarios)
+                        .error(R.drawable.ic_usuarios)
                         .circleCrop()
                         .into(binding.ivUserPhoto);
             } else {
                 Glide.with(this)
-                        .load(R.drawable.ic_profile)
+                        .load(R.drawable.ic_usuarios)
                         .circleCrop()
                         .into(binding.ivUserPhoto);
             }
