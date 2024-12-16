@@ -12,14 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodisea.R;
 import com.example.foodisea.item.LogItem;
+import com.example.foodisea.model.AppLog;
 
 import java.util.List;
 
 public class LogsAdapter extends RecyclerView.Adapter<LogsAdapter.LogViewHolder> {
-    private List<LogItem> logList;
+    private List<AppLog> logList;
     private Context context;
 
-    public LogsAdapter(Context context, List<LogItem> logList) {
+    public LogsAdapter(Context context, List<AppLog> logList) {
         this.context = context;
         this.logList = logList;
     }
@@ -33,11 +34,11 @@ public class LogsAdapter extends RecyclerView.Adapter<LogsAdapter.LogViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull LogViewHolder holder, int position) {
-        LogItem currentItem = logList.get(position);
+        AppLog currentItem = logList.get(position);
 
-        holder.tvLogMessage.setText(currentItem.getMessage());
-        holder.tvLogTimestamp.setText(currentItem.getTimestamp());
-        holder.ivIcon.setImageResource(currentItem.getIconResourceId());
+        holder.tvLogMessage.setText(currentItem.getDetails());
+        holder.tvLogTimestamp.setText(Long.toString(currentItem.getTimestamp()));
+        //holder.ivIcon.setImageResource(currentItem.getIconResourceId());
     }
 
     @Override
@@ -45,7 +46,7 @@ public class LogsAdapter extends RecyclerView.Adapter<LogsAdapter.LogViewHolder>
         return logList.size();
     }
 
-    public void updateLogs(List<LogItem> newLogs) {
+    public void updateLogs(List<AppLog> newLogs) {
         this.logList = newLogs;
         notifyDataSetChanged();
     }
@@ -62,4 +63,5 @@ public class LogsAdapter extends RecyclerView.Adapter<LogsAdapter.LogViewHolder>
             tvLogTimestamp = itemView.findViewById(R.id.tvLogTimestamp);
         }
     }
+
 }
