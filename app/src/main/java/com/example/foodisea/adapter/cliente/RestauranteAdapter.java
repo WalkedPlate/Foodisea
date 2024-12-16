@@ -57,7 +57,7 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
 
         // Convertir la lista de categorías en un String concatenado
         String categorias = String.join(" - ", restaurante.getCategorias());
-        holder.binding.restCategories.setText(categorias);
+        holder.binding.restCategories.setText(restaurante.getDireccion());
 
         // Cargar la imagen desde Firebase Storage
         if (!restaurante.getImagenes().isEmpty()) {
