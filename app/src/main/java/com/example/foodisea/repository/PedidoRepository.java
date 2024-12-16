@@ -270,12 +270,16 @@ public class PedidoRepository {
     public Task<List<Pedido>> getPedidosActivosRepartidor(String repartidorId) {
         return db.collection("pedidos")
                 .whereEqualTo("repartidorId", repartidorId)
-                .whereIn("estado", Arrays.asList("En camino", "Recibido"))
+                .whereIn("estado", Arrays.asList("En camino", "Recogiendo pedido"))
                 .get()
                 .continueWith(task -> {
                     List<Pedido> pedidos = new ArrayList<>();
                     for (DocumentSnapshot doc : task.getResult()) {
-                        pedidos.add(doc.toObject(Pedido.class));
+                        Pedido pedido = doc.toObject(Pedido.class);
+                        if (pedido != null) {
+                            pedido.setId(doc.getId());
+                            pedidos.add(pedido);
+                        }
                     }
                     return pedidos;
                 });
@@ -341,6 +345,11 @@ public class PedidoRepository {
                 .update(updates);
     }
 
+    public Task<Void> actualizarDisposicionRepartidor(String repartidorId, String disposicion) {
+        return db.collection("usuarios")
+                .document(repartidorId)
+                .update("disposicion", disposicion);
+    }
 
     // Obtener pedidos por cliente
     public Task<List<Pedido>> getPedidosPorCliente(String clienteId) {
@@ -447,6 +456,27 @@ public class PedidoRepository {
         return db.collection("pedidos")
                 .whereEqualTo("repartidorId", repartidorId)
                 .whereIn("estado", Arrays.asList("En camino", "Entregado"))
+                .get()
+                .continueWith(task -> {
+                    List<Pedido> pedidos = new ArrayList<>();
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            Pedido pedido = doc.toObject(Pedido.class);
+                            if (pedido != null) {
+                                pedido.setId(doc.getId());
+                                pedidos.add(pedido);
+                            }
+                        }
+                    }
+                    return pedidos;
+                });
+    }
+
+    // Método para obtener pedidos asignados al repartidor
+    public Task<List<Pedido>> getPedidosEntregadosRepartidor(String repartidorId) {
+        return db.collection("pedidos")
+                .whereEqualTo("repartidorId", repartidorId)
+                .whereIn("estado", Collections.singletonList("Entregado"))
                 .get()
                 .continueWith(task -> {
                     List<Pedido> pedidos = new ArrayList<>();

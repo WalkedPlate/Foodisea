@@ -84,6 +84,12 @@ public class HistorialPedidosAdapter extends RecyclerView.Adapter<HistorialPedid
                 listener.onPedidoClick(pedido.getId());
             }
         });
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onPedidoClick(pedido.getId());
+            }
+        });
     }
 
     @Override

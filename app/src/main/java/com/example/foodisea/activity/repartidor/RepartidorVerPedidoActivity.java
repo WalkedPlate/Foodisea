@@ -3,6 +3,7 @@ package com.example.foodisea.activity.repartidor;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -21,6 +22,7 @@ import com.example.foodisea.manager.SessionManager;
 import com.example.foodisea.model.Pedido;
 import com.example.foodisea.model.Producto;
 import com.example.foodisea.model.ProductoCantidad;
+import com.example.foodisea.model.Repartidor;
 import com.example.foodisea.model.Restaurante;
 import com.example.foodisea.repository.ChatRepository;
 import com.example.foodisea.repository.PedidoRepository;
@@ -175,31 +177,78 @@ public class RepartidorVerPedidoActivity extends AppCompatActivity {
 
 
     private void aceptarPedido(Pedido pedido) {
-        loadingDialog.show("Aceptando pedido...");
+        loadingDialog.show("Verificando disponibilidad...");
         String repartidorId = SessionManager.getInstance(this).getRepartidorActual().getId();
-        String restauranteId = pedido.getRestauranteId(); // Asegúrate de tener este dato en el pedido.
+        String restauranteId = pedido.getRestauranteId();
 
-        pedidoRepository.asignarRepartidorAPedido(pedido.getId(), repartidorId)
-                .addOnSuccessListener(aVoid -> {
-                    // Crear el chat
-                    chatRepository.crearChat(pedido.getId(), restauranteId, repartidorId, pedido.getClienteId())
-                            .addOnSuccessListener(chatId -> {
-                                loadingDialog.dismiss();
-                                Intent intent = new Intent(this, RepartidorDeliveryMapActivity.class);
-                                intent.putExtra("pedidoId", pedido.getId());
-                                intent.putExtra("chatId", chatId);// Pasamos el ID del chat creado.
-                                intent.putExtra("clienteId",pedido.getClienteId());
-                                startActivity(intent);
-                                finish();
+        // Primero verificar si el repartidor está disponible
+        UsuarioRepository usuarioRepository = new UsuarioRepository();
+        usuarioRepository.getUserById(repartidorId)
+                .addOnSuccessListener(usuario -> {
+                    // Convertir el usuario a repartidor
+                    if (!(usuario instanceof Repartidor)) {
+                        loadingDialog.dismiss();
+                        Toast.makeText(this, "Error: Usuario no es un repartidor",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    Repartidor repartidor = (Repartidor) usuario;
+                    if (!"Disponible".equals(repartidor.getDisposicion())) {
+                        loadingDialog.dismiss();
+                        Toast.makeText(this, "No puedes aceptar pedidos mientras estés ocupado",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // Si está disponible, ejecutar todas las operaciones necesarias
+                    Tasks.whenAllComplete(
+                                    // Asignar repartidor al pedido
+                                    pedidoRepository.asignarRepartidorAPedido(pedido.getId(), repartidorId),
+                                    // Actualizar disposición del repartidor a Ocupado
+                                    pedidoRepository.actualizarDisposicionRepartidor(repartidorId, "Ocupado")
+                            )
+                            .addOnSuccessListener(tasks -> {
+                                // Crear el chat
+                                chatRepository.crearChat(pedido.getId(), restauranteId, repartidorId, pedido.getClienteId())
+                                        .addOnSuccessListener(chatId -> {
+                                            loadingDialog.dismiss();
+                                            Intent intent = new Intent(this, RepartidorDeliveryMapActivity.class);
+                                            intent.putExtra("pedidoId", pedido.getId());
+                                            intent.putExtra("chatId", chatId);
+                                            intent.putExtra("clienteId", pedido.getClienteId());
+                                            startActivity(intent);
+                                            finish();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            loadingDialog.dismiss();
+                                            Toast.makeText(this, "Error al crear el chat",
+                                                    Toast.LENGTH_SHORT).show();
+                                            // Revertir cambios en caso de error
+                                            revertirCambios(pedido.getId(), repartidorId);
+                                        });
                             })
                             .addOnFailureListener(e -> {
                                 loadingDialog.dismiss();
-                                Toast.makeText(this, "Error al crear el chat", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "Error al aceptar el pedido",
+                                        Toast.LENGTH_SHORT).show();
                             });
                 })
                 .addOnFailureListener(e -> {
                     loadingDialog.dismiss();
-                    Toast.makeText(this, "Error al aceptar el pedido", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Error al verificar disponibilidad",
+                            Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    // Método auxiliar para revertir cambios en caso de error
+    private void revertirCambios(String pedidoId, String repartidorId) {
+        // Revertir estado del pedido y disposición del repartidor
+        Tasks.whenAllComplete(
+                pedidoRepository.asignarRepartidorAPedido(pedidoId, null), // Quitar asignación del repartidor
+                pedidoRepository.actualizarDisposicionRepartidor(repartidorId, "Disponible")
+        ).addOnFailureListener(e -> {
+            Log.e("RepartidorVerPedido", "Error al revertir cambios", e);
+        });
     }
 }
