@@ -95,12 +95,13 @@ public class PedidoRepository {
                     if (!updateTask.isSuccessful()) {
                         throw updateTask.getException();
                     }
+                    String idPedido = "#" + pedido.getId().substring(0,5);
 
                     // Registrar un log después de completar el proceso
                     return logManager.createLog(
                             cliente.getId(),
                             "CREAR_PEDIDO",
-                            "Pedido " + pedido.getId() + " creado por " + cliente.getNombres() + " " + cliente.getApellidos()
+                            "Pedido " + idPedido + " creado por " + cliente.getNombres() + " " + cliente.getApellidos()
                     ).continueWithTask(logTask -> {
                         if (!logTask.isSuccessful()) {
                             throw logTask.getException();
