@@ -54,24 +54,28 @@ public class SuperAdminAgregarRestauranteActivity extends AppCompatActivity {
 
         // Configura el botón de guardar restaurante
         binding.btnCrearRestaurante.setOnClickListener(v -> {
+            // Deshabilitar el botón inmediatamente para prevenir múltiples clicks
+            binding.btnCrearRestaurante.setEnabled(false);
+
             String nombre = binding.etNombreRes.getText().toString();
             String descripcion = binding.etDescription.getText().toString();
             String direccion = binding.etDireccion.getText().toString();
             String telefono = binding.etTelefono.getText().toString();
+
+
 
             if (!nombre.isEmpty() && !telefono.isEmpty() && !descripcion.isEmpty() && !direccion.isEmpty() && idAdministradorSeleccionado != null) {
                 Restaurante restaurante = new Restaurante(
                         nombre,
                         direccion,
                         telefono,
-                        null,
+                        new ArrayList<>(), // Establecer estado inicial
                         5.0,
-                        listaUrlsImagenes, // Lista de URLs de imágenes
+                        listaUrlsImagenes,
                         idAdministradorSeleccionado,
                         descripcion
                 );
 
-                //Lista de categorias HARDCODEADA
                 List<String> listaCategoria = new ArrayList<>();
                 listaCategoria.add("Categoria 1");
                 listaCategoria.add("Categoria 2");
@@ -79,18 +83,33 @@ public class SuperAdminAgregarRestauranteActivity extends AppCompatActivity {
 
                 restauranteRepository.createRestaurante(restaurante)
                         .addOnSuccessListener(documentReference -> {
-                            Log.d("FirestoreSuccess", "Restaurante agregado con ID: " + documentReference.getId());
-                            Toast.makeText(this, "Restaurante guardado exitosamente", Toast.LENGTH_SHORT).show();
-                            finish();
+                            String restauranteId = documentReference.getId();
+                            usuarioRepository.asignarRestauranteAAdministrador(idAdministradorSeleccionado, restauranteId)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d("FirestoreSuccess", "Restaurante y administrador actualizados exitosamente");
+                                        Toast.makeText(this, "Restaurante guardado exitosamente", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e("FirestoreError", "Error al actualizar el administrador", e);
+                                        Toast.makeText(this, "Error al actualizar el administrador", Toast.LENGTH_SHORT).show();
+                                        // Reactivar el botón en caso de error
+                                        binding.btnCrearRestaurante.setEnabled(true);
+                                    });
                         })
                         .addOnFailureListener(e -> {
                             Log.e("FirestoreError", "Error al agregar restaurante", e);
                             Toast.makeText(this, "Error al guardar el restaurante", Toast.LENGTH_SHORT).show();
+                            // Reactivar el botón en caso de error
+                            binding.btnCrearRestaurante.setEnabled(true);
                         });
             } else {
                 Toast.makeText(this, "Por favor, completa todos los campos y selecciona un administrador", Toast.LENGTH_SHORT).show();
+                // Reactivar el botón si la validación falla
+                binding.btnCrearRestaurante.setEnabled(true);
             }
         });
+
 
 
 

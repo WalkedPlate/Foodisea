@@ -388,5 +388,11 @@ public class UsuarioRepository {
                 .update("estado", nuevoEstado);
     }
 
+    public Task<Void> asignarRestauranteAAdministrador(String adminId, String restauranteId) {
+        return db.collection(COLLECTION_USUARIOS)
+                .document(adminId)
+                .update("restauranteId", restauranteId);
+    }
+
 
 }
