@@ -51,7 +51,11 @@ public class HistorialPedidosAdapter extends RecyclerView.Adapter<HistorialPedid
         Restaurante restaurante = pedidoConDetalles.getRestaurante();
 
         // Establecer ID del pedido
-        holder.tvPedidoId.setText("Pedido #" + pedido.getId().substring(0, 6));
+        String pedidoId = pedido.getId();
+        String displayId = pedidoId.length() >= 5
+                ? pedidoId.substring(0, 5).toUpperCase()
+                : pedidoId.toUpperCase();
+        holder.tvPedidoId.setText(String.format("Pedido #%s", displayId));
 
         // Manejar fecha null de manera segura
         if (pedido.getFechaPedido() != null) {

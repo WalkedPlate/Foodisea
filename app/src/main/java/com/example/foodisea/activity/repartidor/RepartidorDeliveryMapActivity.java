@@ -255,7 +255,11 @@ public class RepartidorDeliveryMapActivity extends AppCompatActivity implements 
         binding.restaurantAddress.setText(restaurante.getDireccion());
 
         // Actualizar información del pedido
-        binding.orderNumber.setText("Orden #" + currentPedido.getId().substring(0, 6));
+        String pedidoId = currentPedido.getId();
+        String displayId = pedidoId.length() >= 5
+                ? pedidoId.substring(0, 5).toUpperCase()
+                : pedidoId.toUpperCase();
+        binding.orderNumber.setText(String.format("Orden #%s", displayId));
         binding.orderTime.setText("Pedido realizado: " + formatDate(currentPedido.getFechaPedido()));
         binding.deliveryAddress.setText(currentPedido.getDireccionEntrega());
 

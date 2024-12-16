@@ -81,7 +81,12 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.PedidoVi
         }
 
         void bind(PedidoConCliente pedidoConCliente) {
-            tvOrderNumber.setText(pedidoConCliente.getPedido().getId());
+            String pedidoId = pedidoConCliente.getPedido().getId();
+            String displayId = pedidoId.length() >= 5
+                    ? pedidoId.substring(0, 5).toUpperCase()
+                    : pedidoId.toUpperCase();
+            tvOrderNumber.setText(String.format("#%s", displayId));
+
             tvCustomerName.setText(pedidoConCliente.getCliente().obtenerNombreCompleto());
             tvAddress.setText(pedidoConCliente.getPedido().getDireccionEntrega());
             tvPrice.setText(String.format("S/. %.2f", pedidoConCliente.getPedido().getMontoTotal()));

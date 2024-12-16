@@ -95,8 +95,12 @@ public class RepartidorPedidosAdapter extends RecyclerView.Adapter<RepartidorPed
             chipEstado.setChipBackgroundColorResource(R.color.bg_gray_light);
             chipEstado.setTextColor(ContextCompat.getColor(context, R.color.btn_medium));
 
-            // Configurar ID y distancia
-            tvOrderId.setText(String.format("#%s", pedido.getId()));
+            // Configurar ID - Modificamos esta parte para mostrar las 5 primeras letras en mayúscula
+            String pedidoId = pedido.getId();
+            String displayId = pedidoId.length() >= 5
+                    ? pedidoId.substring(0, 5).toUpperCase()
+                    : pedidoId.toUpperCase();
+            tvOrderId.setText(String.format("#%s", displayId));
 
             // Mostrar la distancia calculada
             double distancia = pedidoConDetalles.getDistancia();

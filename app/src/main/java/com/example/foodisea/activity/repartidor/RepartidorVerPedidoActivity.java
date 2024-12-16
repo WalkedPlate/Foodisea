@@ -142,7 +142,11 @@ public class RepartidorVerPedidoActivity extends AppCompatActivity {
         Restaurante restaurante = pedidoConDetalles.getRestaurante();
 
         // Información básica del pedido
-        binding.orderNumberText.setText(String.format("Pedido #%s", pedido.getId()));
+        String pedidoId = pedido.getId();
+        String displayId = pedidoId.length() >= 5
+                ? pedidoId.substring(0, 5).toUpperCase()
+                : pedidoId.toUpperCase();
+        binding.orderNumberText.setText(String.format("Pedido #%s", displayId));
 
         // Información del restaurante
         binding.restaurantName.setText(restaurante.getNombre());
