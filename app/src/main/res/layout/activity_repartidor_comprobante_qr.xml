@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.cliente.ClienteComprobanteQrActivity"
+    tools:context=".activity.repartidor.RepartidorComprobanteQrActivity"
     android:background="@color/white">
 
     <LinearLayout
@@ -36,7 +36,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Confirmar entrega del pedido"
+                android:text="Comprobante de pago"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -47,7 +47,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
-            android:id="@+id/imgQrCliente"
+            android:id="@+id/imgQrRepartidor"
             android:layout_width="280dp"
             android:layout_height="280dp"
             android:layout_marginTop="60dp"
@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/sen_font"
-            android:text="Mostrar el código QR al repartidor para confirmar la entrega del pedido."
+            android:text="Mostrar este código QR al cliente para confirmar el pago del pedido."
             android:textAlignment="center"
             android:textColor="@color/gray"
             android:textSize="16sp"
@@ -68,10 +68,10 @@
             android:layout_marginBottom="20dp"/>
 
         <Button
-            android:id="@+id/btnQrPago"
+            android:id="@+id/btnEscanearEntrega"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ESCANEAR QR DE PAGO"
+            android:text="ESCANEAR QR DE ENTREGA"
             android:textSize="18sp"
             android:backgroundTint="@color/btn_medium"
             android:textColor="@android:color/white"

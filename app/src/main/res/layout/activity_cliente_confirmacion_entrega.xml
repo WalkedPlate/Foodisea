@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.repartidor.RepartidorConfirmacionEntregaActivity">
+    tools:context=".activity.cliente.ClienteConfirmacionEntregaActivity">
 
     <ImageView
         android:id="@+id/imageView"
@@ -53,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingHorizontal="65dp"
-        android:text="Se realizó la entrega exitosamente, gracias por ser parte de nuestro servicio"
+        android:text="Se realizó la entrega exitosamente, gracias usar nuestro servicio"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -67,7 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:text="VOLVER AL INICIO"
+        android:text="VER MIS PEDIDOS"
         android:textSize="18sp"
         android:textStyle="bold"
         android:backgroundTint="@android:color/holo_red_light"

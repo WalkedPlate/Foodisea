@@ -1,5 +1,7 @@
 package com.example.foodisea.repository;
 
+import android.util.Log;
+
 import com.example.foodisea.model.CodigoQR;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -27,13 +29,30 @@ public class CodigoQRRepository {
 
     // Validar código QR (versión actualizada para el sistema dual)
     public Task<Boolean> validarCodigoQR(String codigo, String verificacionId, String tipo) {
+        Log.d("QRRepository", "=== INICIANDO VALIDACIÓN ===");
+        Log.d("QRRepository", "Código a validar: " + codigo);
+        Log.d("QRRepository", "VerificacionId: " + verificacionId);
+        Log.d("QRRepository", "Tipo: " + tipo);
+
         return db.collection(COLLECTION_NAME)
                 .whereEqualTo("codigo", codigo)
                 .whereEqualTo("verificacionId", verificacionId)
                 .whereEqualTo("tipo", tipo)
                 .whereEqualTo("estado", "GENERADO")
                 .get()
-                .continueWith(task -> !task.getResult().isEmpty());
+                .continueWith(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot snapshot = task.getResult();
+                        Log.d("QRRepository", "Documentos encontrados: " + snapshot.size());
+                        for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                            Log.d("QRRepository", "Documento encontrado: " + doc.getData());
+                        }
+                        return !snapshot.isEmpty();
+                    } else {
+                        Log.e("QRRepository", "Error en consulta: " + task.getException().getMessage());
+                        throw task.getException();
+                    }
+                });
     }
 
     // Obtener código QR por código

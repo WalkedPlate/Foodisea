@@ -9,6 +9,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Permisos para Google Play Services -->
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -37,6 +38,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Foodisea"
         tools:targetApi="31">
+        <activity
+            android:name=".activity.cliente.ClienteConfirmacionEntregaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.repartidor.RepartidorScannerQrActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.repartidor.RepartidorComprobanteQrActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.cliente.ClienteScannerQrActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.cliente.ClienteChatActivity"
             android:exported="false" />

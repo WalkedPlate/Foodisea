@@ -1,4 +1,4 @@
-package com.example.foodisea.activity.repartidor;
+package com.example.foodisea.activity.cliente;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,40 +10,34 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodisea.R;
-import com.example.foodisea.databinding.ActivityRepartidorChatBinding;
-import com.example.foodisea.databinding.ActivityRepartidorConfirmacionEntregaBinding;
+import com.example.foodisea.databinding.ActivityClienteConfirmacionEntregaBinding;
 
-public class RepartidorConfirmacionEntregaActivity extends AppCompatActivity {
+public class ClienteConfirmacionEntregaActivity extends AppCompatActivity {
 
-    private ActivityRepartidorConfirmacionEntregaBinding binding;
+    private ActivityClienteConfirmacionEntregaBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Habilitar ViewBinding
-        binding = ActivityRepartidorConfirmacionEntregaBinding.inflate(getLayoutInflater());
+        // Usar ViewBinding
+        binding = ActivityClienteConfirmacionEntregaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Configurar EdgeToEdge (si es necesario)
+        // Configurar ajustes de EdgeToEdge (si es necesario)
         ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Acción del botón cerrar
-        binding.btnClose.setOnClickListener(v -> finish());
-
-        // Acción del botón "VOLVER AL INICIO"
-        binding.btnTracking.setOnClickListener(v -> {
-            Intent intent = new Intent(RepartidorConfirmacionEntregaActivity.this, RepartidorMainActivity.class);
+        // Configurar acción del botón "VER MIS PEDIDOS"
+        binding.btnTracking.setOnClickListener(view -> {
+            Intent intent = new Intent(ClienteConfirmacionEntregaActivity.this, ClienteHistorialPedidosActivity.class);
             startActivity(intent);
 
             // Finalizar esta actividad para que no pueda ser alcanzada de nuevo
             finish();
         });
     }
-
-
 }

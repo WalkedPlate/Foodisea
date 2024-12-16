@@ -302,7 +302,7 @@ public class RepartidorDeliveryMapActivity extends AppCompatActivity implements 
                     repartidorLocationListener.remove();
                 }
 
-                Intent intent = new Intent(this, RepartidorConfirmacionEntregaActivity.class);
+                Intent intent = new Intent(this, RepartidorComprobanteQrActivity.class);
                 intent.putExtra("pedidoId", pedidoId);
                 startActivity(intent);
                 break;

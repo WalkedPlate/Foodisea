@@ -1,4 +1,4 @@
-package com.example.foodisea.activity.cliente;
+package com.example.foodisea.activity.cliente.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.foodisea.R;
+import com.example.foodisea.activity.cliente.ClienteTrackingActivity;
 import com.example.foodisea.adapter.cliente.HistorialPedidosAdapter;
 import com.example.foodisea.dto.PedidoConDetalles;
 

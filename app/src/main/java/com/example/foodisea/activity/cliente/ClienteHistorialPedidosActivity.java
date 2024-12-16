@@ -1,6 +1,5 @@
 package com.example.foodisea.activity.cliente;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -9,12 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.foodisea.R;
-import com.example.foodisea.adapter.cliente.HistorialPedidosAdapter;
+import com.example.foodisea.activity.cliente.fragment.PedidosEnCursoFragment;
 import com.example.foodisea.adapter.cliente.ViewPager2Adapter;
-import com.example.foodisea.databinding.ActivityClienteEditarPerfilBinding;
 import com.example.foodisea.databinding.ActivityClienteHistorialPedidosBinding;
 import com.example.foodisea.dto.PedidoConDetalles;
 import com.example.foodisea.manager.SessionManager;
