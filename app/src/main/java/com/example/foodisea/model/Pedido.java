@@ -17,7 +17,7 @@ public class Pedido {
     private String restauranteId;  // ID del restaurante donde se hizo el pedido
     private List<ProductoCantidad> productos;  // Lista de productos y sus cantidades solicitadas
     private String repartidorId;  // Referencia al repartidor asignado (ID)
-    private String estado;  // "Recibido", "En preparación", "En camino", "Recogiendo pedido", "Entregado"
+    private String estado;  // "Recibido", "En preparación", "Recogiendo pedido", "En camino", "Entregado"
     private Date fechaPedido;
     private String direccionEntrega;
     private Double latitudEntrega;

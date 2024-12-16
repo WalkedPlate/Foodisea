@@ -346,12 +346,15 @@ public class PedidoRepository {
     public Task<List<Pedido>> getPedidosPorCliente(String clienteId) {
         return db.collection("pedidos")
                 .whereEqualTo("clienteId", clienteId)
-                .orderBy("fechaPedido", Query.Direction.DESCENDING)
                 .get()
                 .continueWith(task -> {
                     List<Pedido> pedidos = new ArrayList<>();
                     for (DocumentSnapshot doc : task.getResult()) {
-                        pedidos.add(doc.toObject(Pedido.class));
+                        Pedido pedido = doc.toObject(Pedido.class);
+                        if (pedido != null) {
+                            pedido.setId(doc.getId());
+                            pedidos.add(pedido);
+                        }
                     }
                     return pedidos;
                 });
@@ -439,8 +442,6 @@ public class PedidoRepository {
                 });
     }
 
-
-
     // Método para obtener pedidos asignados al repartidor
     public Task<List<Pedido>> getPedidosAsignadosRepartidor(String repartidorId) {
         return db.collection("pedidos")
@@ -461,8 +462,5 @@ public class PedidoRepository {
                     return pedidos;
                 });
     }
-
-
-
 
 }
