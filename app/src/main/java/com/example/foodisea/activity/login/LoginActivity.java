@@ -24,6 +24,8 @@ import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 /**
  * Activity que maneja el proceso de inicio de sesión de usuarios.
@@ -185,9 +187,30 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void handleLoginSuccess(Usuario usuario) {
-        loadingDialog.dismiss();
+        // Obtener y guardar el token FCM
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        String token = task.getResult();
+                        // Actualizar el token en Firestore
+                        FirebaseFirestore.getInstance()
+                                .collection("usuarios")
+                                .document(usuario.getId())
+                                .update("fcmToken", token)
+                                .addOnCompleteListener(tokenTask -> {
+                                    loadingDialog.dismiss();
+                                    // Continuar con el flujo normal de login
+                                    completeLogin(usuario);
+                                });
+                    } else {
+                        // Si falla la obtención del token, continuar sin él
+                        loadingDialog.dismiss();
+                        completeLogin(usuario);
+                    }
+                });
+    }
 
-        // Validar y guardar el usuario
+    private void completeLogin(Usuario usuario) {
         if (sessionManager.validateUserByType(usuario)) {
             sessionManager.setUsuarioActual(usuario);
             Intent intent = sessionManager.getRedirectIntent(this);
@@ -289,12 +312,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Limpia todos los datos de sesión del usuario
-     */
-    private void clearUserSession() {
-        sessionManager.logout(); // Reemplazar la limpieza manual con el método del SessionManager
-    }
 
     /**
      * Muestra un diálogo de error

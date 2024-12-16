@@ -38,7 +38,6 @@ import java.util.Objects;
 public class AdminResPedidosActivity extends AppCompatActivity {
     ActivityAdminResPedidosBinding binding;
     private Map<String, Cliente> clientesMap = new HashMap<>();
-    private Map<String, Pago> pagosMap = new HashMap<>();
     private PedidoRepository pedidoRepository;
     private List<PedidoConCliente> listaCompletaPedidos = new ArrayList<>();
     private SessionManager sessionManager;

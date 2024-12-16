@@ -1,3 +1,5 @@
 /build
 # Firebase config file
 google-services.json
+/app/src/main/res/raw/service_account.json
+/main/res/raw/service_account.json

@@ -45,19 +45,6 @@ public class PedidoRepository {
         this.notificationHelper = new NotificationHelper(context);
     }
 
-    public Task<DocumentReference> crearPedido(Pedido pedido) {
-        // Ahora retornamos el DocumentReference para poder obtener el ID del pedido creado
-        return db.collection("pedidos")
-                .add(pedido)
-                .addOnSuccessListener(documentReference -> {
-                    pedido.setId(documentReference.getId());
-                    // Buscar repartidores cercanos
-                    buscarRepartidoresCercanos(pedido);
-                    // Enviar notificación al restaurante
-                    notificationHelper.sendNewOrderNotification(pedido);
-                });
-    }
-
 
     public Task<Void> crearPedidoConVerificacion(Pedido pedido) {
         // Primero creamos el pedido
@@ -102,33 +89,53 @@ public class PedidoRepository {
     }
 
     public Task<Void> actualizarEstadoPedido(String pedidoId, String nuevoEstado) {
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("estado", nuevoEstado);
-
         return db.collection("pedidos")
                 .document(pedidoId)
-                .update(updates);
+                .get()
+                .continueWithTask(task -> {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    DocumentSnapshot document = task.getResult();
+                    Pedido pedido = document.toObject(Pedido.class);
+                    String estadoAnterior = pedido != null ? pedido.getEstado() : "";
+
+                    Map<String, Object> updates = new HashMap<>();
+                    updates.put("estado", nuevoEstado);
+
+                    return db.collection("pedidos")
+                            .document(pedidoId)
+                            .update(updates)
+                            .continueWithTask(updateTask -> {
+                                if (updateTask.isSuccessful() && pedido != null) {
+                                    pedido.setId(pedidoId);
+                                    pedido.setEstado(nuevoEstado);
+                                    // Enviar notificación del cambio de estado
+                                    notificationHelper.enviarNotificacionCambioEstadoPedido(
+                                            pedido,
+                                            estadoAnterior
+                                    );
+                                }
+                                return updateTask;
+                            });
+                });
     }
 
 
     private void buscarRepartidoresCercanos(Pedido pedido) {
-        // Solo buscar repartidores si tenemos las coordenadas de entrega
         if (pedido.getLatitudEntrega() == null || pedido.getLongitudEntrega() == null) {
             return;
         }
 
-        // Consulta para encontrar repartidores disponibles
         db.collection("usuarios")
                 .whereEqualTo("tipoUsuario", "Repartidor")
                 .whereEqualTo("estado", "Disponible")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<Repartidor> repartidoresCercanos = new ArrayList<>();
-
                     for (DocumentSnapshot document : queryDocumentSnapshots) {
                         Repartidor repartidor = document.toObject(Repartidor.class);
                         if (repartidor != null) {
-                            // Calcular distancia entre repartidor y punto de entrega
                             double distancia = calcularDistancia(
                                     repartidor.getLatitud(),
                                     repartidor.getLongitud(),
@@ -137,20 +144,14 @@ public class PedidoRepository {
                             );
 
                             if (distancia <= RADIO_BUSQUEDA_KM) {
-                                repartidoresCercanos.add(repartidor);
+                                // Notificar al repartidor sobre el nuevo pedido
+                                notificationHelper.enviarNotificacionNuevoPedidoRepartidor(
+                                        repartidor.getId(),
+                                        pedido
+                                );
                             }
                         }
                     }
-
-                    // Notificar a repartidores cercanos
-
-                    /*
-                    for (Repartidor repartidor : repartidoresCercanos) {
-                        notificationHelper.sendNewOrderToDeliveryNotification(
-                                repartidor.getId(), pedido);
-                    }
-
-                     */
                 });
     }
 
@@ -342,7 +343,29 @@ public class PedidoRepository {
 
         return db.collection("pedidos")
                 .document(pedidoId)
-                .update(updates);
+                .update(updates)
+                .continueWithTask(task -> {
+                    if (task.isSuccessful()) {
+                        return db.collection("pedidos")
+                                .document(pedidoId)
+                                .get()
+                                .continueWithTask(getTask -> {
+                                    if (getTask.isSuccessful()) {
+                                        Pedido pedido = getTask.getResult().toObject(Pedido.class);
+                                        if (pedido != null) {
+                                            pedido.setId(pedidoId);
+                                            // Notificar al cliente sobre la asignación del repartidor
+                                            notificationHelper.enviarNotificacionAsignacionRepartidor(
+                                                    pedido,
+                                                    repartidorId
+                                            );
+                                        }
+                                    }
+                                    return task;
+                                });
+                    }
+                    return task;
+                });
     }
 
     public Task<Void> actualizarDisposicionRepartidor(String repartidorId, String disposicion) {

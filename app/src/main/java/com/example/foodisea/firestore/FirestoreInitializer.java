@@ -32,6 +32,7 @@ public class FirestoreInitializer {
         this.db = FirebaseFirestore.getInstance();
     }
 
+    /*
     public void initializeDatabase() {
         // Crear usuarios base
         initializeSuperAdmin();
@@ -207,4 +208,6 @@ public class FirestoreInitializer {
 
         db.collection("reportes").document(reporte.getId()).set(reporte);
     }
+
+     */
 }

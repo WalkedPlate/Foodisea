@@ -358,7 +358,6 @@ public class AdminResHomeActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (notificationHelper != null) {
-            notificationHelper.shutdown();
         }
     }
 }

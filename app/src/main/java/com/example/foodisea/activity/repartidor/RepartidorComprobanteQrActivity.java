@@ -42,7 +42,7 @@ public class RepartidorComprobanteQrActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // Inicializar repositorios
-        verificacionRepository = new VerificacionEntregaRepository();
+        verificacionRepository = new VerificacionEntregaRepository(this);
         qrRepository = new CodigoQRRepository();
 
         // Obtener pedidoId del intent

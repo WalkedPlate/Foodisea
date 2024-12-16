@@ -24,6 +24,8 @@ public class Usuario implements Serializable {
     protected String estado;  // "Activo", "Inactivo"
     protected String tipoUsuario;  // "Cliente", "AdministradorRestaurante", "Repartidor", "Superadmin"
 
+    private String fcmToken;  // Nuevo campo para el token FCM
+
     public Usuario() {
     }
 
@@ -174,5 +176,13 @@ public class Usuario implements Serializable {
 
     public void setLatitudDireccion(Double latitudDireccion) {
         this.latitudDireccion = latitudDireccion;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 }

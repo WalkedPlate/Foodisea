@@ -21,7 +21,6 @@ import com.example.foodisea.manager.SessionManager;
 import com.example.foodisea.model.Chat;
 import com.example.foodisea.model.Cliente;
 import com.example.foodisea.model.Mensaje;
-import com.example.foodisea.model.Message;
 import com.example.foodisea.model.Repartidor;
 import com.example.foodisea.repository.ChatRepository;
 import com.example.foodisea.repository.UsuarioRepository;

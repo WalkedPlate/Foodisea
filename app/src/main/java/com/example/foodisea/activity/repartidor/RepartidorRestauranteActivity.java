@@ -30,7 +30,6 @@ public class RepartidorRestauranteActivity extends AppCompatActivity {
 
     private ActivityRepartidorRestauranteBinding binding;
     private Map<String, Cliente> clientesMap = new HashMap<>();
-    private Map<String, Pago> pagosMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

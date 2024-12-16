@@ -71,7 +71,7 @@ public class RepartidorScannerQrActivity extends AppCompatActivity {
             return;
         }
 
-        verificacionRepository = new VerificacionEntregaRepository();
+        verificacionRepository = new VerificacionEntregaRepository(this);
         qrRepository = new CodigoQRRepository();
 
         previewView = binding.viewFinder;
@@ -155,23 +155,12 @@ public class RepartidorScannerQrActivity extends AppCompatActivity {
                                         verificacionRepository.confirmarEntrega(verificacionId)
                                                 .addOnSuccessListener(aVoid -> {
                                                     Log.d("QRVerification", "Entrega confirmada exitosamente");
-                                                    verificacionRepository.verificarConfirmacionesCompletas(verificacionId)
-                                                            .addOnSuccessListener(confirmacionesCompletas -> {
-                                                                runOnUiThread(() -> {
-                                                                    vibrar();
-                                                                    if (confirmacionesCompletas) {
-                                                                        Toast.makeText(this, "¡Pedido completado exitosamente!",
-                                                                                Toast.LENGTH_SHORT).show();
-                                                                        Intent intent = new Intent(this, RepartidorConfirmacionEntregaActivity.class);
-                                                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                                        startActivity(intent);
-                                                                    } else {
-                                                                        Toast.makeText(this, "Entrega confirmada, esperando confirmación de pago",
-                                                                                Toast.LENGTH_SHORT).show();
-                                                                    }
-                                                                    finish();
-                                                                });
-                                                            });
+                                                    // Ya no necesitamos verificar aquí porque las notificaciones
+                                                    // se manejarán automáticamente
+                                                    vibrar();
+                                                    Toast.makeText(this, "Entrega confirmada exitosamente",
+                                                            Toast.LENGTH_SHORT).show();
+                                                    finish();
                                                 })
                                                 .addOnFailureListener(e -> {
                                                     Log.e("QRVerification", "Error al confirmar entrega: " + e.getMessage());

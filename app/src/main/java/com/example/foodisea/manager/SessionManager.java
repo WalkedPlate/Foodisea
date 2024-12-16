@@ -19,6 +19,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 /**
  * Gestor de sesión que maneja el estado del usuario actual en la aplicación.
@@ -56,6 +58,7 @@ public class SessionManager {
     private static final String KEY_RESTAURANTE_ID = "restauranteId";
     private static final String KEY_LATITUD = "latitud";
     private static final String KEY_LONGITUD = "longitud";
+    private static final String KEY_FCM_TOKEN = "fcm_token";
 
     /**
      * Constructor privado para implementar Singleton.
@@ -128,6 +131,11 @@ public class SessionManager {
         usuario.setEstado(preferences.getString(KEY_ESTADO, ""));
         usuario.setTipoUsuario(preferences.getString(KEY_USER_TYPE, ""));
 
+        String fcmToken = preferences.getString(KEY_FCM_TOKEN, "");
+        if (!fcmToken.isEmpty()) {
+            usuario.setFcmToken(fcmToken);
+        }
+
         // Datos específicos
         if (usuario instanceof AdministradorRestaurante) {
             ((AdministradorRestaurante) usuario).setRestauranteId(
@@ -147,6 +155,7 @@ public class SessionManager {
                 repartidor.setLongitud(0.0);
             }
         }
+
     }
 
     /**
@@ -209,6 +218,10 @@ public class SessionManager {
             editor.putString(KEY_FOTO, usuario.getFoto());
             editor.putString(KEY_ESTADO, usuario.getEstado());
             editor.putBoolean(KEY_IS_LOGGED_IN, true);
+
+            if (usuario.getFcmToken() != null) {
+                editor.putString(KEY_FCM_TOKEN, usuario.getFcmToken());
+            }
 
             // Datos específicos según tipo
             if (usuario instanceof AdministradorRestaurante) {
@@ -310,15 +323,25 @@ public class SessionManager {
     public Task<Void> logout() {
         Log.d("SessionManager", "Iniciando proceso de cierre de sesión");
 
-        // Limpiar datos en memoria
-        usuarioActual = null;
+        // Obtener el ID del usuario antes de limpiar todo
+        String userId = getUserId();
 
-        // Crear una tarea compuesta para el cierre de sesión
-        return Tasks.call(() -> {
-            // 1. Cerrar sesión en Firebase Auth
+        return Tasks.whenAll(
+                // 1. Limpiar el token FCM en Firestore
+                userId != null && !userId.isEmpty() ?
+                        FirebaseFirestore.getInstance()
+                                .collection("usuarios")
+                                .document(userId)
+                                .update("fcmToken", null) :
+                        Tasks.forResult(null),
+
+                // 2. Eliminar el token localmente
+                FirebaseMessaging.getInstance().deleteToken()
+        ).continueWithTask(task -> {
+            // 3. Cerrar sesión en Firebase Auth
             auth.signOut();
 
-            // 2. Limpiar SharedPreferences
+            // 4. Limpiar SharedPreferences
             boolean prefsCleared = preferences.edit()
                     .clear()
                     .commit();
@@ -327,11 +350,12 @@ public class SessionManager {
                 throw new Exception("Error al limpiar SharedPreferences");
             }
 
-            // 3. Limpiar la instancia singleton
+            // 5. Limpiar la instancia singleton
+            usuarioActual = null;
             instance = null;
 
             Log.d("SessionManager", "Sesión cerrada exitosamente");
-            return null;
+            return Tasks.forResult(null);
         });
     }
 
@@ -431,9 +455,25 @@ public class SessionManager {
         return preferences.getString(KEY_USER_ID, "");
     }
 
-    public Task<Usuario> loadUserData(String userId) {
-        return usuarioRepository.getUserById(userId)
-                .addOnSuccessListener(this::setUsuarioActual);
+    // Nuevo método para actualizar el token FCM
+    public Task<Void> actualizarTokenFCM(String newToken) {
+        if (usuarioActual == null || usuarioActual.getId() == null) {
+            return Tasks.forException(new Exception("No hay usuario activo"));
+        }
+
+        return FirebaseFirestore.getInstance()
+                .collection("usuarios")
+                .document(usuarioActual.getId())
+                .update("fcmToken", newToken)
+                .continueWithTask(task -> {
+                    if (task.isSuccessful()) {
+                        usuarioActual.setFcmToken(newToken);
+                        preferences.edit()
+                                .putString(KEY_FCM_TOKEN, newToken)
+                                .apply();
+                    }
+                    return task;
+                });
     }
 
     public interface SessionCallback {
