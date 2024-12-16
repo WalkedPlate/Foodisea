@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/containerBottom"
         android:clipToPadding="false"
-        android:paddingBottom="16dp"> <!-- Evitar que lo tape el contenedor inferior -->
+        android:paddingBottom="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"

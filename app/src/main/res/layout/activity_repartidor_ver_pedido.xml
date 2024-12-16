@@ -7,171 +7,182 @@
     tools:context=".activity.repartidor.RepartidorVerPedidoActivity"
     android:background="@color/white">
 
-    <LinearLayout
+    <!-- Contenido Scrolleable -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <!-- Header -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp">
-
-            <Button
-                android:id="@+id/btnBack"
-                style="?attr/materialIconButtonFilledTonalStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/baseline_arrow_back_ios_new_24"
-                android:contentDescription="@string/btnBack"
-                android:backgroundTint="@color/bg_color"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
-
-            <TextView
-                android:id="@+id/orderNumberText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="#162432"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:fontFamily="@font/sen_font"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+        android:layout_height="match_parent"
+        android:layout_above="@id/containerBottom"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="18dp">
+            android:orientation="vertical">
 
-            <!-- Sección de información -->
-
-            <!-- Restaurante -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Restaurante:"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/sen_font"/>
-
-            <!-- Primer destino: Restaurante -->
-            <LinearLayout
-                android:id="@+id/restaurantLayout"
+            <!-- Header -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="8dp"
-                android:layout_marginTop="4dp">
+                android:padding="12dp">
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_restaurant"
-                    android:layout_gravity="center_vertical"
-                    app:tint="@color/btn_dark" />
+                <Button
+                    android:id="@+id/btnBack"
+                    style="?attr/materialIconButtonFilledTonalStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/baseline_arrow_back_ios_new_24"
+                    android:contentDescription="@string/btnBack"
+                    android:backgroundTint="@color/bg_color"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
+                <TextView
+                    android:id="@+id/orderNumberText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="#162432"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:fontFamily="@font/sen_font"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="18dp">
+
+                <!-- Sección de información -->
+
+                <!-- Restaurante -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Restaurante:"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/sen_font"/>
+
+                <!-- Primer destino: Restaurante -->
                 <LinearLayout
+                    android:id="@+id/restaurantLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="12dp">
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:layout_marginTop="4dp">
 
-                    <TextView
-                        android:id="@+id/restaurantName"
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_restaurant"
+                        android:layout_gravity="center_vertical"
+                        app:tint="@color/btn_dark" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Burger Bistro"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary" />
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
 
-                    <TextView
-                        android:id="@+id/restaurantAddress"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="2118 Thornridge Cir. Syracuse" />
+                        <TextView
+                            android:id="@+id/restaurantName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Burger Bistro"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_primary" />
 
+                        <TextView
+                            android:id="@+id/restaurantAddress"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="2118 Thornridge Cir. Syracuse" />
+
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
 
-            <!-- Cliente -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cliente:"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/sen_font"
-                android:layout_marginTop="18dp"/>
+                <!-- Cliente -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cliente:"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/sen_font"
+                    android:layout_marginTop="18dp"/>
 
-            <!-- Segundo destino: Cliente -->
-            <LinearLayout
-                android:id="@+id/customerLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="8dp"
-                android:layout_marginTop="4dp">
-
-                <ImageView
-                    android:id="@+id/locationIcon"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_person_location"
-                    android:layout_gravity="center_vertical"
-                    app:tint="@color/btn_dark" />
-
+                <!-- Segundo destino: Cliente -->
                 <LinearLayout
+                    android:id="@+id/customerLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="12dp">
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:layout_marginTop="4dp">
 
-                    <TextView
-                        android:id="@+id/customerName"
+                    <ImageView
+                        android:id="@+id/locationIcon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_person_location"
+                        android:layout_gravity="center_vertical"
+                        app:tint="@color/btn_dark" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="John Dylan Gomez Doe"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary" />
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
 
-                    <TextView
-                        android:id="@+id/customerAddress"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Av. La mar 25 urb santa catalina" />
+                        <TextView
+                            android:id="@+id/customerName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="John Dylan Gomez Doe"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_primary" />
+
+                        <TextView
+                            android:id="@+id/customerAddress"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Av. La mar 25 urb santa catalina" />
+                    </LinearLayout>
                 </LinearLayout>
+
+                <!-- Sección detalles del pedido -->
+                <TextView
+                    android:id="@+id/orderDetailsTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Detalles del pedido:"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/sen_font"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/orderItemsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"/>
+
             </LinearLayout>
-
-            <!-- Sección detalles del pedido -->
-            <TextView
-                android:id="@+id/orderDetailsTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Detalles del pedido:"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
-                android:textSize="14sp"
-                android:fontFamily="@font/sen_font"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/orderItemsRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"/>
-
         </LinearLayout>
-    </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
 
     <!-- Sección de botones abajo -->
     <LinearLayout
@@ -182,14 +193,14 @@
         android:orientation="vertical"
         android:padding="16dp"
         android:background="@drawable/rounded_top"
-        android:backgroundTint="@color/bg_gray_light">
+        android:backgroundTint="#E8EAF6">
 
         <!-- Texto de Pago -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingHorizontal="10dp"
+            android:paddingHorizontal="12dp"
             android:layout_marginVertical="12dp"
             android:gravity="center_vertical">
 
@@ -222,6 +233,7 @@
             android:textSize="18sp"
             android:backgroundTint="@android:color/holo_red_light"
             android:textColor="@android:color/white"
+            android:fontFamily="@font/sen_font"
             android:layout_marginBottom="8dp"
             android:padding="14dp"
             android:textStyle="bold"/>

@@ -104,10 +104,10 @@ public class SuperAdminDetalleRestauranteActivity extends AppCompatActivity {
      */
     private void setupListeners(String restauranteId) {
         binding.btnBack.setOnClickListener(v -> finish());
-        binding.btnEdit.setOnClickListener(v-> {
-            Intent editRest = new Intent(this, SuperAdminEditRestauranteActivity.class);
-            startActivity(editRest);
-        });
+//        binding.btnEdit.setOnClickListener(v-> {
+//            Intent editRest = new Intent(this, SuperAdminEditRestauranteActivity.class);
+//            startActivity(editRest);
+//        });
         binding.btnReporte.setOnClickListener(v -> {
             Intent reporteRest = new Intent(this, SuperAdminRestaurantesReportesActivity.class);
             reporteRest.putExtra("restauranteId",restauranteId);
