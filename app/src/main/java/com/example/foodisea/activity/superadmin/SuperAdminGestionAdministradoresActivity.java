@@ -17,6 +17,7 @@ import com.example.foodisea.adapter.superAdmin.UsuarioAdapter;
 import com.example.foodisea.databinding.ActivitySuperAdminGestionAdministradoresBinding;
 import com.example.foodisea.databinding.ActivitySuperAdminGestionUsuariosBinding;
 import com.example.foodisea.databinding.ActivitySuperAdminSelectionBinding;
+import com.example.foodisea.manager.LogManager;
 import com.example.foodisea.model.Usuario;
 import com.example.foodisea.repository.UsuarioRepository;
 
@@ -27,6 +28,7 @@ public class SuperAdminGestionAdministradoresActivity extends AppCompatActivity 
     ActivitySuperAdminGestionAdministradoresBinding binding;
     UsuarioRepository usuarioRepository;
     private List<Usuario> listaUsuarios = new ArrayList<>();
+    LogManager logManager = new LogManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +106,7 @@ public class SuperAdminGestionAdministradoresActivity extends AppCompatActivity 
     }
 
     public void setupReciclerView(){
-        UsuarioAdapter adapter = new UsuarioAdapter(this, listaUsuarios,usuarioRepository);
+        UsuarioAdapter adapter = new UsuarioAdapter(this, listaUsuarios,usuarioRepository,logManager);
         binding.rvUsers.setLayoutManager(new LinearLayoutManager(this));
         binding.rvUsers.setAdapter(adapter);
     }

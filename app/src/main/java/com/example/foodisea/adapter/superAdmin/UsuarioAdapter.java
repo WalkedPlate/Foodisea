@@ -14,6 +14,7 @@ import com.example.foodisea.R;
 
 import com.example.foodisea.activity.superadmin.SuperAdminDetalleUsuarioActivity;
 import com.example.foodisea.databinding.ItemUserBinding;
+import com.example.foodisea.manager.LogManager;
 import com.example.foodisea.model.Usuario;
 import com.example.foodisea.repository.UsuarioRepository;
 
@@ -24,11 +25,13 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
     private final UsuarioRepository usuarioRepository;
     private final Context context;
     private final List<Usuario> usuarioList;
+    private final LogManager logManager;
 
-    public UsuarioAdapter(Context context, List<Usuario> usuarioList, UsuarioRepository usuarioRepository) {
+    public UsuarioAdapter(Context context, List<Usuario> usuarioList, UsuarioRepository usuarioRepository, LogManager logManager) {
         this.context = context;
         this.usuarioList = usuarioList;
         this.usuarioRepository = usuarioRepository; // Inyección de dependencia
+        this.logManager = logManager;
     }
 
     @NonNull
@@ -70,7 +73,16 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
             usuario.setEstado(isChecked ? "Activo" : "Inactivo");
             // Actualizar el estado en la base de datos o backend
             usuarioRepository.actualizarEstadoUsuario(usuario.getId(), usuario.getEstado())
-                    .addOnSuccessListener(aVoid -> Toast.makeText(context, "Estado actualizado", Toast.LENGTH_SHORT).show())
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(context, "Estado actualizado", Toast.LENGTH_SHORT).show();
+                        // Registrar log después de actualizar el estado
+                        String accion = isChecked ? "Activado" : "Desactivado";
+                        String detalles = "Usuario: " + nombreCompleto + " - ha sido: " + accion;
+
+                        logManager.createLog(usuario.getId(), accion, detalles)
+                                .addOnSuccessListener(documentReference -> Toast.makeText(context, "Log registrado", Toast.LENGTH_SHORT).show())
+                                .addOnFailureListener(e -> Toast.makeText(context, "Error al registrar log: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    })
                     .addOnFailureListener(e -> Toast.makeText(context, "Error al actualizar: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         });
 
