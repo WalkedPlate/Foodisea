@@ -189,7 +189,7 @@
         android:id="@+id/buttonVerDetalles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="VER DETALLES DE COMPRA"
+        android:text="DETALLES DE COMPRA"
         android:backgroundTint="@color/btn_medium"
         android:textColor="@android:color/white"
         android:fontFamily="@font/sen_font"

@@ -16,8 +16,8 @@
         <!-- Imagen del producto -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivItemImage"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:scaleType="centerCrop"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.RoundedCorners16dp"/>
 
@@ -35,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hamburguesa casera"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textColor="@android:color/black"/>
 
             <!-- Precio del producto -->
@@ -44,8 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="S/. 64"
-                android:textSize="18sp"
-                android:textColor="@android:color/darker_gray" />
+                android:textSize="15sp"/>
 
         </LinearLayout>
 
@@ -65,11 +64,11 @@
     </LinearLayout>
 
     <!-- Divisor entre ítems -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="12dp"
-        android:background="@color/gray_light"/>
+<!--    <View-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="1dp"-->
+<!--        android:layout_marginTop="12dp"-->
+<!--        android:background="@color/gray_light"/>-->
 
 
 </LinearLayout>
