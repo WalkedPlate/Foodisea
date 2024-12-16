@@ -126,7 +126,23 @@ public class ClienteEditarPerfilActivity extends AppCompatActivity implements On
         initializeComponents();
         setupListeners();
         setupViews();
+        loadProfileData();
+    }
 
+    private void loadProfileData() {
+        Intent intent = getIntent();
+        String telefono = intent.getStringExtra("telefono");
+        String direccion = intent.getStringExtra("direccion");
+        String fotoUrl = intent.getStringExtra("foto");
+
+        if (telefono != null) binding.etTelefono.setText(telefono);
+        if (direccion != null) binding.etDireccion.setText(direccion);
+        if (fotoUrl != null && !fotoUrl.isEmpty()) {
+            Glide.with(this)
+                    .load(fotoUrl)
+                    .circleCrop()
+                    .into(binding.imgProfile);
+        }
     }
 
     /**
@@ -169,7 +185,59 @@ public class ClienteEditarPerfilActivity extends AppCompatActivity implements On
      */
     private void setupListeners() {
         binding.btnBack.setOnClickListener(v -> finish());
-        //binding.btnGuardar.setOnClickListener(v -> saveChanges());
+        binding.btnGuardar.setOnClickListener(v -> {
+            if (validateFields()) {
+                String newTelefono = binding.etTelefono.getText().toString().trim();
+                String newDireccion = binding.etDireccion.getText().toString().trim();
+                Uri newFotoUri = imageUri;
+
+                // Guardar en Firebase o base de datos
+                saveProfileData(newTelefono, newDireccion, newFotoUri);
+            }
+        });
+
+    }
+
+    private void saveProfileData(String telefono, String direccion, Uri fotoUri) {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference("profile_photos/").child(userId + ".jpg");
+
+        // Subir la foto a Firebase Storage
+        if (fotoUri != null) {
+            storageRef.putFile(fotoUri)
+                    .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                        updateFirestoreData(userId, telefono, direccion, downloadUri.toString());
+                    })).addOnFailureListener(e -> {
+                        showError("Error al subir la foto de perfil");
+                    });
+        } else {
+            // Sin foto nueva, actualizar solo teléfono y dirección
+            updateFirestoreData(userId, telefono, direccion, null);
+        }
+    }
+
+    private void updateFirestoreData(String userId, String telefono, String direccion, String fotoUrl) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Crear mapa de datos a actualizar
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("telefono", telefono);
+        updates.put("direccion", direccion);
+        if (fotoUrl != null) {
+            updates.put("foto", fotoUrl);
+        }
+
+        // Actualizar datos en Firestore
+        db.collection("usuarios").document(userId)
+                .update(updates)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    showError("Error al guardar los datos");
+                });
     }
 
 

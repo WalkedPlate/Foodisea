@@ -67,7 +67,11 @@ public class ClienteInfoPerfilActivity extends AppCompatActivity {
         binding.btnBack.setOnClickListener(v -> finish());
         binding.btnEdit.setOnClickListener(v -> {
             Intent intent = new Intent(this, ClienteEditarPerfilActivity.class);
+            intent.putExtra("telefono", clienteActual.getTelefono());
+            intent.putExtra("direccion", clienteActual.getDireccion());
+            intent.putExtra("foto", clienteActual.getFoto());
             startActivity(intent);
+
         });
     }
 
