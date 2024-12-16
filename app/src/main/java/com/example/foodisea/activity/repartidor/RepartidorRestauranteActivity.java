@@ -15,13 +15,9 @@ import com.example.foodisea.adapter.repartidor.PedidosAdapter;
 import com.example.foodisea.databinding.ActivityRepartidorRestauranteBinding;
 import com.example.foodisea.dto.PedidoConCliente;
 import com.example.foodisea.model.Cliente;
-import com.example.foodisea.model.CodigoQR;
-import com.example.foodisea.model.Pago;
 import com.example.foodisea.model.Pedido;
-import com.example.foodisea.model.ProductoCantidad;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

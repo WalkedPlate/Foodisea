@@ -24,8 +24,6 @@ import com.example.foodisea.databinding.ActivityAdminResPedidosBinding;
 import com.example.foodisea.dto.PedidoConCliente;
 import com.example.foodisea.model.AdministradorRestaurante;
 import com.example.foodisea.model.Cliente;
-import com.example.foodisea.model.Pago;
-import com.example.foodisea.model.Usuario;
 import com.example.foodisea.repository.PedidoRepository;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 

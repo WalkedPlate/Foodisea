@@ -484,26 +484,6 @@ public class PedidoRepository {
                 });
     }
 
-    // Método para obtener pedidos asignados al repartidor
-    public Task<List<Pedido>> getPedidosAsignadosRepartidor(String repartidorId) {
-        return db.collection("pedidos")
-                .whereEqualTo("repartidorId", repartidorId)
-                .whereIn("estado", Arrays.asList("En camino", "Entregado"))
-                .get()
-                .continueWith(task -> {
-                    List<Pedido> pedidos = new ArrayList<>();
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        for (DocumentSnapshot doc : task.getResult()) {
-                            Pedido pedido = doc.toObject(Pedido.class);
-                            if (pedido != null) {
-                                pedido.setId(doc.getId());
-                                pedidos.add(pedido);
-                            }
-                        }
-                    }
-                    return pedidos;
-                });
-    }
 
     // Método para obtener pedidos asignados al repartidor
     public Task<List<Pedido>> getPedidosEntregadosRepartidor(String repartidorId) {
@@ -523,6 +503,146 @@ public class PedidoRepository {
                         }
                     }
                     return pedidos;
+                });
+    }
+
+    // ELIMINAR PEDIDOS
+    public Task<Void> eliminarPedido(String pedidoId) {
+        Log.d("PedidoRepository", "Iniciando eliminación de pedido: " + pedidoId);
+
+        return db.collection("pedidos")
+                .document(pedidoId)
+                .get()
+                .continueWithTask(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.e("PedidoRepository", "Error al obtener pedido", task.getException());
+                        throw task.getException();
+                    }
+
+                    DocumentSnapshot pedidoDoc = task.getResult();
+                    Pedido pedido = pedidoDoc.toObject(Pedido.class);
+
+                    if (pedido == null) {
+                        Log.e("PedidoRepository", "Pedido no encontrado: " + pedidoId);
+                        throw new Exception("Pedido no encontrado");
+                    }
+
+                    Log.d("PedidoRepository", "Estado del pedido: " + pedido.getEstado());
+
+                    // Verificar si el pedido puede ser eliminado según su estado
+                    if (!puedeEliminarPedido(pedido.getEstado())) {
+                        Log.e("PedidoRepository", "No se puede eliminar pedido en estado: " + pedido.getEstado());
+                        throw new Exception("No se puede eliminar el pedido en este estado");
+                    }
+
+                    List<Task<Void>> tasks = new ArrayList<>();
+
+                    // 1. Actualizar disposición del repartidor si existe
+                    if (pedido.getRepartidorId() != null) {
+                        Log.d("PedidoRepository", "Actualizando disposición del repartidor: " + pedido.getRepartidorId());
+                        tasks.add(db.collection("usuarios")
+                                .document(pedido.getRepartidorId())
+                                .update("disposicion", "Disponible"));
+                    }
+
+                    // 2. Eliminar verificación y QRs
+                    if (pedido.getVerificacionEntregaId() != null) {
+                        Log.d("PedidoRepository", "Eliminando verificación y QRs: " + pedido.getVerificacionEntregaId());
+                        tasks.add(eliminarVerificacionYQRs(pedido.getVerificacionEntregaId()));
+                    }
+
+                    // 3. Eliminar chat y mensajes
+                    Log.d("PedidoRepository", "Eliminando chat y mensajes del pedido");
+                    tasks.add(eliminarChatYMensajes(pedidoId));
+
+                    // 4. Eliminar el pedido
+                    Log.d("PedidoRepository", "Eliminando documento del pedido");
+                    tasks.add(db.collection("pedidos")
+                            .document(pedidoId)
+                            .delete());
+
+                    return Tasks.whenAll(tasks);
+                });
+    }
+
+    private boolean puedeEliminarPedido(String estado) {
+        return estado.equals("Recibido") ||
+                estado.equals("En preparación") ||
+                estado.equals("Recogiendo pedido");
+    }
+
+    private Task<Void> eliminarVerificacionYQRs(String verificacionId) {
+        if (verificacionId == null) return Tasks.forResult(null);
+
+        return db.collection("verificaciones_entrega")
+                .document(verificacionId)
+                .get()
+                .continueWithTask(task -> {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    DocumentSnapshot doc = task.getResult();
+                    VerificacionEntrega verificacion = doc.toObject(VerificacionEntrega.class);
+
+                    if (verificacion == null) {
+                        return Tasks.forResult(null);
+                    }
+
+                    List<Task<Void>> deleteTasks = new ArrayList<>();
+
+                    // Eliminar QRs
+                    if (verificacion.getQrEntregaId() != null) {
+                        deleteTasks.add(db.collection("codigosQR")
+                                .document(verificacion.getQrEntregaId())
+                                .delete());
+                    }
+                    if (verificacion.getQrPagoId() != null) {
+                        deleteTasks.add(db.collection("codigosQR")
+                                .document(verificacion.getQrPagoId())
+                                .delete());
+                    }
+
+                    // Eliminar la verificación
+                    deleteTasks.add(db.collection("verificaciones_entrega")
+                            .document(verificacionId)
+                            .delete());
+
+                    return Tasks.whenAll(deleteTasks);
+                });
+    }
+
+    private Task<Void> eliminarChatYMensajes(String pedidoId) {
+        return db.collection("chats")
+                .whereEqualTo("pedidoId", pedidoId)
+                .get()
+                .continueWithTask(task -> {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    List<Task<Void>> deleteTasks = new ArrayList<>();
+
+                    for (DocumentSnapshot chatDoc : task.getResult()) {
+                        String chatId = chatDoc.getId();
+
+                        // Eliminar todos los mensajes del chat
+                        deleteTasks.add(db.collection("mensajes")
+                                .whereEqualTo("chatId", chatId)
+                                .get()
+                                .continueWithTask(mensajesTask -> {
+                                    List<Task<Void>> mensajeDeleteTasks = new ArrayList<>();
+                                    for (DocumentSnapshot mensajeDoc : mensajesTask.getResult()) {
+                                        mensajeDeleteTasks.add(mensajeDoc.getReference().delete());
+                                    }
+                                    return Tasks.whenAll(mensajeDeleteTasks);
+                                }));
+
+                        // Eliminar el chat
+                        deleteTasks.add(chatDoc.getReference().delete());
+                    }
+
+                    return Tasks.whenAll(deleteTasks);
                 });
     }
 

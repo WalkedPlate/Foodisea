@@ -3,27 +3,7 @@ package com.example.foodisea.firestore;
 
 
 
-import com.example.foodisea.model.AdministradorRestaurante;
-import com.example.foodisea.model.Carrito;
-import com.example.foodisea.model.Cliente;
-import com.example.foodisea.model.CodigoQR;
-import com.example.foodisea.model.Pago;
-import com.example.foodisea.model.Pedido;
-import com.example.foodisea.model.ProductoCantidad;
-import com.example.foodisea.model.Producto;
-import com.example.foodisea.model.Repartidor;
-import com.example.foodisea.model.Reporte;
-import com.example.foodisea.model.Restaurante;
-import com.example.foodisea.model.Superadmin;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.WriteBatch;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class FirestoreInitializer {
     private final FirebaseFirestore db;

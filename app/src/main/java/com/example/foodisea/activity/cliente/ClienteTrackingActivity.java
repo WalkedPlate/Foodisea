@@ -1,22 +1,28 @@
 package com.example.foodisea.activity.cliente;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.transition.AutoTransition;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
@@ -35,11 +41,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import com.bumptech.glide.Glide;
 import com.example.foodisea.R;
 import com.example.foodisea.databinding.ActivityClienteTrackingBinding;
+import com.example.foodisea.dialog.LoadingDialog;
 import com.example.foodisea.helper.DirectionsHelper;
 import com.example.foodisea.model.Cliente;
 import com.example.foodisea.model.Pedido;
@@ -63,7 +72,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.transition.MaterialContainerTransform;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -113,8 +124,31 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         binding = ActivityClienteTrackingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Luego configurar edge-to-edge
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+        // Finalmente configurar los insets
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (view, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+            // Manejar el padding del contenedor superior si existe
+            if (binding.topContainer != null) {
+                binding.topContainer.setPadding(0, insets.top, 0, 0);
+            }
+
+            // Manejar el padding del bottom sheet
+            if (binding.bottomSheet != null) {
+                binding.bottomSheet.setPadding(0, 0, 0, insets.bottom);
+            }
+
+            return WindowInsetsCompat.CONSUMED;
+        });
 
         // Inicializar repositories y utilidades
         pedidoRepository = new PedidoRepository(this);
@@ -139,21 +173,81 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
     }
 
     private void initializeViews() {
-        // Bottom Sheet
+        // Configurar BottomSheet
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet);
         setupBottomSheet();
+        setupCancelarPedidoButton();
+    }
+
+    private void setupCancelarPedidoButton() {
+        binding.btnCancelarPedido.setOnClickListener(v -> {
+            mostrarDialogoConfirmacion();
+        });
+    }
+
+    private void mostrarDialogoConfirmacion() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Cancelar pedido")
+                .setMessage("¿Estás seguro que deseas cancelar este pedido? Esta acción no se puede deshacer.")
+                .setPositiveButton("Sí, cancelar", (dialog, which) -> {
+                    Log.d(TAG, "Usuario confirmó cancelación del pedido");
+                    cancelarPedido();
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+                    Log.d(TAG, "Usuario canceló la operación");
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    private void cancelarPedido() {
+        Log.d(TAG, "Iniciando proceso de cancelación para pedido: " + pedidoId);
+
+        LoadingDialog loadingDialog = new LoadingDialog(this);
+        loadingDialog.show("Cancelando pedido...");
+
+        pedidoRepository.eliminarPedido(pedidoId)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Pedido cancelado exitosamente");
+                    loadingDialog.dismiss();
+                    Toast.makeText(this, "Pedido cancelado exitosamente", Toast.LENGTH_SHORT).show();
+
+
+                    Intent intent = new Intent(this, ClienteHistorialPedidosActivity.class);
+                    // Limpiar el back stack para que no pueda volver atrás
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error al cancelar pedido: ", e);
+                    loadingDialog.dismiss();
+                    String errorMessage = "No se puede cancelar el pedido en este momento";
+                    if (e.getMessage() != null && e.getMessage().contains("estado")) {
+                        errorMessage = "No se puede cancelar el pedido en este estado";
+                    }
+                    Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+                });
     }
 
 
     private void setupBottomSheet() {
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         bottomSheetBehavior.setHideable(false);
-        bottomSheetBehavior.setPeekHeight(getResources().getDimensionPixelSize(R.dimen.bottom_sheet_peek_height));
+        bottomSheetBehavior.setFitToContents(true);
+        bottomSheetBehavior.setPeekHeight(
+                getResources().getDimensionPixelSize(R.dimen.bottom_sheet_peek_height)
+        );
 
+        // Mejorar las animaciones del BottomSheet
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                TransitionManager.beginDelayedTransition((ViewGroup) bottomSheet);
+                // Usar AutoTransition para una transición más suave
+                TransitionManager.beginDelayedTransition((ViewGroup) bottomSheet,
+                        new AutoTransition()
+                                .setDuration(300)
+                                .setInterpolator(new FastOutSlowInInterpolator()));
 
                 switch (newState) {
                     case BottomSheetBehavior.STATE_EXPANDED:
@@ -167,7 +261,12 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                // Animar la visibilidad del progress indicator
                 binding.deliveryProgress.setAlpha(slideOffset);
+                binding.statusStepsContainer.setAlpha(slideOffset);
+
+                // Animar el drag handle
+                binding.dragHandle.setAlpha(0.5f + (slideOffset * 0.5f));
             }
         });
     }
@@ -743,6 +842,12 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
         binding.tvOrderTime.setText(sdf.format(currentPedido.getFechaPedido()));
 
         binding.estimatedTime.setVisibility(estado.equals("En camino") ? View.VISIBLE : View.GONE);
+
+        // Mostrar/ocultar botón de cancelar según el estado
+        boolean puedeEliminar = estado.equals("Recibido") ||
+                estado.equals("En preparación") ||
+                estado.equals("Recogiendo pedido");
+        binding.btnCancelarPedido.setVisibility(puedeEliminar ? View.VISIBLE : View.GONE);
     }
 
     private int getProgressForState(String estado) {
@@ -874,13 +979,23 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
     }
 
     private void showExpandedContent(boolean show) {
-        int visibility = show ? View.VISIBLE : View.GONE;
-        binding.deliveryProgress.setVisibility(visibility);
-        binding.statusStepsContainer.setVisibility(visibility);
+        float alpha = show ? 1.0f : 0.0f;
 
-        // Si hay repartidor, mostrar/ocultar su información
+        // Usar animaciones para una transición más suave
+        binding.deliveryProgress.animate().alpha(alpha).setDuration(200);
+        binding.statusStepsContainer.animate().alpha(alpha).setDuration(200);
+
+        // Si hay repartidor, animar su información también
         if (repartidor != null) {
-            binding.deliveryPersonInfo.setVisibility(visibility);
+            binding.deliveryPersonInfo.animate()
+                    .alpha(alpha)
+                    .withStartAction(() -> {
+                        if (show) binding.deliveryPersonInfo.setVisibility(View.VISIBLE);
+                    })
+                    .withEndAction(() -> {
+                        if (!show) binding.deliveryPersonInfo.setVisibility(View.GONE);
+                    })
+                    .setDuration(200);
         }
     }
 
