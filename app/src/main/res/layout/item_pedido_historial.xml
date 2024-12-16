@@ -79,6 +79,7 @@
                 android:textSize="14sp"
                 android:fontFamily="@font/sen_font"
                 android:layout_marginTop="4dp"
+                android:textColor="@color/btn_medium"
                 android:text="En preparación"/>
 
         </LinearLayout>

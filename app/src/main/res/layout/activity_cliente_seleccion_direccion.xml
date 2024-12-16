@@ -15,17 +15,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@color/bg_color"
-        android:elevation="4dp">
+        android:elevation="2dp">
 
-        <!-- Toolbar con botón de regreso y título -->
-        <LinearLayout
+        <!-- Header -->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
             android:padding="12dp">
 
-            <!-- Botón de regresar (flecha) -->
             <Button
                 android:id="@+id/btnBack"
                 style="?attr/materialIconButtonFilledTonalStyle"
@@ -33,25 +30,29 @@
                 android:layout_height="wrap_content"
                 app:icon="@drawable/baseline_arrow_back_ios_new_24"
                 android:contentDescription="@string/btnBack"
-                app:iconTint="@color/black"
-                android:backgroundTint="@color/bg_color"/>
+                android:backgroundTint="@color/bg_color"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
-            <!-- Texto "Seleccionar ubicación" -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Seleccionar ubicación"
-                android:textSize="20sp"
-                android:fontFamily="@font/sen_font"
-                android:textColor="@android:color/white"
-                android:layout_marginStart="8dp"/>
-        </LinearLayout>
+                android:text="Nueva dirección"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:fontFamily="@font/sen_font" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <!-- Barra de búsqueda con estilo personalizado -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:padding="8dp">
 
             <SearchView
                 android:id="@+id/searchView"
@@ -83,6 +84,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:background="@drawable/rounded_top"
+        android:backgroundTint="#E8EAF6"
         android:padding="16dp">
 
         <!-- Contenedor de la dirección -->
@@ -98,7 +100,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="DIRECCIÓN SELECCIONADA"
+                android:text="Dirección seleccionada:"
                 android:textColor="@android:color/darker_gray"
                 android:fontFamily="@font/sen_font"
                 android:textSize="14sp"
@@ -122,12 +124,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="CONFIRMAR UBICACIÓN"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:backgroundTint="@color/btn_medium"
             android:textColor="@android:color/white"
-            android:padding="16dp"
+            android:fontFamily="@font/sen_font"
+            android:padding="14dp"
             android:textStyle="bold"
-            android:layout_marginBottom="12dp"/>
+            android:layout_margin="8dp"/>
     </LinearLayout>
 
 

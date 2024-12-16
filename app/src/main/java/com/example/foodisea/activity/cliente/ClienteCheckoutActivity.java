@@ -8,9 +8,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.foodisea.R;
 import com.example.foodisea.adapter.cliente.CarritoAdapter;
 import com.example.foodisea.manager.SessionManager;
 import com.example.foodisea.databinding.ActivityClienteCheckoutBinding;
@@ -27,6 +29,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.ArrayList;
@@ -86,12 +91,21 @@ public class ClienteCheckoutActivity extends AppCompatActivity {
 
         // Configurar vistas y listeners
         setupRecyclerView();
+        setupWindowInsets();
         setupViews();
 
         // Cargar datos
         cargarCarrito();
     }
 
+    private void setupWindowInsets() {
+        EdgeToEdge.enable(this);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+    }
     private void setupRecyclerView() {
         checkoutAdapter = new CarritoAdapter(this, new ArrayList<>(), true, null);
         binding.orderItemsRecyclerView.setLayoutManager(new LinearLayoutManager(this));

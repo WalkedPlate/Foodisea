@@ -77,7 +77,6 @@
                 android:text="Cliente:"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
                 android:fontFamily="@font/sen_font"
                 android:layout_marginBottom="18dp"/>
 
@@ -166,7 +165,6 @@
                 android:text="Orden:"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
                 android:fontFamily="@font/sen_font"
                 android:layout_marginVertical="8dp"/>
 
@@ -191,7 +189,6 @@
                 android:text="Cuenta:"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
                 android:fontFamily="@font/sen_font"
                 android:layout_marginVertical="14dp"/>
 

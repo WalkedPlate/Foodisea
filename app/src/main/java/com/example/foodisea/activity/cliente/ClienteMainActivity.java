@@ -145,10 +145,10 @@ public class ClienteMainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        binding.btnPedidos.setOnClickListener(view -> {
-            Intent intent = new Intent(this, ClienteTrackingActivity.class);
-            startActivity(intent);
-        });
+//        binding.btnPedidos.setOnClickListener(view -> {
+//            Intent intent = new Intent(this, ClienteTrackingActivity.class);
+//            startActivity(intent);
+//        });
     }
 
     /**
