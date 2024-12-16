@@ -39,7 +39,27 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:fontFamily="@font/sen_font"/>
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- TabLayout -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabTextAppearance="@style/TextAppearance.AppCompat.Small"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        android:background="@color/bg_color"
+        app:tabTextColor="@color/black"
+        app:tabSelectedTextColor="@color/black"
+        app:tabIndicatorColor="@color/black"
+        android:fontFamily="@font/sen_font"/>
+
+    <!-- ViewPager para las secciones -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
 </LinearLayout>
