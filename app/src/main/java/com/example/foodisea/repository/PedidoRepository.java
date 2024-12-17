@@ -321,7 +321,7 @@ public class PedidoRepository {
     public Task<List<PedidoConCliente>> getPedidosActivosRestaurante(String restauranteId) {
         return db.collection("pedidos")
                 .whereEqualTo("restauranteId", restauranteId)
-                .whereIn("estado", Arrays.asList("En camino", "Recibido"))
+                .whereIn("estado", Arrays.asList("En camino", "Entregado"))
                 .get()
                 .continueWithTask(task -> {
                     if (!task.isSuccessful()) {
