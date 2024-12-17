@@ -232,15 +232,25 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
 
 
     private void setupBottomSheet() {
+        // Configuración inicial del BottomSheet
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         bottomSheetBehavior.setHideable(false);
         bottomSheetBehavior.setFitToContents(true);
+        bottomSheetBehavior.setPeekHeight(getResources().getDimensionPixelSize(R.dimen.bottom_sheet_peek_height));
 
+        // Asegurar que el BottomSheet esté visible inicialmente
+        binding.bottomSheet.setVisibility(View.VISIBLE);
 
         // Mejorar las animaciones del BottomSheet
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                // Prevenir que el BottomSheet se oculte
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    return;
+                }
+
                 // Usar AutoTransition para una transición más suave
                 TransitionManager.beginDelayedTransition((ViewGroup) bottomSheet,
                         new AutoTransition()
@@ -835,16 +845,37 @@ public class ClienteTrackingActivity extends AppCompatActivity implements OnMapR
         String estado = currentPedido.getEstado();
         updateOrderStatus(getEstadoIndex(estado));
 
+        // Asegurar que el BottomSheet esté visible
+        binding.bottomSheet.setVisibility(View.VISIBLE);
+
+        // Configurar la altura del BottomSheet según el estado
+        int peekHeight = getResources().getDimensionPixelSize(R.dimen.bottom_sheet_peek_height);
+        if (estado.equals(Pedido.ESTADO_EN_CAMINO)) {
+            peekHeight = getResources().getDimensionPixelSize(R.dimen.bottom_sheet_peek_height_small);
+        }
+        bottomSheetBehavior.setPeekHeight(peekHeight);
+
+        // Actualizar tiempo y estado
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM, hh:mm a", Locale.getDefault());
         binding.tvOrderTime.setText(sdf.format(currentPedido.getFechaPedido()));
 
-        binding.estimatedTime.setVisibility(estado.equals("En camino") ? View.VISIBLE : View.GONE);
+        // Actualizar visibilidad del tiempo estimado
+        binding.estimatedTime.setVisibility(
+                estado.equals(Pedido.ESTADO_EN_CAMINO) ||
+                        estado.equals(Pedido.ESTADO_RECOGIENDO) ?
+                        View.VISIBLE : View.GONE
+        );
 
         // Mostrar/ocultar botón de cancelar según el estado
-        boolean puedeEliminar = estado.equals("Recibido") ||
-                estado.equals("En preparación") ||
-                estado.equals("Recogiendo pedido");
+        boolean puedeEliminar = estado.equals(Pedido.ESTADO_RECIBIDO) ||
+                estado.equals(Pedido.ESTADO_EN_PREPARACION) ||
+                estado.equals(Pedido.ESTADO_RECOGIENDO);
         binding.btnCancelarPedido.setVisibility(puedeEliminar ? View.VISIBLE : View.GONE);
+
+        // Mantener el estado colapsado del BottomSheet
+        if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
     }
 
     private int getProgressForState(String estado) {
